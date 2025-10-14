@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AusClear Newsletter Archive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border-bottom: 3px solid #d4af37;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: #d4af37;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .newsletter-list {
+            display: grid;
+            gap: 25px;
+        }
+
+        .newsletter-card {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            border-left: 4px solid #d4af37;
+        }
+
+        .newsletter-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+
+        .newsletter-date {
+            font-size: 13px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .newsletter-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .newsletter-excerpt {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .read-more {
+            font-size: 14px;
+            color: #d4af37;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .newsletter-card:hover .read-more {
+            color: #1a1a1a;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .page-title {
+                font-size: 28px;
+            }
+
+            .newsletter-card {
+                padding: 20px;
+            }
+
+            .newsletter-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">AusClear</div>
+        <div class="tagline">Elevate Your Career</div>
+    </div>
+
+    <div class="container">
+        <h1 class="page-title">📰 Newsletter Archive</h1>
+        <p class="page-subtitle">Stay updated with the latest from AusClear</p>
+
+        <div class="newsletter-list">
+            <!-- Newsletter Article 1 -->
+            <a href="building-something-better.html" class="newsletter-card">
+                <div class="newsletter-date">January 2025</div>
+                <h2 class="newsletter-title">We've Been Building Something Better</h2>
+                <p class="newsletter-excerpt">
+                    While we've been finalising our accreditation, our software and IT team have been working behind the scenes on something significant. Introducing our new booking system and client portal.
+                </p>
+                <span class="read-more">Read More →</span>
+            </a>
+
+            <!-- Add more newsletter articles here as you publish them -->
+            <!-- Example template for future newsletters:
+            <a href="february-2025.html" class="newsletter-card">
+                <div class="newsletter-date">February 2025</div>
+                <h2 class="newsletter-title">Your Article Title Here</h2>
+                <p class="newsletter-excerpt">
+                    Brief description of the article content goes here...
+                </p>
+                <span class="read-more">Read More →</span>
+            </a>
+            -->
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2025 AusClear. All rights reserved.</p>
+    </div>
+</body>
+</html>
