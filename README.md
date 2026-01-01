@@ -1,2 +1,2 @@
-# ausclear-blog
-AusClear Monthly Blogs
+# ausclear-knowledge base
+AusClear Support Knowledge Base
