@@ -156,19 +156,10 @@ export default function Header() {
                   Contact
                 </Link>
               </li>
-              <li style={{ marginTop: '1rem' }}>
+              <li>
                 <Link
                   href="/login"
-                  style={{
-                    background: 'var(--gold)',
-                    color: 'var(--navy)',
-                    padding: '0.75rem 2rem',
-                    borderRadius: '4px',
-                    textDecoration: 'none',
-                    fontWeight: 600,
-                    display: 'inline-block',
-                    boxShadow: '0 2px 8px rgba(184, 134, 11, 0.3)'
-                  }}
+                  style={{ color: 'var(--white)', textDecoration: 'none', fontWeight: 500 }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Login
