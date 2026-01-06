@@ -75,7 +75,7 @@ export default function ContactForm() {
         </p>
         <button
           onClick={() => setStatus('idle')}
-          className="bg-gold text-navy px-6 py-3 rounded-lg font-semibold hover:bg-yellow-600 transition-colours"
+          className="bg-navy text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all"
         >
           Send Another Message
         </button>
@@ -102,7 +102,7 @@ export default function ContactForm() {
           required
           value={formData.name}
           onChange={handleChange}
-          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
+          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/20"
         />
       </div>
 
@@ -117,7 +117,7 @@ export default function ContactForm() {
           required
           value={formData.email}
           onChange={handleChange}
-          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
+          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/20"
         />
       </div>
 
@@ -131,7 +131,7 @@ export default function ContactForm() {
           name="phone"
           value={formData.phone}
           onChange={handleChange}
-          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
+          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/20"
         />
       </div>
 
@@ -145,7 +145,7 @@ export default function ContactForm() {
           required
           value={formData.subject}
           onChange={handleChange}
-          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
+          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/20"
         >
           <option value="">Select a subject</option>
           <option value="general">General Enquiry</option>
@@ -169,14 +169,14 @@ export default function ContactForm() {
           value={formData.message}
           onChange={handleChange}
           placeholder="How can we help you?"
-          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20"
+          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/20"
         />
       </div>
 
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="w-full bg-gold text-navy px-8 py-4 rounded-lg font-bold text-lg hover:bg-yellow-600 transition-colours disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-navy text-white px-8 py-4 rounded-lg font-bold text-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {status === 'submitting' ? 'Sending...' : 'Send Message'}
       </button>
