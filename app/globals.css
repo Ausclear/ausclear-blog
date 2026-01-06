@@ -297,6 +297,11 @@
     text-decoration: underline;
   }
 
+  .login-submit-btn:hover:not(:disabled),
+  .login-contact-btn:hover {
+    background: #003a70 !important;
+  }
+
   @media (max-width: 768px) {
     .btn {
       min-width: 100%;

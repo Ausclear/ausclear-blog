@@ -243,9 +243,9 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="btn btn-block btn-large"
+              className="btn btn-block btn-large login-submit-btn"
               style={{
-                background: isSubmitting ? '#ccc' : 'linear-gradient(135deg, var(--navy) 0%, #003a70 100%)',
+                background: isSubmitting ? '#ccc' : 'var(--navy)',
                 color: 'white',
                 border: 'none',
                 borderRadius: '8px',
@@ -314,7 +314,7 @@ export default function LoginPage() {
           </p>
           <Link
             href="/contact"
-            className="btn btn-secondary"
+            className="btn btn-secondary login-contact-btn"
             style={{
               textDecoration: 'none',
               display: 'inline-block',
