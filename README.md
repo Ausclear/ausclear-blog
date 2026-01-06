@@ -253,7 +253,7 @@ Proprietary - AusClear 2025
 ## Support
 
 For technical support or questions:
-- Email: support@ausclear.au
+- Email: support@ausclear.com.au
 - Knowledge Base: https://support.ausclear.au
 
 ---
