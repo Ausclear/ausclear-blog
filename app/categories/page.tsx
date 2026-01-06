@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { CATEGORIES } from '@/types'
 
 export const metadata: Metadata = {
   title: 'Categories',
@@ -32,83 +33,18 @@ export default async function CategoriesPage() {
             gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
             gap: '1.5rem'
           }}>
-            <div className="category-card" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-              <div className="category-icon">📘</div>
-              <h3>AusClear Insights</h3>
-              <p>Expert insights and industry updates</p>
-            </div>
-
-            <div className="category-card" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-              <div className="category-icon">🔒</div>
-              <h3>Security Clearances</h3>
-              <p>Comprehensive clearance information</p>
-            </div>
-
-            <div className="category-card" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-              <div className="category-icon">🏢</div>
-              <h3>AusClear</h3>
-              <p>About our services and approach</p>
-            </div>
-
-            <div className="category-card" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-              <div className="category-icon">💰</div>
-              <h3>AGSVA Fees</h3>
-              <p>Costs and pricing information</p>
-            </div>
-
-            <div className="category-card" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-              <div className="category-icon">❓</div>
-              <h3>FAQs</h3>
-              <p>Frequently asked questions</p>
-            </div>
-
-            <div className="category-card" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-              <div className="category-icon">📄</div>
-              <h3>Summary Articles</h3>
-              <p>Quick reference summaries</p>
-            </div>
-
-            <div className="category-card" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-              <div className="category-icon">📝</div>
-              <h3>Application Process</h3>
-              <p>Step-by-step application guides</p>
-            </div>
-
-            <div className="category-card" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-              <div className="category-icon">🛡️</div>
-              <h3>Cyber Security</h3>
-              <p>Security awareness and best practices</p>
-            </div>
-
-            <div className="category-card" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-              <div className="category-icon">⚖️</div>
-              <h3>Policy and Regulations</h3>
-              <p>Government policies and compliance</p>
-            </div>
-
-            <div className="category-card" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-              <div className="category-icon">📈</div>
-              <h3>Trends & Predictions</h3>
-              <p>Industry trends and future outlook</p>
-            </div>
-
-            <div className="category-card" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-              <div className="category-icon">💼</div>
-              <h3>Careers & Opportunities</h3>
-              <p>Career opportunities for cleared personnel</p>
-            </div>
-
-            <div className="category-card" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-              <div className="category-icon">👁️</div>
-              <h3>Security Awareness</h3>
-              <p>Security culture and awareness</p>
-            </div>
-
-            <div className="category-card" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-              <div className="category-icon">⚠️</div>
-              <h3>Disclaimer</h3>
-              <p>Important legal information</p>
-            </div>
+            {CATEGORIES.map((category) => (
+              <a
+                key={category.slug}
+                href={`/categories/${category.slug}`}
+                className="category-card"
+                style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.08)', textDecoration: 'none' }}
+              >
+                <div className="category-icon">{category.icon}</div>
+                <h3>{category.name}</h3>
+                <p>{category.description}</p>
+              </a>
+            ))}
           </div>
         </div>
       </div>
