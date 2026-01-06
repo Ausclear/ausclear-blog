@@ -264,7 +264,9 @@ export default async function HomePage() {
               padding: '1.25rem 3rem',
               fontSize: '1.1rem',
               display: 'inline-block',
-              boxShadow: '0 4px 12px rgba(0, 33, 71, 0.2)'
+              boxShadow: '0 4px 12px rgba(0, 33, 71, 0.2)',
+              maxWidth: '100%',
+              width: 'auto'
             }}>
               Browse All Categories →
             </Link>
