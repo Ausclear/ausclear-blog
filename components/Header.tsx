@@ -7,52 +7,79 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="bg-navy border-b-4 border-gold sticky top-0 z-50 shadow-lg">
-      <nav className="container-custom py-4">
+    <header style={{ background: 'var(--navy)', color: 'var(--white)', padding: '1rem 0', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+      <div className="container-custom">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex flex-col">
-            <span className="text-2xl md:text-3xl font-bold text-white tracking-wider">
-              AusClear
-            </span>
-            <span className="text-xs md:text-sm text-gold tracking-widest uppercase">
-              Knowledge Base
-            </span>
+          <Link
+            href="/"
+            style={{
+              fontSize: '1.5rem',
+              fontWeight: 700,
+              color: 'var(--white)',
+              textDecoration: 'none'
+            }}
+          >
+            AusClear Support
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <Link
-              href="/"
-              className="text-white hover:text-gold transition-colours duration-200 font-medium"
-            >
-              Home
-            </Link>
-            <Link
-              href="/categories"
-              className="text-white hover:text-gold transition-colours duration-200 font-medium"
-            >
-              Categories
-            </Link>
-            <Link
-              href="/search"
-              className="text-white hover:text-gold transition-colours duration-200 font-medium"
-            >
-              Search
-            </Link>
-            <Link
-              href="/request-introduction"
-              className="text-white hover:text-gold transition-colours duration-200 font-medium"
-            >
-              Request Introduction
-            </Link>
-            <Link
-              href="/contact"
-              className="bg-gold text-navy px-6 py-2 rounded-md hover:bg-yellow-600 transition-colours duration-200 font-semibold"
-            >
-              Contact Us
-            </Link>
-          </div>
+          <nav className="hidden md:block">
+            <ul style={{ listStyle: 'none', display: 'flex', gap: '2rem' }}>
+              <li>
+                <Link
+                  href="/"
+                  style={{
+                    color: 'var(--white)',
+                    textDecoration: 'none',
+                    fontWeight: 500,
+                    transition: 'color 0.3s'
+                  }}
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/categories"
+                  style={{
+                    color: 'var(--white)',
+                    textDecoration: 'none',
+                    fontWeight: 500,
+                    transition: 'color 0.3s'
+                  }}
+                >
+                  Categories
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/request-introduction"
+                  style={{
+                    color: 'var(--white)',
+                    textDecoration: 'none',
+                    fontWeight: 500,
+                    transition: 'color 0.3s'
+                  }}
+                >
+                  Request Introduction
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  style={{
+                    color: 'var(--white)',
+                    textDecoration: 'none',
+                    fontWeight: 500,
+                    transition: 'color 0.3s'
+                  }}
+                >
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </nav>
 
           {/* Mobile menu button */}
           <button
@@ -75,45 +102,48 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 space-y-4">
-            <Link
-              href="/"
-              className="block text-white hover:text-gold transition-colours duration-200 font-medium"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Home
-            </Link>
-            <Link
-              href="/categories"
-              className="block text-white hover:text-gold transition-colours duration-200 font-medium"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Categories
-            </Link>
-            <Link
-              href="/search"
-              className="block text-white hover:text-gold transition-colours duration-200 font-medium"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Search
-            </Link>
-            <Link
-              href="/request-introduction"
-              className="block text-white hover:text-gold transition-colours duration-200 font-medium"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Request Introduction
-            </Link>
-            <Link
-              href="/contact"
-              className="block bg-gold text-navy px-6 py-2 rounded-md hover:bg-yellow-600 transition-colours duration-200 font-semibold text-center"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Contact Us
-            </Link>
-          </div>
+          <nav className="md:hidden mt-4">
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.5rem', textAlign: 'center' }}>
+              <li>
+                <Link
+                  href="/"
+                  style={{ color: 'var(--white)', textDecoration: 'none', fontWeight: 500 }}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/categories"
+                  style={{ color: 'var(--white)', textDecoration: 'none', fontWeight: 500 }}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Categories
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/request-introduction"
+                  style={{ color: 'var(--white)', textDecoration: 'none', fontWeight: 500 }}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Request Introduction
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  style={{ color: 'var(--white)', textDecoration: 'none', fontWeight: 500 }}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </nav>
         )}
-      </nav>
+      </div>
     </header>
   )
 }

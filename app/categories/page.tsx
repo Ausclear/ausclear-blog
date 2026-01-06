@@ -1,6 +1,3 @@
-import { supabase } from '@/lib/supabase'
-import { CATEGORIES, Category } from '@/types'
-import CategoryCard from '@/components/CategoryCard'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -10,78 +7,92 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600
 
-async function getCategoriesWithCounts() {
-  const categoriesWithCounts: Category[] = []
-
-  for (const category of CATEGORIES) {
-    try {
-      const { count } = await supabase
-        .from('kb_documents')
-        .select('*', { count: 'exact', head: true })
-        .eq('category', category.slug)
-        .eq('published', true)
-
-      categoriesWithCounts.push({
-        ...category,
-        articleCount: count || 0,
-      })
-    } catch (error) {
-      // If Supabase is not configured, just add the category with count 0
-      categoriesWithCounts.push({
-        ...category,
-        articleCount: 0,
-      })
-    }
-  }
-
-  return categoriesWithCounts
-}
-
 export default async function CategoriesPage() {
-  const categories = await getCategoriesWithCounts()
-
   return (
-    <div className="py-12 bg-gray-50 min-h-screen">
+    <div style={{ padding: '3rem 0' }}>
       <div className="container-custom">
-        {/* Page Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-navy mb-4">
-            Knowledge Base Categories
-          </h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Explore our comprehensive collection of articles organised by topic.
-            Find everything you need to know about Australian security clearances.
-          </p>
+        <div className="section-title">
+          <h2>Browse by Category</h2>
+          <p>Select a clearance level or topic to view relevant articles</p>
         </div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((category) => (
-            <CategoryCard key={category.slug} category={category} />
-          ))}
-        </div>
+        <div className="category-grid">
+          <div className="category-card">
+            <div className="category-icon">📘</div>
+            <h3>AusClear Insights</h3>
+            <p>28 articles • Expert insights and industry updates</p>
+          </div>
 
-        {/* Help Section */}
-        <div className="mt-16 bg-white rounded-lg shadow-lg p-8 text-center">
-          <h2 className="text-2xl font-bold text-navy mb-4">
-            Can't Find What You're Looking For?
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Use our search feature or contact our team for personalised assistance
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="/search"
-              className="bg-navy text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-900 transition-colours inline-block"
-            >
-              Search Articles
-            </a>
-            <a
-              href="/contact"
-              className="bg-gold text-navy px-8 py-3 rounded-lg font-semibold hover:bg-yellow-600 transition-colours inline-block"
-            >
-              Contact Us
-            </a>
+          <div className="category-card">
+            <div className="category-icon">🔒</div>
+            <h3>Security Clearances</h3>
+            <p>15 articles • Comprehensive clearance information</p>
+          </div>
+
+          <div className="category-card">
+            <div className="category-icon">🏢</div>
+            <h3>AusClear</h3>
+            <p>11 articles • About our services and approach</p>
+          </div>
+
+          <div className="category-card">
+            <div className="category-icon">💰</div>
+            <h3>AGSVA Fees</h3>
+            <p>10 articles • Costs and pricing information</p>
+          </div>
+
+          <div className="category-card">
+            <div className="category-icon">❓</div>
+            <h3>FAQs</h3>
+            <p>9 articles • Frequently asked questions</p>
+          </div>
+
+          <div className="category-card">
+            <div className="category-icon">📄</div>
+            <h3>Summary Articles for Security Clearances</h3>
+            <p>9 articles • Quick reference summaries</p>
+          </div>
+
+          <div className="category-card">
+            <div className="category-icon">📝</div>
+            <h3>Application Process</h3>
+            <p>7 articles • Step-by-step application guides</p>
+          </div>
+
+          <div className="category-card">
+            <div className="category-icon">🛡️</div>
+            <h3>Cyber Security</h3>
+            <p>6 articles • Security awareness and best practices</p>
+          </div>
+
+          <div className="category-card">
+            <div className="category-icon">⚖️</div>
+            <h3>Policy and Regulations</h3>
+            <p>5 articles • Government policies and compliance</p>
+          </div>
+
+          <div className="category-card">
+            <div className="category-icon">📈</div>
+            <h3>Trends & Predictions</h3>
+            <p>4 articles • Industry trends and future outlook</p>
+          </div>
+
+          <div className="category-card">
+            <div className="category-icon">💼</div>
+            <h3>Careers & Opportunities as a Clearance Holder</h3>
+            <p>3 articles • Career opportunities for cleared personnel</p>
+          </div>
+
+          <div className="category-card">
+            <div className="category-icon">👁️</div>
+            <h3>Security Awareness</h3>
+            <p>3 articles • Security culture and awareness</p>
+          </div>
+
+          <div className="category-card">
+            <div className="category-icon">⚠️</div>
+            <h3>Disclaimer</h3>
+            <p>1 article • Important legal disclaimer</p>
           </div>
         </div>
       </div>
