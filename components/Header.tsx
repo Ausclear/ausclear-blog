@@ -7,7 +7,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header style={{ background: 'var(--navy)', color: 'var(--white)', padding: '1rem 0', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+    <header style={{ background: 'var(--header-navy)', color: 'var(--white)', padding: '1rem 0', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
       <div className="container-custom">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -81,18 +81,7 @@ export default function Header() {
             </ul>
             <Link
               href="/login"
-              style={{
-                background: 'var(--navy)',
-                color: 'var(--white)',
-                padding: '0.6rem 1.5rem',
-                borderRadius: '4px',
-                textDecoration: 'none',
-                fontWeight: 600,
-                fontSize: '0.95rem',
-                transition: 'all 0.3s',
-                boxShadow: '0 2px 8px rgba(0, 33, 71, 0.3)',
-                border: '2px solid var(--white)'
-              }}
+              className="header-login-btn"
             >
               Login
             </Link>
