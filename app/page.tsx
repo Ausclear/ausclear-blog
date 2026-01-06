@@ -199,14 +199,7 @@ export default async function HomePage() {
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-            <Link href="/categories" className="btn" style={{
-              padding: '1.25rem 3rem',
-              fontSize: '1.1rem',
-              display: 'inline-block',
-              boxShadow: '0 4px 12px rgba(0, 33, 71, 0.2)',
-              maxWidth: '100%',
-              width: 'auto'
-            }}>
+            <Link href="/categories" className="browse-categories-link">
               Browse All Categories →
             </Link>
           </div>
