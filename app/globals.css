@@ -269,7 +269,7 @@
   }
 
   .btn-outline:hover {
-    background: var(--navy);
+    background: #003a70;
     color: var(--white);
   }
 
