@@ -5,7 +5,7 @@ export default function Footer() {
 
   return (
     <footer style={{
-      background: 'var(--navy)',
+      background: 'var(--header-navy)',
       color: 'var(--white)',
       marginTop: '4rem',
       borderTop: '4px solid var(--gold)'
