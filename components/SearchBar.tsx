@@ -26,11 +26,11 @@ export default function SearchBar({ initialQuery = '' }: SearchBarProps) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search articles..."
-          className="w-full px-6 py-4 pr-12 text-lg rounded-lg border-2 border-gray-300 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+          className="w-full px-6 py-4 pr-12 text-lg rounded-lg border-2 border-gray-300 focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/20 transition-all"
         />
         <button
           type="submit"
-          className="absolute right-2 top-1/2 -translate-y-1/2 bg-gold text-navy px-6 py-2 rounded-md hover:bg-yellow-600 transition-colours font-semibold"
+          className="absolute right-2 top-1/2 -translate-y-1/2 bg-navy text-white px-6 py-2 rounded-md hover:opacity-90 transition-all font-semibold"
         >
           Search
         </button>

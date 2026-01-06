@@ -130,16 +130,10 @@ export default async function CategoriesPage() {
             }}>
               Search Articles
             </a>
-            <a href="/contact" style={{
-              background: 'var(--gold)',
-              color: 'var(--navy)',
+            <a href="/contact" className="btn" style={{
               padding: '1rem 2rem',
-              borderRadius: '4px',
-              fontWeight: 600,
-              textDecoration: 'none',
               display: 'inline-block',
-              boxShadow: '0 2px 8px rgba(184, 134, 11, 0.2)',
-              transition: 'all 0.3s'
+              boxShadow: '0 2px 8px rgba(0, 33, 71, 0.15)'
             }}>
               Contact Us
             </a>

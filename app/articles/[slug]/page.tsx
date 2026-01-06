@@ -214,7 +214,7 @@ export default async function ArticlePage({ params }: Props) {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/request-introduction"
-                className="bg-gold text-navy px-8 py-3 rounded-lg font-semibold hover:bg-yellow-600 transition-colours inline-block"
+                className="bg-navy text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-all inline-block"
               >
                 Request Introduction
               </Link>

@@ -96,7 +96,7 @@ export default async function SearchPage({ searchParams }: Props) {
                 </a>
                 <a
                   href="/contact"
-                  className="bg-gold text-navy px-8 py-3 rounded-lg font-semibold hover:bg-yellow-600 transition-colours inline-block"
+                  className="bg-navy text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-all inline-block"
                 >
                   Contact Us
                 </a>
@@ -116,7 +116,7 @@ export default async function SearchPage({ searchParams }: Props) {
                     className="flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 transition-colours group"
                   >
                     <span className="text-3xl mb-2">{category.icon}</span>
-                    <span className="text-sm text-center text-gray-700 group-hover:text-gold transition-colours">
+                    <span className="text-sm text-center text-gray-700 group-hover:text-navy transition-colours">
                       {category.name}
                     </span>
                   </a>
