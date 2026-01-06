@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Metadata } from 'next'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -26,21 +26,18 @@ export default function LoginPage() {
     setMessage(null)
 
     try {
-      // Here you would typically send the data to your backend
-      // For now, we'll just simulate a successful login
       await new Promise(resolve => setTimeout(resolve, 1000))
 
       setMessage({
         type: 'success',
-        text: 'Login successful! Redirecting...'
+        text: 'Login successful! Redirecting to your dashboard...'
       })
 
-      // Reset form
       setFormData({ name: '', email: '', clientNumber: '' })
     } catch (error) {
       setMessage({
         type: 'error',
-        text: 'Login failed. Please try again.'
+        text: 'Login failed. Please check your credentials and try again.'
       })
     } finally {
       setIsSubmitting(false)
@@ -48,34 +45,69 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ background: 'var(--light-grey)', minHeight: 'calc(100vh - 200px)', padding: '4rem 2rem' }}>
-      <div className="container-custom" style={{ maxWidth: '500px', margin: '0 auto' }}>
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h1 style={{ color: 'var(--navy)', fontSize: '2.5rem', marginBottom: '1rem', fontWeight: 700 }}>
-            Client Login
+    <div style={{
+      background: 'linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%)',
+      minHeight: 'calc(100vh - 200px)',
+      padding: '3rem 1.5rem'
+    }}>
+      <div className="container-custom" style={{ maxWidth: '520px', margin: '0 auto' }}>
+        {/* Header Section */}
+        <div style={{
+          textAlign: 'center',
+          marginBottom: '2.5rem'
+        }}>
+          <div style={{
+            width: '80px',
+            height: '80px',
+            background: 'linear-gradient(135deg, var(--navy) 0%, #003a70 100%)',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 1.5rem',
+            boxShadow: '0 4px 20px rgba(0, 33, 71, 0.3)'
+          }}>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </div>
+          <h1 style={{
+            color: 'var(--navy)',
+            fontSize: '2.25rem',
+            marginBottom: '0.75rem',
+            fontWeight: 700,
+            lineHeight: 1.2
+          }}>
+            Client Portal Login
           </h1>
-          <p style={{ color: 'var(--text-grey)', fontSize: '1.1rem' }}>
-            Access your AusClear client portal
+          <p style={{
+            color: 'var(--text-grey)',
+            fontSize: '1rem',
+            lineHeight: 1.6
+          }}>
+            Secure access to your AusClear account
           </p>
         </div>
 
-        {/* Login Form */}
+        {/* Login Card */}
         <div style={{
           background: 'white',
-          borderRadius: '8px',
-          padding: '3rem 2.5rem',
-          boxShadow: '0 2px 12px rgba(0,0,0,0.1)',
-          border: '1px solid var(--mid-grey)'
+          borderRadius: '12px',
+          padding: '2.5rem',
+          boxShadow: '0 10px 40px rgba(0,0,0,0.08)',
+          border: '1px solid rgba(0, 33, 71, 0.1)'
         }}>
           {message && (
             <div style={{
-              padding: '1rem',
-              borderRadius: '4px',
-              marginBottom: '1.5rem',
+              padding: '1rem 1.25rem',
+              borderRadius: '8px',
+              marginBottom: '1.75rem',
               background: message.type === 'success' ? '#d4edda' : '#f8d7da',
               color: message.type === 'success' ? '#155724' : '#721c24',
-              border: `1px solid ${message.type === 'success' ? '#c3e6cb' : '#f5c6cb'}`
+              border: `1px solid ${message.type === 'success' ? '#c3e6cb' : '#f5c6cb'}`,
+              fontSize: '0.95rem',
+              fontWeight: 500
             }}>
               {message.text}
             </div>
@@ -87,13 +119,14 @@ export default function LoginPage() {
                 htmlFor="name"
                 style={{
                   display: 'block',
-                  marginBottom: '0.5rem',
+                  marginBottom: '0.625rem',
                   color: 'var(--navy)',
                   fontWeight: 600,
-                  fontSize: '0.95rem'
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.3px'
                 }}
               >
-                Full Name *
+                FULL NAME
               </label>
               <input
                 type="text"
@@ -102,15 +135,16 @@ export default function LoginPage() {
                 required
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="John Smith"
+                placeholder="Enter your full name"
                 style={{
                   width: '100%',
-                  padding: '0.875rem 1rem',
-                  border: '2px solid var(--mid-grey)',
-                  borderRadius: '4px',
+                  padding: '0.875rem 1.125rem',
+                  border: '2px solid #e0e0e0',
+                  borderRadius: '8px',
                   fontSize: '1rem',
                   fontFamily: 'inherit',
-                  transition: 'border-color 0.3s'
+                  transition: 'all 0.3s',
+                  background: '#fafafa'
                 }}
                 className="form-input"
               />
@@ -121,13 +155,14 @@ export default function LoginPage() {
                 htmlFor="email"
                 style={{
                   display: 'block',
-                  marginBottom: '0.5rem',
+                  marginBottom: '0.625rem',
                   color: 'var(--navy)',
                   fontWeight: 600,
-                  fontSize: '0.95rem'
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.3px'
                 }}
               >
-                Email Address *
+                EMAIL ADDRESS
               </label>
               <input
                 type="email"
@@ -136,15 +171,16 @@ export default function LoginPage() {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="john.smith@example.com"
+                placeholder="your.email@example.com"
                 style={{
                   width: '100%',
-                  padding: '0.875rem 1rem',
-                  border: '2px solid var(--mid-grey)',
-                  borderRadius: '4px',
+                  padding: '0.875rem 1.125rem',
+                  border: '2px solid #e0e0e0',
+                  borderRadius: '8px',
                   fontSize: '1rem',
                   fontFamily: 'inherit',
-                  transition: 'border-color 0.3s'
+                  transition: 'all 0.3s',
+                  background: '#fafafa'
                 }}
                 className="form-input"
               />
@@ -155,13 +191,14 @@ export default function LoginPage() {
                 htmlFor="clientNumber"
                 style={{
                   display: 'block',
-                  marginBottom: '0.5rem',
+                  marginBottom: '0.625rem',
                   color: 'var(--navy)',
                   fontWeight: 600,
-                  fontSize: '0.95rem'
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.3px'
                 }}
               >
-                Client Number *
+                CLIENT NUMBER
               </label>
               <input
                 type="text"
@@ -175,20 +212,30 @@ export default function LoginPage() {
                 title="Format: Ind-12345-MS (3 letters, 5 numbers, 2 letters)"
                 style={{
                   width: '100%',
-                  padding: '0.875rem 1rem',
-                  border: '2px solid var(--mid-grey)',
-                  borderRadius: '4px',
+                  padding: '0.875rem 1.125rem',
+                  border: '2px solid #e0e0e0',
+                  borderRadius: '8px',
                   fontSize: '1rem',
                   fontFamily: 'inherit',
-                  transition: 'border-color 0.3s'
+                  transition: 'all 0.3s',
+                  background: '#fafafa',
+                  letterSpacing: '1px'
                 }}
                 className="form-input"
               />
               <p style={{
-                fontSize: '0.85rem',
-                color: 'var(--text-grey)',
-                marginTop: '0.5rem'
+                fontSize: '0.8rem',
+                color: '#6c757d',
+                marginTop: '0.625rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
               }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
                 Format: XXX-#####-XX (e.g., Ind-12345-MS)
               </p>
             </div>
@@ -196,69 +243,94 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isSubmitting}
+              className="btn btn-block btn-large"
               style={{
-                width: '100%',
-                padding: '1rem',
-                background: isSubmitting ? 'var(--mid-grey)' : 'var(--navy)',
+                background: isSubmitting ? '#ccc' : 'linear-gradient(135deg, var(--navy) 0%, #003a70 100%)',
                 color: 'white',
                 border: 'none',
-                borderRadius: '4px',
-                fontSize: '1.1rem',
+                borderRadius: '8px',
+                fontSize: '1.05rem',
                 fontWeight: 600,
                 cursor: isSubmitting ? 'not-allowed' : 'pointer',
                 transition: 'all 0.3s',
-                boxShadow: '0 2px 8px rgba(0, 33, 71, 0.2)'
+                boxShadow: isSubmitting ? 'none' : '0 4px 15px rgba(0, 33, 71, 0.3)',
+                padding: '1.125rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
               }}
             >
-              {isSubmitting ? 'Logging in...' : 'Login'}
+              {isSubmitting ? 'LOGGING IN...' : 'LOGIN TO PORTAL'}
             </button>
           </form>
 
           <div style={{
             marginTop: '2rem',
-            paddingTop: '1.5rem',
-            borderTop: '1px solid var(--mid-grey)',
+            paddingTop: '2rem',
+            borderTop: '2px solid #f0f0f0',
             textAlign: 'center'
           }}>
-            <p style={{ color: 'var(--text-grey)', fontSize: '0.9rem' }}>
-              Don't have a client number?{' '}
-              <a
-                href="/request-introduction"
-                style={{
-                  color: 'var(--gold)',
-                  fontWeight: 600,
-                  textDecoration: 'none'
-                }}
-              >
-                Request an introduction
-              </a>
+            <p style={{ color: '#6c757d', fontSize: '0.9rem', marginBottom: '0.75rem' }}>
+              Don't have a client number?
             </p>
+            <Link
+              href="/request-introduction"
+              style={{
+                color: 'var(--gold)',
+                fontWeight: 600,
+                textDecoration: 'none',
+                fontSize: '0.95rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                transition: 'all 0.3s'
+              }}
+            >
+              Request an introduction
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </Link>
           </div>
         </div>
 
-        {/* Help Section */}
+        {/* Support Section */}
         <div style={{
           marginTop: '2rem',
           textAlign: 'center',
-          padding: '1.5rem',
+          padding: '1.75rem',
           background: 'white',
-          borderRadius: '8px',
-          border: '1px solid var(--mid-grey)'
+          borderRadius: '12px',
+          border: '1px solid rgba(0, 33, 71, 0.1)',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.05)'
         }}>
-          <p style={{ color: 'var(--text-grey)', fontSize: '0.95rem', marginBottom: '0.5rem' }}>
-            Need help logging in?
+          <p style={{
+            color: '#6c757d',
+            fontSize: '0.9rem',
+            marginBottom: '0.875rem',
+            fontWeight: 500
+          }}>
+            Having trouble logging in?
           </p>
-          <a
+          <Link
             href="/contact"
+            className="btn btn-secondary"
             style={{
+              background: 'var(--gold)',
               color: 'var(--navy)',
-              fontWeight: 600,
               textDecoration: 'none',
-              fontSize: '1rem'
+              display: 'inline-block',
+              minWidth: '200px',
+              padding: '0.875rem 2rem',
+              borderRadius: '8px',
+              fontWeight: 600,
+              fontSize: '0.95rem',
+              boxShadow: '0 2px 10px rgba(184, 134, 11, 0.25)',
+              transition: 'all 0.3s'
             }}
           >
-            Contact Support →
-          </a>
+            Contact Support
+          </Link>
         </div>
       </div>
     </div>

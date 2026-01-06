@@ -264,7 +264,9 @@ export default async function HomePage() {
               padding: '1.25rem 3rem',
               fontSize: '1.1rem',
               display: 'inline-block',
-              boxShadow: '0 4px 12px rgba(0, 33, 71, 0.2)'
+              boxShadow: '0 4px 12px rgba(0, 33, 71, 0.2)',
+              maxWidth: '100%',
+              width: 'auto'
             }}>
               Browse All Categories →
             </Link>
@@ -286,34 +288,10 @@ export default async function HomePage() {
             Our team is ready to help you navigate your security clearance journey
           </p>
           <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/request-introduction" style={{
-              background: 'var(--gold)',
-              color: 'var(--navy)',
-              padding: '1.25rem 2.5rem',
-              borderRadius: '4px',
-              fontSize: '1.1rem',
-              fontWeight: 600,
-              textDecoration: 'none',
-              display: 'inline-block',
-              boxShadow: '0 4px 12px rgba(184, 134, 11, 0.3)',
-              minWidth: '240px',
-              textAlign: 'center'
-            }}>
+            <Link href="/request-introduction" className="btn btn-secondary btn-large">
               Request Introduction
             </Link>
-            <Link href="/contact" style={{
-              background: 'white',
-              color: 'var(--navy)',
-              padding: '1.25rem 2.5rem',
-              borderRadius: '4px',
-              fontSize: '1.1rem',
-              fontWeight: 600,
-              textDecoration: 'none',
-              display: 'inline-block',
-              boxShadow: '0 4px 12px rgba(255, 255, 255, 0.2)',
-              minWidth: '240px',
-              textAlign: 'center'
-            }}>
+            <Link href="/contact" className="btn btn-outline btn-large">
               Contact Us
             </Link>
           </div>
