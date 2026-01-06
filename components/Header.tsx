@@ -24,7 +24,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:block">
+          <nav className="hidden md:flex items-center gap-8">
             <ul style={{ listStyle: 'none', display: 'flex', gap: '2rem' }}>
               <li>
                 <Link
@@ -79,6 +79,22 @@ export default function Header() {
                 </Link>
               </li>
             </ul>
+            <Link
+              href="/login"
+              style={{
+                background: 'var(--gold)',
+                color: 'var(--navy)',
+                padding: '0.6rem 1.5rem',
+                borderRadius: '4px',
+                textDecoration: 'none',
+                fontWeight: 600,
+                fontSize: '0.95rem',
+                transition: 'all 0.3s',
+                boxShadow: '0 2px 8px rgba(184, 134, 11, 0.3)'
+              }}
+            >
+              Login
+            </Link>
           </nav>
 
           {/* Mobile menu button */}
@@ -138,6 +154,24 @@ export default function Header() {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Contact
+                </Link>
+              </li>
+              <li style={{ marginTop: '1rem' }}>
+                <Link
+                  href="/login"
+                  style={{
+                    background: 'var(--gold)',
+                    color: 'var(--navy)',
+                    padding: '0.75rem 2rem',
+                    borderRadius: '4px',
+                    textDecoration: 'none',
+                    fontWeight: 600,
+                    display: 'inline-block',
+                    boxShadow: '0 2px 8px rgba(184, 134, 11, 0.3)'
+                  }}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Login
                 </Link>
               </li>
             </ul>

@@ -1,6 +1,34 @@
 import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
+
+type Article = {
+  id: string
+  title: string
+  excerpt: string
+  slug: string
+  category: string
+}
 
 export default async function HomePage() {
+  // Fetch latest articles (most recent 3)
+  const { data: latestData } = await supabase
+    .from('kb_documents')
+    .select('id, title, excerpt, slug, category, created_at')
+    .eq('published', true)
+    .order('created_at', { ascending: false })
+    .limit(3)
+
+  const latestArticles = (latestData as Article[]) || []
+
+  // Fetch most popular articles (highest view count)
+  const { data: popularData } = await supabase
+    .from('kb_documents')
+    .select('id, title, excerpt, slug, category, view_count')
+    .eq('published', true)
+    .order('view_count', { ascending: false })
+    .limit(3)
+
+  const popularArticles = (popularData as Article[]) || []
   return (
     <div>
       {/* Hero Section */}
@@ -79,8 +107,152 @@ export default async function HomePage() {
         </div>
       </div>
 
+      {/* Latest Articles Section */}
+      {latestArticles && latestArticles.length > 0 && (
+        <div style={{ background: 'white', padding: '4rem 2rem' }}>
+          <div className="container-custom">
+            <div className="section-title">
+              <h2>Latest Articles</h2>
+              <p>Stay up to date with our newest content</p>
+            </div>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '2rem',
+              marginTop: '2rem'
+            }}>
+              {latestArticles.map((article) => (
+                <Link
+                  key={article.id}
+                  href={`/articles/${article.slug}`}
+                  style={{
+                    display: 'block',
+                    background: 'var(--light-grey)',
+                    borderRadius: '8px',
+                    padding: '2rem',
+                    textDecoration: 'none',
+                    border: '1px solid var(--mid-grey)',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                    transition: 'all 0.3s ease'
+                  }}
+                  className="article-card-hover"
+                >
+                  <div style={{
+                    fontSize: '0.85rem',
+                    color: 'var(--gold)',
+                    fontWeight: 600,
+                    marginBottom: '0.75rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    {article.category}
+                  </div>
+                  <h3 style={{
+                    color: 'var(--navy)',
+                    fontSize: '1.3rem',
+                    marginBottom: '1rem',
+                    fontWeight: 600,
+                    lineHeight: 1.4
+                  }}>
+                    {article.title}
+                  </h3>
+                  <p style={{
+                    color: 'var(--text-grey)',
+                    fontSize: '0.95rem',
+                    lineHeight: 1.6,
+                    marginBottom: '1rem'
+                  }}>
+                    {article.excerpt}
+                  </p>
+                  <div style={{
+                    color: 'var(--navy)',
+                    fontSize: '0.9rem',
+                    fontWeight: 600
+                  }}>
+                    Read more →
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Most Popular Articles Section */}
+      {popularArticles && popularArticles.length > 0 && (
+        <div style={{ background: 'var(--light-grey)', padding: '4rem 2rem' }}>
+          <div className="container-custom">
+            <div className="section-title">
+              <h2>Most Popular Articles</h2>
+              <p>Our most viewed and helpful content</p>
+            </div>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '2rem',
+              marginTop: '2rem'
+            }}>
+              {popularArticles.map((article) => (
+                <Link
+                  key={article.id}
+                  href={`/articles/${article.slug}`}
+                  style={{
+                    display: 'block',
+                    background: 'white',
+                    borderRadius: '8px',
+                    padding: '2rem',
+                    textDecoration: 'none',
+                    border: '1px solid var(--mid-grey)',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                    transition: 'all 0.3s ease'
+                  }}
+                  className="article-card-hover"
+                >
+                  <div style={{
+                    fontSize: '0.85rem',
+                    color: 'var(--gold)',
+                    fontWeight: 600,
+                    marginBottom: '0.75rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    {article.category}
+                  </div>
+                  <h3 style={{
+                    color: 'var(--navy)',
+                    fontSize: '1.3rem',
+                    marginBottom: '1rem',
+                    fontWeight: 600,
+                    lineHeight: 1.4
+                  }}>
+                    {article.title}
+                  </h3>
+                  <p style={{
+                    color: 'var(--text-grey)',
+                    fontSize: '0.95rem',
+                    lineHeight: 1.6,
+                    marginBottom: '1rem'
+                  }}>
+                    {article.excerpt}
+                  </p>
+                  <div style={{
+                    color: 'var(--navy)',
+                    fontSize: '0.9rem',
+                    fontWeight: 600
+                  }}>
+                    Read more →
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Categories Preview Section */}
-      <div style={{ background: 'var(--light-grey)', padding: '4rem 2rem' }}>
+      <div style={{ background: 'white', padding: '4rem 2rem' }}>
         <div className="container-custom">
           <div className="section-title">
             <h2>Explore by Topic</h2>
@@ -123,7 +295,9 @@ export default async function HomePage() {
               fontWeight: 600,
               textDecoration: 'none',
               display: 'inline-block',
-              boxShadow: '0 4px 12px rgba(184, 134, 11, 0.3)'
+              boxShadow: '0 4px 12px rgba(184, 134, 11, 0.3)',
+              minWidth: '240px',
+              textAlign: 'center'
             }}>
               Request Introduction
             </Link>
@@ -136,7 +310,9 @@ export default async function HomePage() {
               fontWeight: 600,
               textDecoration: 'none',
               display: 'inline-block',
-              boxShadow: '0 4px 12px rgba(255, 255, 255, 0.2)'
+              boxShadow: '0 4px 12px rgba(255, 255, 255, 0.2)',
+              minWidth: '240px',
+              textAlign: 'center'
             }}>
               Contact Us
             </Link>
