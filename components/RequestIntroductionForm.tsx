@@ -185,6 +185,8 @@ export default function RequestIntroductionForm() {
         >
           <option value="">Select clearance type</option>
           <option value="baseline">Baseline Vetting</option>
+          <option value="nv1">Negative Vetting Level 1 (NV1)</option>
+          <option value="nv2">Negative Vetting Level 2 (NV2)</option>
           <option value="not-sure">Not Sure</option>
         </select>
       </div>
