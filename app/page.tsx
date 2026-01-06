@@ -46,67 +46,6 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* Value Proposition Section */}
-      <div style={{ background: 'white', padding: '4rem 2rem' }}>
-        <div className="container-custom">
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '2rem',
-            maxWidth: '1000px',
-            margin: '0 auto'
-          }}>
-            <div style={{
-              textAlign: 'center',
-              padding: '2rem',
-              background: 'var(--light-grey)',
-              borderRadius: '8px',
-              border: '1px solid var(--mid-grey)'
-            }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📚</div>
-              <h3 style={{ color: 'var(--navy)', fontSize: '1.3rem', marginBottom: '0.5rem', fontWeight: 600 }}>
-                Comprehensive Resources
-              </h3>
-              <p style={{ color: 'var(--text-grey)', fontSize: '0.95rem' }}>
-                In-depth articles covering all aspects of Australian security clearances
-              </p>
-            </div>
-
-            <div style={{
-              textAlign: 'center',
-              padding: '2rem',
-              background: 'var(--light-grey)',
-              borderRadius: '8px',
-              border: '1px solid var(--mid-grey)'
-            }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✓</div>
-              <h3 style={{ color: 'var(--navy)', fontSize: '1.3rem', marginBottom: '0.5rem', fontWeight: 600 }}>
-                Expert Guidance
-              </h3>
-              <p style={{ color: 'var(--text-grey)', fontSize: '0.95rem' }}>
-                Professional insights to navigate your clearance journey with confidence
-              </p>
-            </div>
-
-            <div style={{
-              textAlign: 'center',
-              padding: '2rem',
-              background: 'var(--light-grey)',
-              borderRadius: '8px',
-              border: '1px solid var(--mid-grey)'
-            }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔒</div>
-              <h3 style={{ color: 'var(--navy)', fontSize: '1.3rem', marginBottom: '0.5rem', fontWeight: 600 }}>
-                Up-to-Date Information
-              </h3>
-              <p style={{ color: 'var(--text-grey)', fontSize: '0.95rem' }}>
-                Current, accurate information on clearance requirements and processes
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Latest Articles Section */}
       {latestArticles && latestArticles.length > 0 && (
         <div style={{ background: 'white', padding: '4rem 2rem' }}>
