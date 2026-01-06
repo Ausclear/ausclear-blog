@@ -258,8 +258,8 @@
   }
 
   .btn-secondary {
-    background: var(--gold);
-    color: var(--navy);
+    background: var(--navy);
+    color: var(--white);
   }
 
   .btn-outline {
@@ -277,6 +277,19 @@
     padding: 1.25rem 2.5rem;
     font-size: 1.1rem;
     min-width: 240px;
+  }
+
+  .browse-categories-link {
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+  }
+
+  .browse-categories-link:hover {
+    color: #003a70;
+    text-decoration: underline;
   }
 
   @media (max-width: 768px) {

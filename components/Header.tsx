@@ -82,15 +82,16 @@ export default function Header() {
             <Link
               href="/login"
               style={{
-                background: 'var(--gold)',
-                color: 'var(--navy)',
+                background: 'var(--navy)',
+                color: 'var(--white)',
                 padding: '0.6rem 1.5rem',
                 borderRadius: '4px',
                 textDecoration: 'none',
                 fontWeight: 600,
                 fontSize: '0.95rem',
                 transition: 'all 0.3s',
-                boxShadow: '0 2px 8px rgba(184, 134, 11, 0.3)'
+                boxShadow: '0 2px 8px rgba(0, 33, 71, 0.3)',
+                border: '2px solid var(--white)'
               }}
             >
               Login

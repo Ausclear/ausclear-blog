@@ -316,17 +316,17 @@ export default function LoginPage() {
             href="/contact"
             className="btn btn-secondary"
             style={{
-              background: 'var(--gold)',
-              color: 'var(--navy)',
               textDecoration: 'none',
               display: 'inline-block',
-              minWidth: '200px',
-              padding: '0.875rem 2rem',
+              minWidth: '240px',
+              padding: '1.125rem',
               borderRadius: '8px',
               fontWeight: 600,
-              fontSize: '0.95rem',
-              boxShadow: '0 2px 10px rgba(184, 134, 11, 0.25)',
-              transition: 'all 0.3s'
+              fontSize: '1.05rem',
+              boxShadow: '0 4px 15px rgba(0, 33, 71, 0.3)',
+              transition: 'all 0.3s',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px'
             }}
           >
             Contact Support
