@@ -2,10 +2,17 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Article } from '@/types'
+
+type RelatedArticle = {
+  id: string
+  title: string
+  slug: string
+  excerpt: string
+  category: string
+}
 
 interface RelatedArticlesProps {
-  articles: Article[]
+  articles: RelatedArticle[]
 }
 
 export default function RelatedArticles({ articles }: RelatedArticlesProps) {
