@@ -9,28 +9,50 @@ type Article = {
   category: string
 }
 
-// Sanitise content by ONLY removing garbage that appears as plain text
+// Sanitise content - remove ALL garbage
 function sanitiseContent(content: string): string {
   if (!content) return ''
   
   let cleaned = content
-  cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, '')
-  cleaned = cleaned.replace(/<script[\s\S]*?<\/script>/gi, '')
-  cleaned = cleaned.replace(/<meta[\s\S]*?>/gi, '')
-  cleaned = cleaned.replace(/\*\s*\{[\s\S]*?\}\s*body\s*\{[\s\S]*?\}/i, '')
-  cleaned = cleaned.trim()
   
+  // Remove HTML comments
+  cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, '')
+  
+  // Remove script tags  
+  cleaned = cleaned.replace(/<script[\s\S]*?<\/script>/gi, '')
+  
+  // Remove style tags (but keep inline styles)
+  cleaned = cleaned.replace(/<style[\s\S]*?<\/style>/gi, '')
+  
+  // Remove meta tags
+  cleaned = cleaned.replace(/<meta[\s\S]*?>/gi, '')
+  
+  // Remove CSS text patterns
+  cleaned = cleaned.replace(/\/\*[\s\S]*?\*\//g, '') // Remove CSS comments
+  cleaned = cleaned.replace(/\.[a-z\-]+\s*\{[^}]+\}/gi, '') // Remove CSS rules
+  cleaned = cleaned.replace(/\*\s*\{[\s\S]*?\}/gi, '') // Remove universal selector CSS
+  
+  cleaned = cleaned.trim()
   return cleaned
 }
 
-// Remove the TOC that's embedded in the article HTML
-function removeEmbeddedTOC(content: string): string {
+// Remove embedded sections from article HTML
+function removeEmbeddedSections(content: string): string {
   if (!content) return ''
   
   let cleaned = content
-  cleaned = cleaned.replace(/<div[^>]*class="[^"]*table-of-contents[^"]*"[^>]*>[\s\S]*?<\/div>/gi, '')
-  cleaned = cleaned.replace(/<(?:div|section)[^>]*>[\s\S]*?(?:on this page|table of contents)[\s\S]*?<\/(?:div|section)>/gi, '')
-  cleaned = cleaned.replace(/<nav[^>]*>[\s\S]*?(?:on this page|table of contents)[\s\S]*?<\/nav>/gi, '')
+  
+  // Remove "On this page" / TOC sections
+  cleaned = cleaned.replace(/<(?:div|section|nav)[^>]*>[\s\S]*?(?:on this page|table of contents)[\s\S]*?<\/(?:div|section|nav)>/gi, '')
+  
+  // Remove "Key Takeaways" sections
+  cleaned = cleaned.replace(/<(?:div|section)[^>]*>[\s\S]*?key takeaways[\s\S]*?<\/(?:div|section)>/gi, '')
+  
+  // Remove "Contact" sections
+  cleaned = cleaned.replace(/<(?:div|section)[^>]*>[\s\S]*?(?:contact ausclear|phone:|email:|website:)[\s\S]*?<\/(?:div|section)>/gi, '')
+  
+  // Remove any divs with class containing "toc"
+  cleaned = cleaned.replace(/<(?:div|nav)[^>]*class="[^"]*toc[^"]*"[^>]*>[\s\S]*?<\/(?:div|nav)>/gi, '')
   
   return cleaned
 }
@@ -48,7 +70,7 @@ export default async function HomePage() {
   // Generate excerpt from content and ensure slug exists
   const latestArticles = (latestData || []).map((article: any) => {
     let cleanContent = sanitiseContent(article.content || '')
-    cleanContent = removeEmbeddedTOC(cleanContent)
+    cleanContent = removeEmbeddedSections(cleanContent)
     
     // Extract excerpt from first paragraph
     let excerpt = ''
@@ -77,7 +99,7 @@ export default async function HomePage() {
 
   const popularArticles = (popularData || []).map((article: any) => {
     let cleanContent = sanitiseContent(article.content || '')
-    cleanContent = removeEmbeddedTOC(cleanContent)
+    cleanContent = removeEmbeddedSections(cleanContent)
     
     // Extract excerpt from first paragraph
     let excerpt = ''
