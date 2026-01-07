@@ -10,7 +10,7 @@ type Props = {
   params: { slug: string }
 }
 
-// Sanitise content by removing HTML comments and script tags
+// Sanitise content by removing meta tags, scripts, comments, and CSS that appear as TEXT
 function sanitiseContent(content: string): string {
   if (!content) return ''
   
@@ -19,11 +19,26 @@ function sanitiseContent(content: string): string {
   // Remove HTML comments
   cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, '')
   
-  // Remove script tags and their content
+  // Remove script tags and their content  
   cleaned = cleaned.replace(/<script[\s\S]*?<\/script>/gi, '')
   
-  // Remove any remaining meta tags that might have slipped through
+  // Remove style tags and their content
+  cleaned = cleaned.replace(/<style[\s\S]*?<\/style>/gi, '')
+  
+  // Remove meta tags
   cleaned = cleaned.replace(/<meta[\s\S]*?>/gi, '')
+  
+  // Remove the CSS garbage that appears as plain text
+  // This pattern matches: "* { margin: 0; ... } body { font-family: ... }" etc
+  cleaned = cleaned.replace(/\*\s*\{[\s\S]*?\}\s*body\s*\{[\s\S]*?\}/i, '')
+  
+  // If there's still garbage before the first proper HTML tag, remove it
+  // Find the first occurrence of a content tag like <div, <p, <h1, <h2, <section, <article, etc
+  const firstTagMatch = cleaned.match(/<(div|p|h[1-6]|section|article|main|header|ul|ol|table|blockquote)/i)
+  if (firstTagMatch && firstTagMatch.index && firstTagMatch.index > 0) {
+    // Remove everything before the first proper HTML tag
+    cleaned = cleaned.substring(firstTagMatch.index)
+  }
   
   // Trim whitespace
   cleaned = cleaned.trim()
@@ -61,16 +76,15 @@ async function getArticle(slug: string): Promise<Article | null> {
     return null
   }
 
-  // Cast to any to avoid TypeScript issues
   const rawData: any = data
 
-  // Sanitise the content (remove meta tags, scripts, comments ONLY)
+  // Sanitise the content
   const cleanContent = sanitiseContent(rawData.content || '')
 
   const article: Article = {
     ...rawData,
     content: cleanContent,
-    excerpt: cleanContent ? cleanContent.substring(0, 200).replace(/<[^>]*>/g, '') + '...' : '',
+    excerpt: cleanContent ? cleanContent.substring(0, 200).replace(/<[^>]*>/g, '').trim() + '...' : '',
     slug: rawData.slug || rawData.id,
     view_count: 0,
     author: null,
@@ -95,14 +109,13 @@ async function getRelatedArticles(categorySlug: string, currentArticleId: string
 
   if (!data) return []
 
-  // Cast to any to avoid TypeScript issues
   return data.map((article: any) => {
     const cleanContent = sanitiseContent(article.content || '')
     return {
       id: article.id,
       title: article.title,
       slug: article.slug || article.id,
-      excerpt: cleanContent ? cleanContent.substring(0, 150).replace(/<[^>]*>/g, '') + '...' : '',
+      excerpt: cleanContent ? cleanContent.substring(0, 150).replace(/<[^>]*>/g, '').trim() + '...' : '',
       category: article.category
     }
   })
@@ -151,7 +164,7 @@ export default async function ArticlePage({ params }: Props) {
   return (
     <div className="py-12 bg-gray-50 min-h-screen">
       <div className="container-custom">
-        <div className="max-w-7xl mx-auto">{/* Wider for TOC layout */}
+        <div className="max-w-7xl mx-auto">
           {/* Breadcrumb */}
           <nav className="text-sm mb-8">
             <ol className="flex items-center space-x-2 text-gray-600 flex-wrap">
@@ -184,7 +197,7 @@ export default async function ArticlePage({ params }: Props) {
             </ol>
           </nav>
 
-          {/* Article Header */}
+          {/* Article */}
           <article className="bg-white rounded-lg shadow-lg overflow-hidden">
             <div className="p-8 md:p-12 border-t-4 border-gold">
               {/* Meta Information */}
@@ -199,37 +212,32 @@ export default async function ArticlePage({ params }: Props) {
                   </Link>
                 )}
                 <span className="text-sm text-gray-500">{formattedDate}</span>
-                {article.view_count > 0 && (
-                  <span className="text-sm text-gray-500">
-                    {article.view_count} {article.view_count === 1 ? 'view' : 'views'}
-                  </span>
-                )}
               </div>
 
-              {/* Title */}
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-navy mb-6 leading-tight">
-                {article.title}
-              </h1>
-
-              {/* Excerpt */}
-              {article.excerpt && (
-                <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                  {article.excerpt}
-                </p>
-              )}
-
-              {/* Author */}
-              {article.author && (
-                <div className="flex items-center gap-2 text-sm text-gray-600 mb-8 pb-8 border-b border-gray-200">
-                  <span className="font-medium">By {article.author}</span>
-                </div>
-              )}
-
-              {/* Content */}
+              {/* Content - renders with native Zoho TOC */}
               <div
                 className="prose prose-lg max-w-none prose-headings:text-navy prose-a:text-gold hover:prose-a:text-navy prose-strong:text-navy"
                 dangerouslySetInnerHTML={{ __html: article.content }}
               />
+
+              {/* Feedback Buttons */}
+              <div className="mt-12 pt-8 border-t border-gray-200">
+                <p className="text-sm font-semibold text-gray-700 mb-4">Was this article helpful?</p>
+                <div className="flex gap-4">
+                  <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colours">
+                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                    </svg>
+                    <span className="text-sm font-medium">Yes</span>
+                  </button>
+                  <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colours">
+                    <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5" />
+                    </svg>
+                    <span className="text-sm font-medium">No</span>
+                  </button>
+                </div>
+              </div>
 
               {/* Tags */}
               {article.tags && article.tags.length > 0 && (
