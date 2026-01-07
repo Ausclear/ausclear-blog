@@ -70,7 +70,6 @@ export default async function HomePage() {
   // Generate excerpt from content and ensure slug exists
   const latestArticles = (latestData || []).map((article: any) => {
     let cleanContent = sanitiseContent(article.content || '')
-    cleanContent = removeEmbeddedSections(cleanContent)
     
     // Extract excerpt from first paragraph
     let excerpt = ''
@@ -99,7 +98,6 @@ export default async function HomePage() {
 
   const popularArticles = (popularData || []).map((article: any) => {
     let cleanContent = sanitiseContent(article.content || '')
-    cleanContent = removeEmbeddedSections(cleanContent)
     
     // Extract excerpt from first paragraph
     let excerpt = ''
