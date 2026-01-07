@@ -20,7 +20,7 @@ export default async function HomePage() {
     .limit(3)
 
   // Generate excerpt from content and ensure slug exists
-  const latestArticles = (latestData || []).map(article => ({
+  const latestArticles = (latestData || []).map((article: any) => ({
     id: article.id,
     title: article.title,
     excerpt: article.content ? article.content.substring(0, 150) + '...' : '',
@@ -37,7 +37,7 @@ export default async function HomePage() {
     .order('created_at', { ascending: false })
     .range(3, 5) // Get articles 4-6 to avoid duplicates with latest
 
-  const popularArticles = (popularData || []).map(article => ({
+  const popularArticles = (popularData || []).map((article: any) => ({
     id: article.id,
     title: article.title,
     excerpt: article.content ? article.content.substring(0, 150) + '...' : '',
