@@ -202,16 +202,6 @@ export default async function HomePage() {
         </div>
       )}
 
-      <style jsx>{`
-        .article-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
-        .article-card:hover h3 {
-          color: var(--gold);
-        }
-      `}</style>
-
       {/* Most Popular Articles Section */}
       {popularArticles && popularArticles.length > 0 && (
         <div style={{ background: 'var(--light-grey)', padding: '4rem 2rem' }}>
@@ -329,4 +319,5 @@ export default async function HomePage() {
     </div>
   )
 }
+
 
