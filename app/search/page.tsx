@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase'
-import ArticleCard from '@/components/ArticleCard'
+import ArticleListView from '@/components/ArticleListView'
 import SearchBar from '@/components/SearchBar'
 import { Metadata } from 'next'
 import { CATEGORIES, Article } from '@/types'
@@ -132,11 +132,7 @@ export default async function SearchPage({ searchParams }: Props) {
         {/* Search Results */}
         {query.trim() ? (
           results.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {results.map((article) => (
-                <ArticleCard key={article.id} article={article} />
-              ))}
-            </div>
+            <ArticleListView articles={results} title="" />
           ) : (
             <div className="bg-white rounded-lg shadow-md p-12 text-center max-w-2xl mx-auto">
               <svg
