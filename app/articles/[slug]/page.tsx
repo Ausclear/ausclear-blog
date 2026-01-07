@@ -41,19 +41,28 @@ function removeEmbeddedSections(content: string): string {
   
   let cleaned = content
   
-  // Remove the ENTIRE <aside class="sidebar"> section (this contains "On This Page" TOC)
-  // This is the exact pattern from Zoho articles
+  // Remove the ENTIRE <aside class="sidebar"> section
   cleaned = cleaned.replace(/<aside\s+class="sidebar">[\s\S]*?<\/aside>/gi, '')
   
   // Remove smooth scroll script at the very end
   cleaned = cleaned.replace(/<script>[\s\S]*?<\/script>\s*$/gi, '')
   
   // Remove the layout wrapper divs that create two-column grid
-  // Remove: <div class="container"> and <div class="layout">
   cleaned = cleaned.replace(/<div\s+class="container">\s*<div\s+class="layout">/gi, '')
-  
-  // Remove closing </div></div> at the end (for layout and container)
   cleaned = cleaned.replace(/<\/div>\s*<\/div>\s*$/gi, '')
+  
+  // AGGRESSIVE: Remove "On This Page" / "Quick Reference" sections
+  // Pattern: h2-h6 heading containing the text + following ul/div until next heading
+  cleaned = cleaned.replace(/<h[2-6][^>]*>[\s\S]*?(On This Page|On this page|Quick Reference|Table of Contents|Contents)[\s\S]*?<\/h[2-6]>[\s\S]*?(<ul[\s\S]*?<\/ul>|<ol[\s\S]*?<\/ol>)/gi, '')
+  
+  // Remove any <nav> elements (often used for TOC)
+  cleaned = cleaned.replace(/<nav[^>]*>[\s\S]*?<\/nav>/gi, '')
+  
+  // Remove standalone TOC headings without following content
+  cleaned = cleaned.replace(/<h[2-6][^>]*>[\s\S]*?(On this page|Quick Reference|Table of Contents)[\s\S]*?<\/h[2-6]>/gi, '')
+  
+  // Remove "Key Takeaways" sections
+  cleaned = cleaned.replace(/<(?:div|section)[^>]*>[\s\S]*?Key Takeaways[\s\S]*?<\/(?:div|section)>/gi, '')
   
   return cleaned
 }
@@ -218,7 +227,7 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <div className="py-12 bg-gray-50 min-h-screen">
-      <div className="container-custom">
+      <div className="px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Breadcrumb */}
           <nav className="text-sm mb-8">
@@ -252,12 +261,36 @@ export default async function ArticlePage({ params }: Props) {
             </ol>
           </nav>
 
-          {/* Two-column layout - wider content area */}
+          {/* Two-column layout - full width on mobile, sidebar on desktop */}
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-8">
             {/* Article Column */}
-            <div>
+            <div className="min-w-0">{/* min-w-0 prevents grid blowout */}
               <article className="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div className="p-8 md:p-12 border-t-4 border-gold">
+                <div className="p-4 md:p-8 lg:p-12 border-t-4 border-gold">
+                  {/* Mobile TOC - Collapsible */}
+                  {tocHeadings.length > 0 && (
+                    <details className="lg:hidden mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                      <summary className="font-bold text-navy cursor-pointer flex items-center justify-between">
+                        <span>📑 Table of Contents</span>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </summary>
+                      <nav className="mt-4 space-y-2 pl-2">
+                        {tocHeadings.map((heading) => (
+                          <a
+                            key={heading.id}
+                            href={`#${heading.id}`}
+                            className="block text-sm hover:text-gold transition-colours leading-relaxed font-medium text-gray-800 no-underline py-1"
+                            style={{ textDecoration: 'none' }}
+                          >
+                            {heading.text}
+                          </a>
+                        ))}
+                      </nav>
+                    </details>
+                  )}
+                  
                   {/* Meta Information */}
                   <div className="flex flex-wrap items-center gap-4 mb-6">
                     {category && (
