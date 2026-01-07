@@ -171,7 +171,8 @@ export default async function HomePage() {
                     fontSize: '1.25rem',
                     fontWeight: 700,
                     marginBottom: '0.75rem',
-                    lineHeight: 1.4
+                    lineHeight: 1.4,
+                    transition: 'color 0.3s ease'
                   }}>
                     {article.title}
                   </h3>
@@ -197,28 +198,19 @@ export default async function HomePage() {
                 </Link>
               ))}
             </div>
-
-            <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-              <Link
-                href="/categories"
-                className="cta-button"
-                style={{
-                  display: 'inline-block',
-                  background: 'var(--navy)',
-                  color: 'white',
-                  padding: '0.75rem 2rem',
-                  borderRadius: '6px',
-                  textDecoration: 'none',
-                  fontWeight: 600,
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                Browse All Categories
-              </Link>
-            </div>
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        .article-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .article-card:hover h3 {
+          color: var(--gold);
+        }
+      `}</style>
 
       {/* Most Popular Articles Section */}
       {popularArticles && popularArticles.length > 0 && (
