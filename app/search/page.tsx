@@ -22,7 +22,10 @@ function sanitiseContent(content: string): string {
   let cleaned = content
   cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, '')
   cleaned = cleaned.replace(/<script[\s\S]*?<\/script>/gi, '')
+  cleaned = cleaned.replace(/<style[\s\S]*?<\/style>/gi, '')
   cleaned = cleaned.replace(/<meta[\s\S]*?>/gi, '')
+  cleaned = cleaned.replace(/\*\s*\{[^}]*\}/g, '')
+  cleaned = cleaned.replace(/body\s*\{[^}]*\}/g, '')
   cleaned = cleaned.trim()
   
   return cleaned
