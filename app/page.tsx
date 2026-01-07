@@ -288,7 +288,10 @@ export default async function HomePage() {
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-            <Link href="/categories" className="browse-categories-link">
+            <Link 
+              href="/categories" 
+              className="inline-block bg-gold text-navy px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-all"
+            >
               Browse All Categories →
             </Link>
           </div>
