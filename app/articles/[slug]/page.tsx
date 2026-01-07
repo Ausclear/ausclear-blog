@@ -245,7 +245,6 @@ export default async function ArticlePage({ params }: Props) {
                     <p className="text-sm font-semibold text-gray-700 mb-4">Was this article helpful?</p>
                     <div className="flex gap-4">
                       <button 
-                        onClick={() => alert('Thank you for your feedback!')}
                         className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-green-50 hover:border-green-600 transition-colours cursor-pointer"
                       >
                         <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -254,7 +253,6 @@ export default async function ArticlePage({ params }: Props) {
                         <span className="text-sm font-medium">Yes</span>
                       </button>
                       <button 
-                        onClick={() => alert('Thank you for your feedback. We\'ll work to improve this article.')}
                         className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-red-50 hover:border-red-600 transition-colours cursor-pointer"
                       >
                         <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
