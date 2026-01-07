@@ -372,3 +372,4 @@ export default async function ArticlePage({ params }: Props) {
     </div>
   )
 }
+// Force Vercel sync: Wed Jan  7 02:46:58 UTC 2026
