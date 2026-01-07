@@ -31,22 +31,6 @@ function sanitiseContent(content: string): string {
   return cleaned
 }
 
-// Extract headings from HTML content for TOC
-function extractHeadings(content: string): Array<{ id: string; text: string; level: number }> {
-  const headings: Array<{ id: string; text: string; level: number }> = []
-  const headingRegex = /<h([2-3])[^>]*>(.*?)<\/h\1>/gi
-  let match
-  
-  while ((match = headingRegex.exec(content)) !== null) {
-    const level = parseInt(match[1])
-    const text = match[2].replace(/<[^>]*>/g, '').trim()
-    const id = text.toLowerCase().replace(/[^\w]+/g, '-')
-    headings.push({ id, text, level })
-  }
-  
-  return headings
-}
-
 async function getArticle(slug: string): Promise<Article | null> {
   // Try to find by slug first
   let { data, error } = await supabase
@@ -80,14 +64,8 @@ async function getArticle(slug: string): Promise<Article | null> {
   // Cast to any to avoid TypeScript issues
   const rawData: any = data
 
-  // Sanitise the content
-  let cleanContent = sanitiseContent(rawData.content || '')
-  
-  // Add IDs to headings for TOC anchors
-  cleanContent = cleanContent.replace(/<h([2-3])>(.*?)<\/h\1>/gi, (match, level, text) => {
-    const id = text.replace(/<[^>]*>/g, '').trim().toLowerCase().replace(/[^\w]+/g, '-')
-    return `<h${level} id="${id}">${text}</h${level}>`
-  })
+  // Sanitise the content (remove meta tags, scripts, comments ONLY)
+  const cleanContent = sanitiseContent(rawData.content || '')
 
   const article: Article = {
     ...rawData,
@@ -169,9 +147,6 @@ export default async function ArticlePage({ params }: Props) {
     month: 'long',
     day: 'numeric',
   })
-  
-  // Extract TOC headings
-  const tocHeadings = extractHeadings(article.content)
 
   return (
     <div className="py-12 bg-gray-50 min-h-screen">
@@ -209,12 +184,8 @@ export default async function ArticlePage({ params }: Props) {
             </ol>
           </nav>
 
-          {/* Two-column layout: Article content + TOC */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
-            {/* Article Content */}
-            <div>
-              {/* Article Header */}
-              <article className="bg-white rounded-lg shadow-lg overflow-hidden">
+          {/* Article Header */}
+          <article className="bg-white rounded-lg shadow-lg overflow-hidden">
             <div className="p-8 md:p-12 border-t-4 border-gold">
               {/* Meta Information */}
               <div className="flex flex-wrap items-center gap-4 mb-6">
@@ -278,32 +249,6 @@ export default async function ArticlePage({ params }: Props) {
               )}
             </div>
           </article>
-          </div>{/* End article content column */}
-
-          {/* Sticky TOC Sidebar */}
-          {tocHeadings.length > 0 && (
-            <aside className="hidden lg:block">
-              <div className="sticky top-24">
-                <div className="bg-white rounded-lg shadow-md p-6">
-                  <h3 className="text-sm font-bold text-navy mb-4">On this page</h3>
-                  <nav className="space-y-2">
-                    {tocHeadings.map((heading) => (
-                      <a
-                        key={heading.id}
-                        href={`#${heading.id}`}
-                        className={`block text-sm hover:text-gold transition-colours ${
-                          heading.level === 3 ? 'pl-4 text-gray-600' : 'font-medium text-gray-700'
-                        }`}
-                      >
-                        {heading.text}
-                      </a>
-                    ))}
-                  </nav>
-                </div>
-              </div>
-            </aside>
-          )}
-          </div>{/* End two-column grid */}
 
           {/* Related Articles */}
           {relatedArticles.length > 0 && (
