@@ -46,6 +46,13 @@ function removeEmbeddedSections(content: string): string {
   // Remove smooth scroll script at the very end
   cleaned = cleaned.replace(/<script>[\s\S]*?<\/script>\s*$/gi, '')
   
+  // Remove the layout wrapper divs that create two-column grid
+  // Remove: <div class="container"> and <div class="layout">
+  cleaned = cleaned.replace(/<div\s+class="container">\s*<div\s+class="layout">/gi, '')
+  
+  // Remove closing </div></div> at the end (for layout and container)
+  cleaned = cleaned.replace(/<\/div>\s*<\/div>\s*$/gi, '')
+  
   return cleaned
 }
 
