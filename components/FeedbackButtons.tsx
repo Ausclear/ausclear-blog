@@ -3,13 +3,13 @@
 import { useState } from 'react'
 
 interface FeedbackButtonsProps {
-  articleId: string
+  articleId?: string
   initialHelpfulCount?: number
   initialNotHelpfulCount?: number
 }
 
 export default function FeedbackButtons({ 
-  articleId, 
+  articleId = 'unknown', 
   initialHelpfulCount = 0, 
   initialNotHelpfulCount = 0 
 }: FeedbackButtonsProps) {
