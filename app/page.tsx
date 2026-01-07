@@ -9,18 +9,28 @@ type Article = {
   category: string
 }
 
-// Sanitise content by removing HTML comments and script tags
+// Sanitise content by ONLY removing garbage that appears as plain text
 function sanitiseContent(content: string): string {
   if (!content) return ''
   
   let cleaned = content
   cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, '')
   cleaned = cleaned.replace(/<script[\s\S]*?<\/script>/gi, '')
-  cleaned = cleaned.replace(/<style[\s\S]*?<\/style>/gi, '')
   cleaned = cleaned.replace(/<meta[\s\S]*?>/gi, '')
-  cleaned = cleaned.replace(/\*\s*\{[^}]*\}/g, '')
-  cleaned = cleaned.replace(/body\s*\{[^}]*\}/g, '')
+  cleaned = cleaned.replace(/\*\s*\{[\s\S]*?\}\s*body\s*\{[\s\S]*?\}/i, '')
   cleaned = cleaned.trim()
+  
+  return cleaned
+}
+
+// Remove the TOC that's embedded in the article HTML
+function removeEmbeddedTOC(content: string): string {
+  if (!content) return ''
+  
+  let cleaned = content
+  cleaned = cleaned.replace(/<div[^>]*class="[^"]*table-of-contents[^"]*"[^>]*>[\s\S]*?<\/div>/gi, '')
+  cleaned = cleaned.replace(/<(?:div|section)[^>]*>[\s\S]*?(?:on this page|table of contents)[\s\S]*?<\/(?:div|section)>/gi, '')
+  cleaned = cleaned.replace(/<nav[^>]*>[\s\S]*?(?:on this page|table of contents)[\s\S]*?<\/nav>/gi, '')
   
   return cleaned
 }
@@ -37,11 +47,20 @@ export default async function HomePage() {
 
   // Generate excerpt from content and ensure slug exists
   const latestArticles = (latestData || []).map((article: any) => {
-    const cleanContent = sanitiseContent(article.content || '')
+    let cleanContent = sanitiseContent(article.content || '')
+    cleanContent = removeEmbeddedTOC(cleanContent)
+    
+    // Extract excerpt from first paragraph
+    let excerpt = ''
+    const paragraphMatch = cleanContent.match(/<p[^>]*>(.*?)<\/p>/i)
+    if (paragraphMatch) {
+      excerpt = paragraphMatch[1].replace(/<[^>]*>/g, '').trim().substring(0, 150) + '...'
+    }
+    
     return {
       id: article.id,
       title: article.title,
-      excerpt: cleanContent ? cleanContent.substring(0, 150).replace(/<[^>]*>/g, '') + '...' : '',
+      excerpt: excerpt || cleanContent.substring(0, 150).replace(/<[^>]*>/g, '').trim() + '...',
       slug: article.slug || article.id,
       category: article.category
     }
@@ -57,11 +76,20 @@ export default async function HomePage() {
     .range(3, 5) // Get articles 4-6 to avoid duplicates with latest
 
   const popularArticles = (popularData || []).map((article: any) => {
-    const cleanContent = sanitiseContent(article.content || '')
+    let cleanContent = sanitiseContent(article.content || '')
+    cleanContent = removeEmbeddedTOC(cleanContent)
+    
+    // Extract excerpt from first paragraph
+    let excerpt = ''
+    const paragraphMatch = cleanContent.match(/<p[^>]*>(.*?)<\/p>/i)
+    if (paragraphMatch) {
+      excerpt = paragraphMatch[1].replace(/<[^>]*>/g, '').trim().substring(0, 150) + '...'
+    }
+    
     return {
       id: article.id,
       title: article.title,
-      excerpt: cleanContent ? cleanContent.substring(0, 150).replace(/<[^>]*>/g, '') + '...' : '',
+      excerpt: excerpt || cleanContent.substring(0, 150).replace(/<[^>]*>/g, '').trim() + '...',
       slug: article.slug || article.id,
       category: article.category
     }
