@@ -331,70 +331,70 @@ export default function ContactForm() {
             </div>
             
             <div className="mb-6">
-              <label className="block text-sm font-bold text-navy mb-2 uppercase">
+              <label className="block text-sm font-bold text-navy mb-3 uppercase">
                 Type of Enquiry <span className="text-red-600">*</span>
               </label>
-              <div className="flex gap-6">
-                <label className="flex items-center cursor-pointer">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                <label className="flex items-center cursor-pointer p-3 sm:p-0">
                   <input
                     type="radio"
                     name="enquiry_type"
                     value="General"
                     checked={enquiryType === 'general'}
                     onChange={() => setEnquiryType('general')}
-                    className="w-5 h-5 text-navy"
+                    className="w-5 h-5 text-navy flex-shrink-0"
                   />
-                  <span className="ml-2 text-gray-700">General Enquiry</span>
+                  <span className="ml-3 text-gray-700 text-base">General Enquiry</span>
                 </label>
-                <label className="flex items-center cursor-pointer">
+                <label className="flex items-center cursor-pointer p-3 sm:p-0">
                   <input
                     type="radio"
                     name="enquiry_type"
                     value="Security Clearance"
                     checked={enquiryType === 'security'}
                     onChange={() => setEnquiryType('security')}
-                    className="w-5 h-5 text-navy"
+                    className="w-5 h-5 text-navy flex-shrink-0"
                   />
-                  <span className="ml-2 text-gray-700">Security Clearance Enquiry</span>
+                  <span className="ml-3 text-gray-700 text-base">Security Clearance Enquiry</span>
                 </label>
               </div>
             </div>
             
             {enquiryType === 'security' && (
               <div className="mb-6">
-                <label className="block text-sm font-bold text-navy mb-2 uppercase">
+                <label className="block text-sm font-bold text-navy mb-3 uppercase">
                   Clearance Type <span className="text-red-600">*</span>
                 </label>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <label className="flex items-center cursor-pointer p-4">
+                <div className="flex flex-col gap-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                  <label className="flex items-center cursor-pointer p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-navy hover:bg-white transition-colors">
                     <input
                       type="radio"
                       name="LEADCF5"
                       value="Baseline Security Clearance"
                       required={enquiryType === 'security'}
-                      className="w-5 h-5 text-navy"
+                      className="w-5 h-5 text-navy flex-shrink-0"
                     />
-                    <span className="ml-2 text-gray-700">Baseline Security<br />Clearance</span>
+                    <span className="ml-3 text-gray-700 text-base leading-tight">Baseline Security Clearance</span>
                   </label>
-                  <label className="flex items-center cursor-pointer p-4">
+                  <label className="flex items-center cursor-pointer p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-navy hover:bg-white transition-colors">
                     <input
                       type="radio"
                       name="LEADCF5"
                       value="NV1 Security Clearance"
                       required={enquiryType === 'security'}
-                      className="w-5 h-5 text-navy"
+                      className="w-5 h-5 text-navy flex-shrink-0"
                     />
-                    <span className="ml-2 text-gray-700">NV1 Security<br />Clearance</span>
+                    <span className="ml-3 text-gray-700 text-base leading-tight">NV1 Security Clearance</span>
                   </label>
-                  <label className="flex items-center cursor-pointer p-4">
+                  <label className="flex items-center cursor-pointer p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-navy hover:bg-white transition-colors">
                     <input
                       type="radio"
                       name="LEADCF5"
                       value="NV2 Security Clearance"
                       required={enquiryType === 'security'}
-                      className="w-5 h-5 text-navy"
+                      className="w-5 h-5 text-navy flex-shrink-0"
                     />
-                    <span className="ml-2 text-gray-700">NV2 Security<br />Clearance</span>
+                    <span className="ml-3 text-gray-700 text-base leading-tight">NV2 Security Clearance</span>
                   </label>
                 </div>
               </div>
@@ -569,4 +569,5 @@ export default function ContactForm() {
     </>
   )
 }
+
 
