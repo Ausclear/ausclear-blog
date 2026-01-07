@@ -1,7 +1,6 @@
 import { Metadata } from 'next'
 import ContactForm from '@/components/ContactForm'
 import FlipCard from '@/components/FlipCard'
-import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Contact AusClear - Security Clearance Sponsorship & Consulting',
@@ -21,22 +20,6 @@ export default function ContactPage() {
         overflow: 'hidden'
       }}>
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
-          <nav style={{ 
-            display: 'flex', 
-            gap: '12px', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            marginBottom: '24px',
-            fontSize: '14px',
-            color: 'rgba(255,255,255,0.8)'
-          }}>
-            <Link href="/" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>
-              Home
-            </Link>
-            <span>/</span>
-            <span style={{ color: 'white' }}>Contact</span>
-          </nav>
-
           <h1 style={{
             fontSize: '42px',
             fontWeight: 800,
