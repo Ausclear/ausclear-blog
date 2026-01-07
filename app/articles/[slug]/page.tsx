@@ -219,6 +219,15 @@ export default async function ArticlePage({ params }: Props) {
   }
 
   const category = CATEGORIES.find((cat) => cat.slug === article.category)
+  
+  // Create category link even if not in CATEGORIES array
+  const categoryDisplay = category ? {
+    name: category.name,
+    slug: category.slug
+  } : {
+    name: article.category?.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') || 'Uncategorized',
+    slug: article.category || 'uncategorized'
+  }
   const relatedArticles = await getRelatedArticles(article.category, article.id)
 
   const formattedDate = new Date(article.created_at).toLocaleDateString('en-AU', {
@@ -248,19 +257,15 @@ export default async function ArticlePage({ params }: Props) {
                   Categories
                 </Link>
               </li>
-              {category && (
-                <>
-                  <li>/</li>
-                  <li>
-                    <Link
-                      href={`/categories/${category.slug}`}
-                      className="hover:text-gold transition-colours"
-                    >
-                      {category.name}
-                    </Link>
-                  </li>
-                </>
-              )}
+              <li>/</li>
+              <li>
+                <Link
+                  href={`/categories/${categoryDisplay.slug}`}
+                  className="hover:text-gold transition-colours"
+                >
+                  {categoryDisplay.name}
+                </Link>
+              </li>
               <li>/</li>
               <li className="text-navy font-medium truncate">{article.title}</li>
             </ol>
@@ -298,15 +303,13 @@ export default async function ArticlePage({ params }: Props) {
                   
                   {/* Meta Information */}
                   <div className="flex flex-wrap items-center gap-4 mb-6">
-                    {category && (
-                      <Link
-                        href={`/categories/${category.slug}`}
-                        className="inline-flex items-center gap-2 text-sm bg-navy text-white px-4 py-2 rounded-full hover:bg-blue-900 transition-colours"
-                      >
-                        <span>{category.icon}</span>
-                        <span>{category.name}</span>
-                      </Link>
-                    )}
+                    <Link
+                      href={`/categories/${categoryDisplay.slug}`}
+                      className="inline-flex items-center gap-2 text-sm bg-navy text-white px-4 py-2 rounded-full hover:bg-blue-900 transition-colours"
+                    >
+                      {category?.icon && <span>{category.icon}</span>}
+                      <span>{categoryDisplay.name}</span>
+                    </Link>
                     <span className="text-sm text-gray-500">{formattedDate}</span>
                   </div>
 
