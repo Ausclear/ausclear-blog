@@ -234,17 +234,18 @@ export default async function ArticlePage({ params }: Props) {
     'Summary Articles': 'summary-articles',
     'Application Process': 'application-process',
     'Security Awareness': 'security-awareness',
-    'Disclaimer': 'disclaimer'
+    'Disclaimer': 'disclaimer',
+    'AusClear': 'ausclear'
   }
   
-  // Try to find mapped category, fallback to direct slug match, then format the raw value
+  // Try to find mapped category
   let categoryDisplay = category
   
   if (!categoryDisplay && article.category) {
     // Try mapping first
     const mappedSlug = CATEGORY_MAPPING[article.category]
     if (mappedSlug) {
-      categoryDisplay = CATEGORIES.find((cat) => cat.slug === mappedSlug) || null
+      categoryDisplay = CATEGORIES.find((cat) => cat.slug === mappedSlug)
     }
   }
   
