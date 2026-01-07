@@ -220,13 +220,43 @@ export default async function ArticlePage({ params }: Props) {
 
   const category = CATEGORIES.find((cat) => cat.slug === article.category)
   
-  // Create category link even if not in CATEGORIES array
-  const categoryDisplay = category ? {
-    name: category.name,
-    slug: category.slug
+  // Map Zoho category names to our category slugs
+  const CATEGORY_MAPPING: Record<string, string> = {
+    'Clearance Process': 'application-process',
+    'Security Clearance': 'security-clearances',
+    'AGSVA Fees': 'agsva-fees',
+    'FAQs': 'faqs',
+    'Policy and Regulations': 'policy-regulations',
+    'Cyber Security': 'cyber-security',
+    'Career Opportunities': 'careers-opportunities',
+    'AusClear Insights': 'ausclear-insights',
+    'Trends & Predictions': 'trends-predictions',
+    'Summary Articles': 'summary-articles',
+    'Application Process': 'application-process',
+    'Security Awareness': 'security-awareness',
+    'Disclaimer': 'disclaimer'
+  }
+  
+  // Try to find mapped category, fallback to direct slug match, then format the raw value
+  let categoryDisplay = category
+  
+  if (!categoryDisplay && article.category) {
+    // Try mapping first
+    const mappedSlug = CATEGORY_MAPPING[article.category]
+    if (mappedSlug) {
+      categoryDisplay = CATEGORIES.find((cat) => cat.slug === mappedSlug) || null
+    }
+  }
+  
+  // Final fallback: format the raw category value
+  const finalCategoryDisplay = categoryDisplay ? {
+    name: categoryDisplay.name,
+    slug: categoryDisplay.slug,
+    icon: categoryDisplay.icon
   } : {
     name: article.category?.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') || 'Uncategorized',
-    slug: article.category || 'uncategorized'
+    slug: article.category || 'uncategorized',
+    icon: '📄'
   }
   const relatedArticles = await getRelatedArticles(article.category, article.id)
 
@@ -260,10 +290,10 @@ export default async function ArticlePage({ params }: Props) {
               <li>/</li>
               <li>
                 <Link
-                  href={`/categories/${categoryDisplay.slug}`}
+                  href={`/categories/${finalCategoryDisplay.slug}`}
                   className="hover:text-gold transition-colours"
                 >
-                  {categoryDisplay.name}
+                  {finalCategoryDisplay.name}
                 </Link>
               </li>
               <li>/</li>
@@ -301,15 +331,8 @@ export default async function ArticlePage({ params }: Props) {
                     </details>
                   )}
                   
-                  {/* Meta Information */}
+                  {/* Meta Information - Date only */}
                   <div className="flex flex-wrap items-center gap-4 mb-6">
-                    <Link
-                      href={`/categories/${categoryDisplay.slug}`}
-                      className="inline-flex items-center gap-2 text-sm bg-navy text-white px-4 py-2 rounded-full hover:bg-blue-900 transition-colours"
-                    >
-                      {category?.icon && <span>{category.icon}</span>}
-                      <span>{categoryDisplay.name}</span>
-                    </Link>
                     <span className="text-sm text-gray-500">{formattedDate}</span>
                   </div>
 
