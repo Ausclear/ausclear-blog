@@ -30,18 +30,8 @@ export default function FeedbackButtons({
       setNotHelpfulCount(prev => prev + 1)
     }
 
-    try {
-      await fetch('/api/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          article_id: articleId,
-          feedback_type: type === 'yes' ? 'helpful' : 'not_helpful'
-        })
-      })
-    } catch (error) {
-      console.error('Failed to submit feedback:', error)
-    }
+    // TODO: Send to API when feedback table is created in Supabase
+    console.log(`Feedback: ${type} for article ${articleId}`)
   }
 
   return (
