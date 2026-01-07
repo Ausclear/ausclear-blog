@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
-import ArticleListView from '@/components/ArticleListView'
 
 type Article = {
   id: string
@@ -140,7 +139,83 @@ export default async function HomePage() {
       {latestArticles && latestArticles.length > 0 && (
         <div style={{ background: 'white', padding: '4rem 2rem' }}>
           <div className="container-custom">
-            <ArticleListView articles={latestArticles} title="Latest Articles" />
+            <div className="section-title">
+              <h2>Latest Articles</h2>
+              <p>Stay updated with our newest content</p>
+            </div>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+              gap: '2rem',
+              marginBottom: '2rem'
+            }}>
+              {latestArticles.map((article) => (
+                <Link
+                  key={article.id}
+                  href={`/articles/${article.slug}`}
+                  className="article-card"
+                  style={{
+                    background: 'white',
+                    borderLeft: '4px solid var(--gold)',
+                    borderRadius: '8px',
+                    padding: '1.5rem',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    transition: 'all 0.3s ease',
+                    textDecoration: 'none',
+                    display: 'block'
+                  }}
+                >
+                  <h3 style={{
+                    color: 'var(--navy)',
+                    fontSize: '1.25rem',
+                    fontWeight: 700,
+                    marginBottom: '0.75rem',
+                    lineHeight: 1.4
+                  }}>
+                    {article.title}
+                  </h3>
+                  <p style={{
+                    color: 'var(--text-grey)',
+                    fontSize: '0.95rem',
+                    lineHeight: 1.6,
+                    marginBottom: '1rem'
+                  }}>
+                    {article.excerpt}
+                  </p>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    fontSize: '0.875rem',
+                    color: 'var(--navy)',
+                    fontWeight: 600
+                  }}>
+                    <span>Read more</span>
+                    <span>→</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+              <Link
+                href="/categories"
+                className="cta-button"
+                style={{
+                  display: 'inline-block',
+                  background: 'var(--navy)',
+                  color: 'white',
+                  padding: '0.75rem 2rem',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  fontWeight: 600,
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Browse All Categories
+              </Link>
+            </div>
           </div>
         </div>
       )}
@@ -262,3 +337,4 @@ export default async function HomePage() {
     </div>
   )
 }
+
