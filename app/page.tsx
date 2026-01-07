@@ -1,3 +1,4 @@
+// Force redeploy
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 
@@ -319,5 +320,6 @@ export default async function HomePage() {
     </div>
   )
 }
+
 
 
