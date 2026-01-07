@@ -290,7 +290,7 @@ export default async function HomePage() {
           <div style={{ textAlign: 'center', marginTop: '3rem' }}>
             <Link 
               href="/categories" 
-              className="text-navy font-semibold hover:text-gold transition-colors underline"
+              className="inline-block bg-navy text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-900 transition-colors"
             >
               Browse All Categories →
             </Link>
