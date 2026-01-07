@@ -38,16 +38,23 @@ function sanitiseContent(content: string): string {
 
 // Remove embedded TOC sidebar - SURGICAL pattern based on actual Zoho HTML structure
 function removeEmbeddedSections(content: string): string {
-  if (!content) return ""
+  if (!content) return ''
   
   let cleaned = content
   
   // Remove the ENTIRE <aside class="sidebar"> section (this contains "On This Page" TOC)
   // This is the exact pattern from Zoho articles
-  cleaned = cleaned.replace(/<aside\s+class="sidebar">[\s\S]*?<\/aside>/gi, "")
+  cleaned = cleaned.replace(/<aside\s+class="sidebar">[\s\S]*?<\/aside>/gi, '')
   
   // Remove smooth scroll script at the very end
-  cleaned = cleaned.replace(/<script>[\s\S]*?<\/script>\s*$/gi, "")
+  cleaned = cleaned.replace(/<script>[\s\S]*?<\/script>\s*$/gi, '')
+  
+  // Remove the layout wrapper divs that create two-column grid
+  // Remove: <div class="container"> and <div class="layout">
+  cleaned = cleaned.replace(/<div\s+class="container">\s*<div\s+class="layout">/gi, '')
+  
+  // Remove closing </div></div> at the end (for layout and container)
+  cleaned = cleaned.replace(/<\/div>\s*<\/div>\s*$/gi, '')
   
   return cleaned
 }
