@@ -9,6 +9,19 @@ type Article = {
   category: string
 }
 
+// Sanitise content by removing HTML comments and script tags
+function sanitiseContent(content: string): string {
+  if (!content) return ''
+  
+  let cleaned = content
+  cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, '')
+  cleaned = cleaned.replace(/<script[\s\S]*?<\/script>/gi, '')
+  cleaned = cleaned.replace(/<meta[\s\S]*?>/gi, '')
+  cleaned = cleaned.trim()
+  
+  return cleaned
+}
+
 export default async function HomePage() {
   // Fetch latest articles (most recent 3)
   const { data: latestData } = await supabase
@@ -20,13 +33,16 @@ export default async function HomePage() {
     .limit(3)
 
   // Generate excerpt from content and ensure slug exists
-  const latestArticles = (latestData || []).map((article: any) => ({
-    id: article.id,
-    title: article.title,
-    excerpt: article.content ? article.content.substring(0, 150) + '...' : '',
-    slug: article.slug || article.id,
-    category: article.category
-  }))
+  const latestArticles = (latestData || []).map((article: any) => {
+    const cleanContent = sanitiseContent(article.content || '')
+    return {
+      id: article.id,
+      title: article.title,
+      excerpt: cleanContent ? cleanContent.substring(0, 150).replace(/<[^>]*>/g, '') + '...' : '',
+      slug: article.slug || article.id,
+      category: article.category
+    }
+  })
 
   // Fetch most popular articles (most recent 6, since we don't have view_count)
   const { data: popularData } = await supabase
@@ -37,13 +53,16 @@ export default async function HomePage() {
     .order('created_at', { ascending: false })
     .range(3, 5) // Get articles 4-6 to avoid duplicates with latest
 
-  const popularArticles = (popularData || []).map((article: any) => ({
-    id: article.id,
-    title: article.title,
-    excerpt: article.content ? article.content.substring(0, 150) + '...' : '',
-    slug: article.slug || article.id,
-    category: article.category
-  }))
+  const popularArticles = (popularData || []).map((article: any) => {
+    const cleanContent = sanitiseContent(article.content || '')
+    return {
+      id: article.id,
+      title: article.title,
+      excerpt: cleanContent ? cleanContent.substring(0, 150).replace(/<[^>]*>/g, '') + '...' : '',
+      slug: article.slug || article.id,
+      category: article.category
+    }
+  })
   return (
     <div>
       {/* Hero Section */}
