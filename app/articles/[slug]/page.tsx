@@ -35,34 +35,39 @@ function sanitiseContent(content: string): string {
   return cleaned
 }
 
-// Remove embedded TOC sidebar - SURGICAL pattern based on actual Zoho HTML structure
+// Remove embedded TOC elements - CONSERVATIVE: only remove by specific class/element names
 function removeEmbeddedSections(content: string): string {
   if (!content) return ''
   
   let cleaned = content
   
-  // Remove the ENTIRE <aside class="sidebar"> section
-  cleaned = cleaned.replace(/<aside\s+class="sidebar">[\s\S]*?<\/aside>/gi, '')
+  // Remove ONLY specific structural TOC elements by class name
+  // Do NOT remove based on heading content - that deletes actual articles!
   
-  // Remove smooth scroll script at the very end
-  cleaned = cleaned.replace(/<script>[\s\S]*?<\/script>\s*$/gi, '')
+  // Remove sidebar div that contains TOC (but NOT article content)
+  cleaned = cleaned.replace(/<div\s+class="sidebar"[^>]*>[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/gi, '')
   
-  // Remove the layout wrapper divs that create two-column grid
-  cleaned = cleaned.replace(/<div\s+class="container">\s*<div\s+class="layout">/gi, '')
-  cleaned = cleaned.replace(/<\/div>\s*<\/div>\s*$/gi, '')
+  // Remove aside elements (Zoho uses <aside class="sidebar">)
+  cleaned = cleaned.replace(/<aside\s+class="sidebar"[^>]*>[\s\S]*?<\/aside>/gi, '')
   
-  // AGGRESSIVE: Remove "On This Page" / "Quick Reference" sections
-  // Pattern: h2-h6 heading containing the text + following ul/div until next heading
-  cleaned = cleaned.replace(/<h[2-6][^>]*>[\s\S]*?(On This Page|On this page|Quick Reference|Table of Contents|Contents)[\s\S]*?<\/h[2-6]>[\s\S]*?(<ul[\s\S]*?<\/ul>|<ol[\s\S]*?<\/ol>)/gi, '')
+  // Remove standalone toc wrapper divs
+  cleaned = cleaned.replace(/<div\s+class="toc-wrapper"[^>]*>[\s\S]*?<\/div>/gi, '')
+  cleaned = cleaned.replace(/<div\s+class="toc"[^>]*>[\s\S]*?<\/div>/gi, '')
   
-  // Remove any <nav> elements (often used for TOC)
-  cleaned = cleaned.replace(/<nav[^>]*>[\s\S]*?<\/nav>/gi, '')
+  // Remove toc-links divs (the horizontal link spam)
+  cleaned = cleaned.replace(/<div\s+class="toc-links"[^>]*>[\s\S]*?<\/div>/gi, '')
   
-  // Remove standalone TOC headings without following content
-  cleaned = cleaned.replace(/<h[2-6][^>]*>[\s\S]*?(On this page|Quick Reference|Table of Contents)[\s\S]*?<\/h[2-6]>/gi, '')
+  // Remove nav elements that are TOCs
+  cleaned = cleaned.replace(/<nav\s+class="toc[^"]*"[^>]*>[\s\S]*?<\/nav>/gi, '')
   
-  // Remove "Key Takeaways" sections
-  cleaned = cleaned.replace(/<(?:div|section)[^>]*>[\s\S]*?Key Takeaways[\s\S]*?<\/(?:div|section)>/gi, '')
+  // Remove any smooth scroll scripts
+  cleaned = cleaned.replace(/<script>[\s\S]*?smooth[\s\S]*?<\/script>/gi, '')
+  
+  // Remove layout wrapper divs (but carefully - don't remove article content divs)
+  cleaned = cleaned.replace(/<div\s+class="container">\s*<div\s+class="layout">/gi, '<div class="article-content">')
+  
+  // Remove empty divs
+  cleaned = cleaned.replace(/<div>\s*<\/div>/gi, '')
   
   return cleaned
 }
