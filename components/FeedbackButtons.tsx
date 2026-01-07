@@ -1,35 +1,35 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 
 interface FeedbackButtonsProps {
-  articleId?: string
   initialHelpfulCount?: number
   initialNotHelpfulCount?: number
 }
 
 export default function FeedbackButtons({ 
-  articleId = 'unknown', 
   initialHelpfulCount = 0, 
   initialNotHelpfulCount = 0 
-}: FeedbackButtonsProps) {
+}: FeedbackButtonsProps = {}) {
+  const pathname = usePathname()
+  const articleId = pathname?.split('/').pop() || 'unknown'
+  
   const [helpfulCount, setHelpfulCount] = useState(initialHelpfulCount)
   const [notHelpfulCount, setNotHelpfulCount] = useState(initialNotHelpfulCount)
   const [userVoted, setUserVoted] = useState<'yes' | 'no' | null>(null)
 
   const handleFeedback = async (type: 'yes' | 'no') => {
-    if (userVoted) return // Already voted
+    if (userVoted) return
     
     setUserVoted(type)
     
-    // Optimistically update the count
     if (type === 'yes') {
       setHelpfulCount(prev => prev + 1)
     } else {
       setNotHelpfulCount(prev => prev + 1)
     }
 
-    // Send to Supabase
     try {
       await fetch('/api/feedback', {
         method: 'POST',
