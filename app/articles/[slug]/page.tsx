@@ -412,10 +412,10 @@ export default async function ArticlePage({ params }: Props) {
           )}
 
           {/* CTA Section */}
-          <div className="mt-12 bg-gradient-to-r from-navy to-blue-900 text-white rounded-lg shadow-lg p-8 text-center">
-            <h2 className="text-2xl font-bold mb-4">Need More Help?</h2>
+          <div className="mt-12 bg-navy text-white rounded-lg shadow-lg p-8 text-center">
+            <h2 className="text-2xl font-bold mb-4">Need Personalised Assistance?</h2>
             <p className="text-gray-200 mb-6">
-              Our team is here to assist you with your security clearance journey
+              Our team is ready to help you navigate your security clearance journey
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
