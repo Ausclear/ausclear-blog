@@ -42,17 +42,17 @@ async function getArticle(slug: string): Promise<Article | null> {
   }
 
   // Add excerpt from content
-  const article = {
-    ...data,
+  const article: Article = {
+    ...(data as any),
     excerpt: data.content ? data.content.substring(0, 200) + '...' : '',
     slug: data.slug || data.id,
-    view_count: 0, // Placeholder since column doesn't exist
-    author: null, // Placeholder since column doesn't exist
-    meta_title: null,
-    meta_description: null
+    view_count: 0,
+    author: null,
+    meta_title: data.meta_title || null,
+    meta_description: data.meta_description || null
   }
 
-  return article as Article
+  return article
 }
 
 type RelatedArticle = Pick<Article, 'id' | 'title' | 'slug' | 'excerpt' | 'category'>
