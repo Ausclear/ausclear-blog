@@ -4,7 +4,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import FeedbackButtons from '@/components/FeedbackButtons'
-import RelatedArticles from '@/components/RelatedArticles'
+import ArticleListView from '@/components/ArticleListView'
 
 export const revalidate = 300 // Revalidate every 5 minutes
 
@@ -392,7 +392,7 @@ export default async function ArticlePage({ params }: Props) {
           </div>
 
           {/* Related Articles with View Toggle */}
-          <RelatedArticles articles={relatedArticles} />
+          <ArticleListView articles={relatedArticles} title="Related Articles" />
 
           {/* CTA Section */}
           <div className="mt-12 bg-navy text-white rounded-lg shadow-lg p-8 text-center">
