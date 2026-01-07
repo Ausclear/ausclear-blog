@@ -494,26 +494,31 @@ export default function ContactForm() {
       
       {/* Thank You Modal */}
       {showThankYou && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-md w-full overflow-hidden">
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4" style={{ backdropFilter: 'blur(5px)' }}>
+          <div className="bg-white rounded-[15px] max-w-md w-full overflow-hidden shadow-[0_25px_50px_rgba(0,0,0,0.7)]">
             <div className="bg-navy text-white p-6 relative">
-              <h2 className="text-2xl font-bold text-center">Message Sent Successfully!</h2>
+              <h2 className="text-2xl font-bold text-center m-0">Message Sent Successfully!</h2>
               <button
                 onClick={() => setShowThankYou(false)}
-                className="absolute top-4 right-4 text-white hover:text-gray-200 text-3xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-white hover:bg-opacity-10 transition-all"
+                className="absolute top-4 right-4 text-white hover:text-gray-200 text-3xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/20 hover:rotate-90 transition-all bg-white/10"
               >
                 &times;
               </button>
             </div>
             <div className="p-8 text-center">
-              <div className="w-20 h-20 bg-navy rounded-full flex items-center justify-center mx-auto mb-6">
+              <div 
+                className="w-20 h-20 bg-gradient-to-br from-[#002147] to-[#003366] rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_8px_25px_rgba(0,33,71,0.3)]"
+                style={{
+                  animation: 'checkBounce 0.6s ease'
+                }}
+              >
                 <span className="text-4xl text-white">✓</span>
               </div>
               <h3 className="text-2xl font-bold text-navy mb-4">{thankYouMessage.title}</h3>
-              <p className="text-gray-600 mb-6">{thankYouMessage.message}</p>
+              <p className="text-gray-600 mb-6 leading-relaxed">{thankYouMessage.message}</p>
               <button
                 onClick={() => setShowThankYou(false)}
-                className="bg-navy text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-900 transition-colors"
+                className="bg-gradient-to-br from-[#002147] to-[#003366] text-white px-8 py-3 rounded-lg font-bold hover:from-[#003366] hover:to-[#3b82f6] hover:-translate-y-0.5 transition-all shadow-[0_4px_15px_rgba(0,33,71,0.3)] hover:shadow-[0_6px_20px_rgba(0,33,71,0.4)] uppercase tracking-wider"
               >
                 Close
               </button>
@@ -521,6 +526,14 @@ export default function ContactForm() {
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        @keyframes checkBounce {
+          0% { transform: scale(0); }
+          50% { transform: scale(1.1); }
+          100% { transform: scale(1); }
+        }
+      `}</style>
       
       {/* Booking Modal */}
       {showBooking && (
