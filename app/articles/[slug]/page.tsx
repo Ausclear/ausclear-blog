@@ -20,7 +20,7 @@ async function getArticle(slug: string): Promise<Article | null> {
     .eq('archived', false)
     .single()
 
-  // If not found by slug, try by ID (since slugs are null in your data)
+  // If not found by slug, try by ID
   if (error || !data) {
     const { data: dataById, error: errorById } = await supabase
       .from('kb_documents')
@@ -36,15 +36,13 @@ async function getArticle(slug: string): Promise<Article | null> {
     data = dataById
   }
 
-  // TypeScript safety check
   if (!data) {
     return null
   }
 
-  // Cast to any to avoid TypeScript spread errors
-  const rawData = data as any
+  // Cast to any to avoid TypeScript issues
+  const rawData: any = data
 
-  // Add excerpt from content
   const article: Article = {
     ...rawData,
     excerpt: rawData.content ? rawData.content.substring(0, 200) + '...' : '',
@@ -70,13 +68,16 @@ async function getRelatedArticles(categorySlug: string, currentArticleId: string
     .neq('id', currentArticleId)
     .limit(3)
 
-  return (data || []).map(article => ({
+  if (!data) return []
+
+  // Cast to any to avoid TypeScript issues
+  return data.map((article: any) => ({
     id: article.id,
     title: article.title,
     slug: article.slug || article.id,
     excerpt: article.content ? article.content.substring(0, 150) + '...' : '',
     category: article.category
-  })) as RelatedArticle[]
+  }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
