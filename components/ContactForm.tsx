@@ -148,68 +148,67 @@ export default function ContactForm() {
     setIsSubmitting(true)
     setProgress(0)
     
+    // Get form data first
+    const form = e.currentTarget
+    const formData = new FormData(form)
+    
+    const firstName = formData.get('First Name') as string
+    const isSecurityEnquiry = formData.get('enquiry_type') === 'Security Clearance'
+    const clearanceType = formData.get('LEADCF5') as string
+    
+    // Personalize thank you message
+    const capitalizedName = firstName ? firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase() : ''
+    const greeting = capitalizedName ? `Hi ${capitalizedName}!` : 'Thank you!'
+    
+    if (isSecurityEnquiry && clearanceType) {
+      setThankYouMessage({
+        title: greeting,
+        message: `Thank you for your interest in the ${clearanceType}. Our security clearance specialists will be in touch soon to discuss your requirements. We typically respond within a few hours during business days.`
+      })
+    } else {
+      setThankYouMessage({
+        title: greeting,
+        message: 'Thank you for your enquiry. Someone from our team will be in touch soon. We typically respond within a few hours during business days.'
+      })
+    }
+    
     // Animate progress bar
     const interval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
           clearInterval(interval)
+          
+          // Submit form when progress completes
+          const iframe = document.createElement('iframe')
+          iframe.style.display = 'none'
+          iframe.name = 'zohoFrame'
+          document.body.appendChild(iframe)
+          
+          form.target = 'zohoFrame'
+          form.submit()
+          
+          // Show modal immediately
+          setShowThankYou(true)
+          
+          // Reset form after 500ms
+          setTimeout(() => {
+            form.reset()
+            setEmailValidation({ type: 'hide', message: '' })
+            setMobileValidation({ type: 'hide', message: '' })
+            setProgress(0)
+            setIsSubmitting(false)
+            setEnquiryType('general')
+            if (document.body.contains(iframe)) {
+              document.body.removeChild(iframe)
+            }
+            form.removeAttribute('target')
+          }, 500)
+          
           return 100
         }
         return prev + 1
       })
     }, 30)
-    
-    // Wait for progress to complete
-    setTimeout(() => {
-      const form = e.currentTarget
-      const formData = new FormData(form)
-      
-      const firstName = formData.get('First Name') as string
-      const isSecurityEnquiry = formData.get('enquiry_type') === 'Security Clearance'
-      const clearanceType = formData.get('LEADCF5') as string
-      
-      // Personalize thank you message
-      const capitalizedName = firstName ? firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase() : ''
-      const greeting = capitalizedName ? `Hi ${capitalizedName}!` : 'Thank you!'
-      
-      if (isSecurityEnquiry && clearanceType) {
-        setThankYouMessage({
-          title: greeting,
-          message: `Thank you for your interest in the ${clearanceType}. Our security clearance specialists will be in touch soon to discuss your requirements. We typically respond within a few hours during business days.`
-        })
-      } else {
-        setThankYouMessage({
-          title: greeting,
-          message: 'Thank you for your enquiry. Someone from our team will be in touch soon. We typically respond within a few hours during business days.'
-        })
-      }
-      
-      // Submit form to Zoho via hidden iframe
-      const iframe = document.createElement('iframe')
-      iframe.style.display = 'none'
-      iframe.name = 'zohoFrame'
-      document.body.appendChild(iframe)
-      
-      form.target = 'zohoFrame'
-      form.submit()
-      
-      // Show thank you modal
-      setShowThankYou(true)
-      
-      // Reset form
-      setTimeout(() => {
-        form.reset()
-        setEmailValidation({ type: 'hide', message: '' })
-        setMobileValidation({ type: 'hide', message: '' })
-        setProgress(0)
-        setIsSubmitting(false)
-        setEnquiryType('general')
-        if (document.body.contains(iframe)) {
-          document.body.removeChild(iframe)
-        }
-        form.removeAttribute('target')
-      }, 1000)
-    }, 3000)
   }
   
   return (
