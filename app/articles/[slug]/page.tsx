@@ -32,6 +32,27 @@ function sanitiseContent(content: string): string {
   return cleaned
 }
 
+// Remove embedded TOC, Key Takeaways, Contact sections from article HTML
+function removeEmbeddedSections(content: string): string {
+  if (!content) return ''
+  
+  let cleaned = content
+  
+  // Remove "On this page" section
+  cleaned = cleaned.replace(/<(?:div|section|nav)[^>]*>[\s\S]*?On this page[\s\S]*?<\/(?:div|section|nav)>/gi, '')
+  
+  // Remove "Key Takeaways" section
+  cleaned = cleaned.replace(/<(?:div|section)[^>]*>[\s\S]*?Key Takeaways[\s\S]*?<\/(?:div|section)>/gi, '')
+  
+  // Remove "Contact AusClear" section
+  cleaned = cleaned.replace(/<(?:div|section)[^>]*>[\s\S]*?Contact AusClear[\s\S]*?<\/(?:div|section)>/gi, '')
+  
+  // Remove any remaining TOC-like structures
+  cleaned = cleaned.replace(/<(?:div|nav)[^>]*class="[^"]*toc[^"]*"[^>]*>[\s\S]*?<\/(?:div|nav)>/gi, '')
+  
+  return cleaned
+}
+
 // Extract H2 headings only for sidebar TOC
 function extractTOCHeadings(htmlContent: string): Array<{ id: string; text: string }> {
   const headings: Array<{ id: string; text: string }> = []
@@ -41,7 +62,16 @@ function extractTOCHeadings(htmlContent: string): Array<{ id: string; text: stri
   while ((match = headingRegex.exec(htmlContent)) !== null) {
     const existingId = match[1]
     const textWithHtml = match[2]
-    const text = textWithHtml.replace(/<[^>]*>/g, '').trim()
+    let text = textWithHtml.replace(/<[^>]*>/g, '').trim()
+    
+    // Decode HTML entities (&amp; -> &, etc.)
+    text = text
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+    
     const id = existingId || text.toLowerCase().replace(/[^\w]+/g, '-')
     
     headings.push({ id, text })
@@ -76,8 +106,11 @@ async function getArticle(slug: string): Promise<Article | null> {
 
   const rawData: any = data
 
-  // Sanitise content - ONLY remove garbage, keep everything else
+  // Sanitise content - remove meta/scripts/comments
   let cleanContent = sanitiseContent(rawData.content || '')
+  
+  // Remove embedded TOC, Key Takeaways, Contact sections
+  cleanContent = removeEmbeddedSections(cleanContent)
   
   // Add IDs to h2 headings for TOC anchors
   cleanContent = cleanContent.replace(/<h2(?![^>]*\sid=)([^>]*)>(.*?)<\/h2>/gi, (match, attrs, text) => {
