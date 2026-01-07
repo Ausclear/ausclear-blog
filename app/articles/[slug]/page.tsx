@@ -250,8 +250,8 @@ export default async function ArticlePage({ params }: Props) {
             </ol>
           </nav>
 
-          {/* Two-column layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
+          {/* Two-column layout - wider content area */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-8">
             {/* Article Column */}
             <div>
               <article className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -277,7 +277,7 @@ export default async function ArticlePage({ params }: Props) {
                   />
 
                   {/* Feedback Buttons */}
-                  <FeedbackButtons />
+                  <FeedbackButtons articleId={article.id} />
 
                   {/* Tags */}
                   {article.tags && article.tags.length > 0 && (
