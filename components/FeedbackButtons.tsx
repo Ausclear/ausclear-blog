@@ -1,19 +1,21 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 
 interface FeedbackButtonsProps {
+  articleId?: string
   initialHelpfulCount?: number
   initialNotHelpfulCount?: number
 }
 
 export default function FeedbackButtons({ 
+  articleId,
   initialHelpfulCount = 0, 
   initialNotHelpfulCount = 0 
 }: FeedbackButtonsProps = {}) {
   const pathname = usePathname()
-  const articleId = pathname?.split('/').pop() || 'unknown'
+  const id = articleId || pathname?.split('/').pop() || 'unknown'
   
   const [helpfulCount, setHelpfulCount] = useState(initialHelpfulCount)
   const [notHelpfulCount, setNotHelpfulCount] = useState(initialNotHelpfulCount)
@@ -30,8 +32,18 @@ export default function FeedbackButtons({
       setNotHelpfulCount(prev => prev + 1)
     }
 
-    // TODO: Send to API when feedback table is created in Supabase
-    console.log(`Feedback: ${type} for article ${articleId}`)
+    try {
+      await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          article_id: id,
+          feedback_type: type === 'yes' ? 'helpful' : 'not_helpful'
+        })
+      })
+    } catch (error) {
+      console.error('Failed to submit feedback:', error)
+    }
   }
 
   return (
