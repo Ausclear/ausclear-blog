@@ -41,15 +41,18 @@ async function getArticle(slug: string): Promise<Article | null> {
     return null
   }
 
+  // Cast to any to avoid TypeScript spread errors
+  const rawData = data as any
+
   // Add excerpt from content
   const article: Article = {
-    ...(data as any),
-    excerpt: data.content ? data.content.substring(0, 200) + '...' : '',
-    slug: data.slug || data.id,
+    ...rawData,
+    excerpt: rawData.content ? rawData.content.substring(0, 200) + '...' : '',
+    slug: rawData.slug || rawData.id,
     view_count: 0,
     author: null,
-    meta_title: data.meta_title || null,
-    meta_description: data.meta_description || null
+    meta_title: rawData.meta_title || null,
+    meta_description: rawData.meta_description || null
   }
 
   return article
