@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import { CATEGORIES, Article } from '@/types'
-import ArticleCard from '@/components/ArticleCard'
+import ArticleListView from '@/components/ArticleListView'
 import Link from 'next/link'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -170,13 +170,9 @@ export default async function CategoryPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Articles List */}
+        {/* Articles List with Grid/List Toggle */}
         {articles.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {articles.map((article) => (
-              <ArticleCard key={article.id} article={article} />
-            ))}
-          </div>
+          <ArticleListView articles={articles} title="" />
         ) : (
           <div className="bg-white rounded-lg shadow-md p-12 text-center">
             <p className="text-gray-600 text-lg mb-4">
