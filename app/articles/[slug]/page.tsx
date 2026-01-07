@@ -10,6 +10,27 @@ type Props = {
   params: { slug: string }
 }
 
+// Sanitise content by removing HTML comments and script tags
+function sanitiseContent(content: string): string {
+  if (!content) return ''
+  
+  let cleaned = content
+  
+  // Remove HTML comments
+  cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, '')
+  
+  // Remove script tags and their content
+  cleaned = cleaned.replace(/<script[\s\S]*?<\/script>/gi, '')
+  
+  // Remove any remaining meta tags that might have slipped through
+  cleaned = cleaned.replace(/<meta[\s\S]*?>/gi, '')
+  
+  // Trim whitespace
+  cleaned = cleaned.trim()
+  
+  return cleaned
+}
+
 async function getArticle(slug: string): Promise<Article | null> {
   // Try to find by slug first
   let { data, error } = await supabase
@@ -43,9 +64,13 @@ async function getArticle(slug: string): Promise<Article | null> {
   // Cast to any to avoid TypeScript issues
   const rawData: any = data
 
+  // Sanitise the content
+  const cleanContent = sanitiseContent(rawData.content || '')
+
   const article: Article = {
     ...rawData,
-    excerpt: rawData.content ? rawData.content.substring(0, 200) + '...' : '',
+    content: cleanContent,
+    excerpt: cleanContent ? cleanContent.substring(0, 200).replace(/<[^>]*>/g, '') + '...' : '',
     slug: rawData.slug || rawData.id,
     view_count: 0,
     author: null,
@@ -71,13 +96,16 @@ async function getRelatedArticles(categorySlug: string, currentArticleId: string
   if (!data) return []
 
   // Cast to any to avoid TypeScript issues
-  return data.map((article: any) => ({
-    id: article.id,
-    title: article.title,
-    slug: article.slug || article.id,
-    excerpt: article.content ? article.content.substring(0, 150) + '...' : '',
-    category: article.category
-  }))
+  return data.map((article: any) => {
+    const cleanContent = sanitiseContent(article.content || '')
+    return {
+      id: article.id,
+      title: article.title,
+      slug: article.slug || article.id,
+      excerpt: cleanContent ? cleanContent.substring(0, 150).replace(/<[^>]*>/g, '') + '...' : '',
+      category: article.category
+    }
+  })
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
