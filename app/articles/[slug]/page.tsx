@@ -7,6 +7,8 @@ import FeedbackButtons from '@/components/FeedbackButtons'
 
 export const revalidate = 300 // Revalidate every 5 minutes
 
+// Force rebuild - articleId prop is now optional in FeedbackButtons
+
 type Props = {
   params: { slug: string }
 }
