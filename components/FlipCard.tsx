@@ -21,30 +21,8 @@ export default function FlipCard({
   href,
   onClick 
 }: FlipCardProps) {
-  const CardWrapper = href ? 'a' : 'div'
-  
-  return (
-    <CardWrapper
-      href={href}
-      onClick={onClick}
-      className="contact-card"
-      style={{
-        background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
-        border: '1px solid #e2e8f0',
-        borderRadius: '16px',
-        padding: '32px 24px',
-        textAlign: 'center',
-        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        cursor: 'pointer',
-        position: 'relative',
-        overflow: 'hidden',
-        perspective: '1000px',
-        minHeight: '240px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
+  const cardContent = (
+    <>
       <div 
         className="contact-card-inner"
         style={{
@@ -149,6 +127,45 @@ export default function FlipCard({
           background: white;
         }
       `}</style>
-    </CardWrapper>
+    </>
+  )
+
+  const baseStyles = {
+    background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+    border: '1px solid #e2e8f0',
+    borderRadius: '16px',
+    padding: '32px 24px',
+    textAlign: 'center' as const,
+    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    cursor: 'pointer',
+    position: 'relative' as const,
+    overflow: 'hidden',
+    perspective: '1000px',
+    minHeight: '240px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        className="contact-card"
+        style={baseStyles}
+      >
+        {cardContent}
+      </a>
+    )
+  }
+
+  return (
+    <div
+      className="contact-card"
+      style={baseStyles}
+      onClick={onClick}
+    >
+      {cardContent}
+    </div>
   )
 }
