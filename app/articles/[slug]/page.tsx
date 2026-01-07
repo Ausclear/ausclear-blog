@@ -394,17 +394,25 @@ export default async function ArticlePage({ params }: Props) {
           {relatedArticles.length > 0 && (
             <div className="mt-12">
               <h2 className="text-2xl font-bold text-navy mb-6">Related Articles</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white rounded-lg shadow-md divide-y divide-gray-200">
                 {relatedArticles.map((related) => (
                   <Link
                     key={related.id}
                     href={`/articles/${related.slug}`}
-                    className="block bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 p-6 border-l-4 border-gold group"
+                    className="block p-6 hover:bg-gray-50 transition-colors group"
                   >
-                    <h3 className="text-lg font-semibold text-navy mb-2 group-hover:text-gold transition-colours">
-                      {related.title}
-                    </h3>
-                    <p className="text-sm text-gray-600 line-clamp-3">{related.excerpt}</p>
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0 w-2 h-2 mt-2 bg-gold rounded-full"></div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg font-semibold text-navy mb-2 group-hover:text-gold transition-colors">
+                          {related.title}
+                        </h3>
+                        <p className="text-sm text-gray-600 line-clamp-2">{related.excerpt}</p>
+                      </div>
+                      <svg className="flex-shrink-0 w-5 h-5 text-gray-400 group-hover:text-gold transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
                   </Link>
                 ))}
               </div>
