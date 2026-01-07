@@ -15,6 +15,19 @@ type Props = {
   searchParams: { q?: string }
 }
 
+// Sanitise content by removing HTML comments and script tags
+function sanitiseContent(content: string): string {
+  if (!content) return ''
+  
+  let cleaned = content
+  cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, '')
+  cleaned = cleaned.replace(/<script[\s\S]*?<\/script>/gi, '')
+  cleaned = cleaned.replace(/<meta[\s\S]*?>/gi, '')
+  cleaned = cleaned.trim()
+  
+  return cleaned
+}
+
 async function searchArticles(query: string): Promise<Article[]> {
   if (!query || query.trim().length < 2) {
     return []
@@ -37,11 +50,15 @@ async function searchArticles(query: string): Promise<Article[]> {
   }
 
   // Map to add excerpt and ensure slug exists
-  return (data || []).map((article: any) => ({
-    ...article,
-    excerpt: article.content ? article.content.substring(0, 150) + '...' : '',
-    slug: article.slug || article.id
-  })) as Article[]
+  return (data || []).map((article: any) => {
+    const cleanContent = sanitiseContent(article.content || '')
+    return {
+      ...article,
+      content: cleanContent,
+      excerpt: cleanContent ? cleanContent.substring(0, 150).replace(/<[^>]*>/g, '') + '...' : '',
+      slug: article.slug || article.id
+    }
+  }) as Article[]
 }
 
 export default async function SearchPage({ searchParams }: Props) {
