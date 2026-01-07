@@ -18,10 +18,7 @@ function sanitiseContent(content: string): string {
   let cleaned = content
   cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, '')
   cleaned = cleaned.replace(/<script[\s\S]*?<\/script>/gi, '')
-  cleaned = cleaned.replace(/<style[\s\S]*?<\/style>/gi, '')
   cleaned = cleaned.replace(/<meta[\s\S]*?>/gi, '')
-  cleaned = cleaned.replace(/\*\s*\{[^}]*\}/g, '')
-  cleaned = cleaned.replace(/body\s*\{[^}]*\}/g, '')
   cleaned = cleaned.trim()
   
   return cleaned
@@ -49,10 +46,14 @@ export async function generateStaticParams() {
 }
 
 async function getCategoryArticles(categorySlug: string): Promise<Article[]> {
+  // Find the category name from the slug
+  const category = CATEGORIES.find((cat) => cat.slug === categorySlug)
+  if (!category) return []
+  
   const { data, error } = await supabase
     .from('kb_documents')
     .select('*')
-    .eq('category', categorySlug)
+    .eq('category', category.name) // Filter by category NAME, not slug
     .eq('is_active', true)
     .eq('archived', false)
     .order('created_at', { ascending: false })
