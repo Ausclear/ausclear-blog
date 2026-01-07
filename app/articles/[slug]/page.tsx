@@ -11,21 +11,43 @@ type Props = {
 }
 
 async function getArticle(slug: string): Promise<Article | null> {
-  const { data, error } = await supabase
+  // Try to find by slug first
+  let { data, error } = await supabase
     .from('kb_documents')
     .select('*')
     .eq('slug', slug)
-    .eq('published', true)
+    .eq('is_active', true)
+    .eq('archived', false)
     .single()
 
+  // If not found by slug, try by ID (since slugs are null in your data)
   if (error || !data) {
-    return null
+    const { data: dataById, error: errorById } = await supabase
+      .from('kb_documents')
+      .select('*')
+      .eq('id', slug)
+      .eq('is_active', true)
+      .eq('archived', false)
+      .single()
+    
+    if (errorById || !dataById) {
+      return null
+    }
+    data = dataById
   }
 
-  // TODO: Increment view count once Supabase types are properly configured
-  // This requires update permissions on the kb_documents table
+  // Add excerpt from content
+  const article = {
+    ...data,
+    excerpt: data.content ? data.content.substring(0, 200) + '...' : '',
+    slug: data.slug || data.id,
+    view_count: 0, // Placeholder since column doesn't exist
+    author: null, // Placeholder since column doesn't exist
+    meta_title: null,
+    meta_description: null
+  }
 
-  return data as Article
+  return article as Article
 }
 
 type RelatedArticle = Pick<Article, 'id' | 'title' | 'slug' | 'excerpt' | 'category'>
@@ -33,13 +55,20 @@ type RelatedArticle = Pick<Article, 'id' | 'title' | 'slug' | 'excerpt' | 'categ
 async function getRelatedArticles(categorySlug: string, currentArticleId: string): Promise<RelatedArticle[]> {
   const { data } = await supabase
     .from('kb_documents')
-    .select('id, title, slug, excerpt, category')
+    .select('id, title, slug, content, category')
     .eq('category', categorySlug)
-    .eq('published', true)
+    .eq('is_active', true)
+    .eq('archived', false)
     .neq('id', currentArticleId)
     .limit(3)
 
-  return (data as RelatedArticle[]) || []
+  return (data || []).map(article => ({
+    id: article.id,
+    title: article.title,
+    slug: article.slug || article.id,
+    excerpt: article.content ? article.content.substring(0, 150) + '...' : '',
+    category: article.category
+  })) as RelatedArticle[]
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
