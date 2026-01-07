@@ -367,7 +367,7 @@ export default function ContactForm() {
                   Clearance Type <span className="text-red-600">*</span>
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <label className="flex items-center cursor-pointer border-2 border-gray-200 rounded-lg p-4 hover:border-navy transition-colors">
+                  <label className="flex items-center cursor-pointer p-4">
                     <input
                       type="radio"
                       name="LEADCF5"
@@ -377,7 +377,7 @@ export default function ContactForm() {
                     />
                     <span className="ml-2 text-gray-700">Baseline Security<br />Clearance</span>
                   </label>
-                  <label className="flex items-center cursor-pointer border-2 border-gray-200 rounded-lg p-4 hover:border-navy transition-colors">
+                  <label className="flex items-center cursor-pointer p-4">
                     <input
                       type="radio"
                       name="LEADCF5"
@@ -387,7 +387,7 @@ export default function ContactForm() {
                     />
                     <span className="ml-2 text-gray-700">NV1 Security<br />Clearance</span>
                   </label>
-                  <label className="flex items-center cursor-pointer border-2 border-gray-200 rounded-lg p-4 hover:border-navy transition-colors">
+                  <label className="flex items-center cursor-pointer p-4">
                     <input
                       type="radio"
                       name="LEADCF5"
@@ -557,3 +557,4 @@ export default function ContactForm() {
     </>
   )
 }
+
