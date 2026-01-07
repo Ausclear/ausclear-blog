@@ -281,6 +281,15 @@ export default async function HomePage() {
             <h2>Explore by Topic</h2>
             <p>Find the information you need, organised by category</p>
           </div>
+
+          <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+            <Link 
+              href="/categories" 
+              className="inline-block bg-navy text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-900 transition-colors"
+            >
+              Browse All Categories →
+            </Link>
+          </div>
         </div>
       </div>
 
