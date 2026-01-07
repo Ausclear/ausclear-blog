@@ -25,8 +25,9 @@ async function searchArticles(query: string): Promise<Article[]> {
   const { data, error } = await supabase
     .from('kb_documents')
     .select('*')
-    .eq('published', true)
-    .or(`title.ilike.${searchTerm},content.ilike.${searchTerm},excerpt.ilike.${searchTerm}`)
+    .eq('is_active', true)
+    .eq('archived', false)
+    .or(`title.ilike.${searchTerm},content.ilike.${searchTerm}`)
     .order('created_at', { ascending: false })
     .limit(50)
 
@@ -35,7 +36,12 @@ async function searchArticles(query: string): Promise<Article[]> {
     return []
   }
 
-  return (data as Article[]) || []
+  // Map to add excerpt and ensure slug exists
+  return (data || []).map(article => ({
+    ...article,
+    excerpt: article.content ? article.content.substring(0, 150) + '...' : '',
+    slug: article.slug || article.id
+  })) as Article[]
 }
 
 export default async function SearchPage({ searchParams }: Props) {
