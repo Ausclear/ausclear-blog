@@ -10,7 +10,8 @@ type Props = {
   params: { slug: string }
 }
 
-// Sanitise content by removing meta tags, scripts, comments, and CSS that appear as TEXT
+// Sanitise content by ONLY removing garbage that appears as plain text
+// KEEP all proper HTML tags including <style>, <p>, <div>, etc.
 function sanitiseContent(content: string): string {
   if (!content) return ''
   
@@ -25,15 +26,35 @@ function sanitiseContent(content: string): string {
   // Remove meta tags
   cleaned = cleaned.replace(/<meta[\s\S]*?>/gi, '')
   
-  // Remove the CSS garbage that appears as plain text (NOT in <style> tags)
-  // This pattern matches: "* { margin: 0; ... } body { font-family: ... }" etc
+  // Remove CSS that appears as PLAIN TEXT (not in <style> tags)
   cleaned = cleaned.replace(/\*\s*\{[\s\S]*?\}\s*body\s*\{[\s\S]*?\}/i, '')
   
   // Trim whitespace
   cleaned = cleaned.trim()
   
-  // IMPORTANT: We DO NOT remove <style> tags - they contain article formatting
+  // IMPORTANT: DO NOT remove <style> tags - they contain article formatting
   return cleaned
+}
+
+// Extract H2 headings only for TOC (main sections, not subsections)
+function extractTOCHeadings(htmlContent: string): Array<{ id: string; text: string }> {
+  const headings: Array<{ id: string; text: string }> = []
+  
+  // Match ONLY h2 tags (main sections)
+  const headingRegex = /<h2(?:\s+id=["']([^"']+)["'])?[^>]*>(.*?)<\/h2>/gi
+  let match
+  
+  while ((match = headingRegex.exec(htmlContent)) !== null) {
+    const existingId = match[1]
+    const textWithHtml = match[2]
+    const text = textWithHtml.replace(/<[^>]*>/g, '').trim()
+    
+    const id = existingId || text.toLowerCase().replace(/[^\w]+/g, '-')
+    
+    headings.push({ id, text })
+  }
+  
+  return headings
 }
 
 async function getArticle(slug: string): Promise<Article | null> {
@@ -69,7 +90,13 @@ async function getArticle(slug: string): Promise<Article | null> {
   const rawData: any = data
 
   // Sanitise the content
-  const cleanContent = sanitiseContent(rawData.content || '')
+  let cleanContent = sanitiseContent(rawData.content || '')
+  
+  // Add IDs to h2 headings that don't have them (for TOC anchors)
+  cleanContent = cleanContent.replace(/<h2(?![^>]*\sid=)([^>]*)>(.*?)<\/h2>/gi, (match, attrs, text) => {
+    const id = text.replace(/<[^>]*>/g, '').trim().toLowerCase().replace(/[^\w]+/g, '-')
+    return `<h2${attrs} id="${id}">${text}</h2>`
+  })
 
   const article: Article = {
     ...rawData,
@@ -150,6 +177,9 @@ export default async function ArticlePage({ params }: Props) {
     month: 'long',
     day: 'numeric',
   })
+  
+  // Extract TOC (H2 headings only - main sections)
+  const tocHeadings = extractTOCHeadings(article.content)
 
   return (
     <div className="py-12 bg-gray-50 min-h-screen">
@@ -187,28 +217,31 @@ export default async function ArticlePage({ params }: Props) {
             </ol>
           </nav>
 
-          {/* Article */}
-          <article className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div className="p-8 md:p-12 border-t-4 border-gold">
-              {/* Meta Information */}
-              <div className="flex flex-wrap items-center gap-4 mb-6">
-                {category && (
-                  <Link
-                    href={`/categories/${category.slug}`}
-                    className="inline-flex items-center gap-2 text-sm bg-navy text-white px-4 py-2 rounded-full hover:bg-blue-900 transition-colours"
-                  >
-                    <span>{category.icon}</span>
-                    <span>{category.name}</span>
-                  </Link>
-                )}
-                <span className="text-sm text-gray-500">{formattedDate}</span>
-              </div>
+          {/* Two-column layout: Article + Sticky TOC */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
+            {/* Article Column */}
+            <div>
+              <article className="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div className="p-8 md:p-12 border-t-4 border-gold">
+                  {/* Meta Information */}
+                  <div className="flex flex-wrap items-center gap-4 mb-6">
+                    {category && (
+                      <Link
+                        href={`/categories/${category.slug}`}
+                        className="inline-flex items-center gap-2 text-sm bg-navy text-white px-4 py-2 rounded-full hover:bg-blue-900 transition-colours"
+                      >
+                        <span>{category.icon}</span>
+                        <span>{category.name}</span>
+                      </Link>
+                    )}
+                    <span className="text-sm text-gray-500">{formattedDate}</span>
+                  </div>
 
-              {/* Content - renders with native Zoho TOC */}
-              <div
-                className="prose prose-lg max-w-none prose-headings:text-navy prose-a:text-gold hover:prose-a:text-navy prose-strong:text-navy"
-                dangerouslySetInnerHTML={{ __html: article.content }}
-              />
+                  {/* Content - Article HTML has title and everything */}
+                  <div
+                    className="prose prose-lg max-w-none prose-headings:text-navy prose-a:text-gold hover:prose-a:text-navy prose-strong:text-navy"
+                    dangerouslySetInnerHTML={{ __html: article.content }}
+                  />
 
               {/* Feedback Buttons */}
               <div className="mt-12 pt-8 border-t border-gray-200">
@@ -247,6 +280,30 @@ export default async function ArticlePage({ params }: Props) {
               )}
             </div>
           </article>
+          </div>{/* End article column */}
+
+          {/* Sticky TOC Sidebar - H2 headings only */}
+          {tocHeadings.length > 0 && (
+            <aside className="hidden lg:block">
+              <div className="sticky top-24">
+                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-gold">
+                  <h3 className="text-sm font-bold text-navy mb-4 uppercase tracking-wide">On This Page</h3>
+                  <nav className="space-y-2">
+                    {tocHeadings.map((heading) => (
+                      <a
+                        key={heading.id}
+                        href={`#${heading.id}`}
+                        className="block text-sm hover:text-gold transition-colours leading-relaxed font-medium text-gray-800"
+                      >
+                        {heading.text}
+                      </a>
+                    ))}
+                  </nav>
+                </div>
+              </div>
+            </aside>
+          )}
+          </div>{/* End two-column grid */}
 
           {/* Related Articles */}
           {relatedArticles.length > 0 && (
