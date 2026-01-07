@@ -37,7 +37,7 @@ async function searchArticles(query: string): Promise<Article[]> {
   }
 
   // Map to add excerpt and ensure slug exists
-  return (data || []).map(article => ({
+  return (data || []).map((article: any) => ({
     ...article,
     excerpt: article.content ? article.content.substring(0, 150) + '...' : '',
     slug: article.slug || article.id
