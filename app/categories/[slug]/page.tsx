@@ -38,23 +38,18 @@ function sanitiseContent(content: string): string {
   return cleaned
 }
 
-// Remove embedded sections from article HTML
+// Remove embedded TOC sidebar - SURGICAL pattern based on actual Zoho HTML structure
 function removeEmbeddedSections(content: string): string {
-  if (!content) return ''
+  if (!content) return ""
   
   let cleaned = content
   
-  // Remove "On this page" / TOC sections
-  cleaned = cleaned.replace(/<(?:div|section|nav)[^>]*>[\s\S]*?(?:on this page|table of contents)[\s\S]*?<\/(?:div|section|nav)>/gi, '')
+  // Remove the ENTIRE <aside class="sidebar"> section (this contains "On This Page" TOC)
+  // This is the exact pattern from Zoho articles
+  cleaned = cleaned.replace(/<aside\s+class="sidebar">[\s\S]*?<\/aside>/gi, "")
   
-  // Remove "Key Takeaways" sections
-  cleaned = cleaned.replace(/<(?:div|section)[^>]*>[\s\S]*?key takeaways[\s\S]*?<\/(?:div|section)>/gi, '')
-  
-  // Remove "Contact" sections
-  cleaned = cleaned.replace(/<(?:div|section)[^>]*>[\s\S]*?(?:contact ausclear|phone:|email:|website:)[\s\S]*?<\/(?:div|section)>/gi, '')
-  
-  // Remove any divs with class containing "toc"
-  cleaned = cleaned.replace(/<(?:div|nav)[^>]*class="[^"]*toc[^"]*"[^>]*>[\s\S]*?<\/(?:div|nav)>/gi, '')
+  // Remove smooth scroll script at the very end
+  cleaned = cleaned.replace(/<script>[\s\S]*?<\/script>\s*$/gi, "")
   
   return cleaned
 }
@@ -101,6 +96,7 @@ async function getCategoryArticles(categorySlug: string): Promise<Article[]> {
   // Map to add excerpt and ensure slug exists
   return (data || []).map((article: any) => {
     let cleanContent = sanitiseContent(article.content || '')
+    cleanContent = removeEmbeddedSections(cleanContent || '')
     
     // Extract excerpt from first paragraph
     let excerpt = ''
