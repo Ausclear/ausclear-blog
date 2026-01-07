@@ -403,13 +403,15 @@ export default async function ArticlePage({ params }: Props) {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/request-introduction"
-                className="bg-white text-navy border-2 border-navy px-6 py-3 rounded-lg text-sm font-semibold hover:bg-gray-100 transition-colors w-full sm:w-auto whitespace-nowrap"
+                className="bg-white text-navy border-2 border-navy px-6 py-3 rounded-lg text-sm font-semibold hover:bg-gray-100 transition-colors sm:w-52 text-center no-underline"
+                style={{ textDecoration: 'none' }}
               >
                 Request Introduction
               </Link>
               <Link
                 href="/contact"
-                className="bg-white text-navy border-2 border-navy px-6 py-3 rounded-lg text-sm font-semibold hover:bg-gray-100 transition-colors w-full sm:w-auto whitespace-nowrap"
+                className="bg-white text-navy border-2 border-navy px-6 py-3 rounded-lg text-sm font-semibold hover:bg-gray-100 transition-colors sm:w-52 text-center no-underline"
+                style={{ textDecoration: 'none' }}
               >
                 Contact Us
               </Link>
