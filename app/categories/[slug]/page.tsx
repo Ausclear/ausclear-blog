@@ -101,7 +101,6 @@ async function getCategoryArticles(categorySlug: string): Promise<Article[]> {
   // Map to add excerpt and ensure slug exists
   return (data || []).map((article: any) => {
     let cleanContent = sanitiseContent(article.content || '')
-    cleanContent = removeEmbeddedSections(cleanContent)
     
     // Extract excerpt from first paragraph
     let excerpt = ''
