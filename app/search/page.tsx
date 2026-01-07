@@ -15,18 +15,28 @@ type Props = {
   searchParams: { q?: string }
 }
 
-// Sanitise content by removing HTML comments and script tags
+// Sanitise content by ONLY removing garbage that appears as plain text
 function sanitiseContent(content: string): string {
   if (!content) return ''
   
   let cleaned = content
   cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, '')
   cleaned = cleaned.replace(/<script[\s\S]*?<\/script>/gi, '')
-  cleaned = cleaned.replace(/<style[\s\S]*?<\/style>/gi, '')
   cleaned = cleaned.replace(/<meta[\s\S]*?>/gi, '')
-  cleaned = cleaned.replace(/\*\s*\{[^}]*\}/g, '')
-  cleaned = cleaned.replace(/body\s*\{[^}]*\}/g, '')
+  cleaned = cleaned.replace(/\*\s*\{[\s\S]*?\}\s*body\s*\{[\s\S]*?\}/i, '')
   cleaned = cleaned.trim()
+  
+  return cleaned
+}
+
+// Remove the TOC that's embedded in the article HTML
+function removeEmbeddedTOC(content: string): string {
+  if (!content) return ''
+  
+  let cleaned = content
+  cleaned = cleaned.replace(/<div[^>]*class="[^"]*table-of-contents[^"]*"[^>]*>[\s\S]*?<\/div>/gi, '')
+  cleaned = cleaned.replace(/<(?:div|section)[^>]*>[\s\S]*?(?:on this page|table of contents)[\s\S]*?<\/(?:div|section)>/gi, '')
+  cleaned = cleaned.replace(/<nav[^>]*>[\s\S]*?(?:on this page|table of contents)[\s\S]*?<\/nav>/gi, '')
   
   return cleaned
 }
@@ -54,11 +64,20 @@ async function searchArticles(query: string): Promise<Article[]> {
 
   // Map to add excerpt and ensure slug exists
   return (data || []).map((article: any) => {
-    const cleanContent = sanitiseContent(article.content || '')
+    let cleanContent = sanitiseContent(article.content || '')
+    cleanContent = removeEmbeddedTOC(cleanContent)
+    
+    // Extract excerpt from first paragraph
+    let excerpt = ''
+    const paragraphMatch = cleanContent.match(/<p[^>]*>(.*?)<\/p>/i)
+    if (paragraphMatch) {
+      excerpt = paragraphMatch[1].replace(/<[^>]*>/g, '').trim().substring(0, 150) + '...'
+    }
+    
     return {
       ...article,
       content: cleanContent,
-      excerpt: cleanContent ? cleanContent.substring(0, 150).replace(/<[^>]*>/g, '') + '...' : '',
+      excerpt: excerpt || cleanContent.substring(0, 150).replace(/<[^>]*>/g, '').trim() + '...',
       slug: article.slug || article.id
     }
   }) as Article[]
