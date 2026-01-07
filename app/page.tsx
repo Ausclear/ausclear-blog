@@ -13,22 +13,37 @@ export default async function HomePage() {
   // Fetch latest articles (most recent 3)
   const { data: latestData } = await supabase
     .from('kb_documents')
-    .select('id, title, excerpt, slug, category, created_at')
-    .eq('published', true)
+    .select('id, title, content, slug, category, created_at')
+    .eq('is_active', true)
+    .eq('archived', false)
     .order('created_at', { ascending: false })
     .limit(3)
 
-  const latestArticles = (latestData as Article[]) || []
+  // Generate excerpt from content and ensure slug exists
+  const latestArticles = (latestData || []).map(article => ({
+    id: article.id,
+    title: article.title,
+    excerpt: article.content ? article.content.substring(0, 150) + '...' : '',
+    slug: article.slug || article.id,
+    category: article.category
+  }))
 
-  // Fetch most popular articles (highest view count)
+  // Fetch most popular articles (most recent 6, since we don't have view_count)
   const { data: popularData } = await supabase
     .from('kb_documents')
-    .select('id, title, excerpt, slug, category, view_count')
-    .eq('published', true)
-    .order('view_count', { ascending: false })
-    .limit(3)
+    .select('id, title, content, slug, category, created_at')
+    .eq('is_active', true)
+    .eq('archived', false)
+    .order('created_at', { ascending: false })
+    .range(3, 5) // Get articles 4-6 to avoid duplicates with latest
 
-  const popularArticles = (popularData as Article[]) || []
+  const popularArticles = (popularData || []).map(article => ({
+    id: article.id,
+    title: article.title,
+    excerpt: article.content ? article.content.substring(0, 150) + '...' : '',
+    slug: article.slug || article.id,
+    category: article.category
+  }))
   return (
     <div>
       {/* Hero Section */}
