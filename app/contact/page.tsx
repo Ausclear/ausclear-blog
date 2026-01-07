@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import ContactForm from '@/components/ContactForm'
-import ScheduleCard from '@/components/ScheduleCard'
+import FlipCard from '@/components/FlipCard'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -10,141 +10,231 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Page Hero */}
-      <div className="bg-navy text-white py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          {/* Breadcrumb */}
-          <nav className="text-sm mb-6">
-            <ol className="flex items-center space-x-2 text-gray-300">
-              <li>
-                <Link href="/" className="hover:text-white transition-colors">
-                  Home
-                </Link>
-              </li>
-              <li>/</li>
-              <li className="text-white font-medium">Contact</li>
-            </ol>
+      <div style={{
+        padding: '60px 0 40px',
+        background: 'linear-gradient(135deg, rgba(30,58,138,0.9) 0%, rgba(10,22,40,0.85) 100%), url(https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1920) center/cover',
+        color: 'white',
+        textAlign: 'center',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+          <nav style={{ 
+            display: 'flex', 
+            gap: '12px', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            marginBottom: '24px',
+            fontSize: '14px',
+            color: 'rgba(255,255,255,0.8)'
+          }}>
+            <Link href="/" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>
+              Home
+            </Link>
+            <span>/</span>
+            <span style={{ color: 'white' }}>Contact</span>
           </nav>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Contact AusClear</h1>
-          <p className="text-xl text-gray-200 max-w-3xl">
+          <h1 style={{
+            fontSize: '42px',
+            fontWeight: 800,
+            marginBottom: '24px',
+            lineHeight: 1.2,
+            color: '#ffffff'
+          }}>
+            Contact AusClear
+          </h1>
+          <p style={{
+            fontSize: '20px',
+            color: 'rgba(255,255,255,0.9)',
+            maxWidth: '700px',
+            margin: '0 auto'
+          }}>
             Whether you have a query, need more information or are ready to kickstart your security clearance journey, we are just a message away.
           </p>
         </div>
       </div>
 
-      {/* Contact Methods */}
-      <div className="py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Email Card */}
-            <a
+      {/* Contact Methods - 3 Flip Cards */}
+      <section style={{ padding: '100px 0' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '32px'
+          }}>
+            <FlipCard
+              frontEmoji="✉️"
+              frontTitle="Email"
+              frontDescription="Email support to start your journey"
+              backEmoji="✉️"
+              backTitle="Click to send us an email"
+              backDetail="support@ausclear.com.au"
               href="mailto:support@ausclear.com.au?subject=Security%20Clearance%20Enquiry"
-              className="block bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 p-8 text-center border-l-4 border-gold group"
-            >
-              <div className="text-6xl mb-4">✉️</div>
-              <h3 className="text-2xl font-bold text-navy mb-3 group-hover:text-gold transition-colors">
-                Email
-              </h3>
-              <p className="text-gray-600 mb-4">Email support to start your journey</p>
-              <p className="text-sm font-semibold text-navy">support@ausclear.com.au</p>
-            </a>
-
-            {/* Phone Card */}
-            <a
+            />
+            
+            <FlipCard
+              frontEmoji="📞"
+              frontTitle="Call Us"
+              frontDescription="Lines open Monday to Friday<br>9am to 5pm"
+              backEmoji="📞"
+              backTitle="Click to call us now"
+              backDetail="1300 027 423"
               href="tel:1300027423"
-              className="block bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 p-8 text-center border-l-4 border-gold group"
-            >
-              <div className="text-6xl mb-4">📞</div>
-              <h3 className="text-2xl font-bold text-navy mb-3 group-hover:text-gold transition-colors">
-                Call Us
-              </h3>
-              <p className="text-gray-600 mb-4">Lines open Monday to Friday<br />9am to 5pm ACST</p>
-              <p className="text-sm font-semibold text-navy">1300 027 423</p>
-            </a>
-
-            {/* Schedule Card */}
-            <ScheduleCard />
+            />
+            
+            <FlipCard
+              frontEmoji="📅"
+              frontTitle="Schedule a Call"
+              frontDescription="Can't decide, schedule a call back at your convenience"
+              backEmoji="📅"
+              backTitle="Click to book a time"
+              backDetail="Choose your preferred slot"
+            />
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Main Content - Form and Business Info */}
-      <div className="py-16 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            {/* Business Info Sidebar */}
-            <div className="lg:col-span-1">
-              <h2 className="text-3xl font-bold text-navy mb-6">Get In Touch</h2>
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                Need Professional Help? We've Got You Covered! Kindly complete the contact form with your details and message.
+      {/* Main Content - Sidebar + Form */}
+      <section style={{ padding: '100px 0', background: '#f8fafc' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+          <div style={{
+            display: 'flex',
+            gap: '60px',
+            alignItems: 'flex-start'
+          }}>
+            {/* Sidebar - 35% */}
+            <div style={{ 
+              flex: '0 0 35%', 
+              maxWidth: '450px' 
+            }}>
+              <h2 style={{
+                fontSize: '40px',
+                fontWeight: 800,
+                color: '#002147',
+                marginBottom: '16px',
+                lineHeight: 1.2,
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <span style={{
+                  display: 'inline-block',
+                  width: '6px',
+                  height: '40px',
+                  background: '#dc2626',
+                  marginRight: '16px',
+                  borderRadius: '3px'
+                }}></span>
+                Get In Touch
+              </h2>
+              
+              <p style={{
+                fontSize: '18px',
+                color: '#475569',
+                lineHeight: 1.7,
+                marginBottom: '24px'
+              }}>
+                Need Professional Help? We've Got You Covered! Kindly complete the contact form with your details and message. At AusClear, we are dedicated to assisting you with your security clearance needs, and our team will contact you within the next few hours.
               </p>
-              <p className="text-gray-600 mb-8 leading-relaxed">
-                AusClear delivers responsive, expert support for individuals, defence contractors and organisations navigating Baseline, NV1 and NV2 security clearances.
+
+              <p style={{
+                fontSize: '18px',
+                color: '#475569',
+                lineHeight: 1.7,
+                marginBottom: '48px'
+              }}>
+                AusClear delivers responsive, expert support for individuals, defence contractors and organisations navigating Baseline, NV1 and NV2 security clearances. Whether you're beginning the process or seeking guidance on AGSVA requirements, our team provides clear, compliant and timely assistance to keep your clearance journey on track.
               </p>
 
               {/* Business Info Card */}
-              <div className="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
-                <div className="bg-navy text-white p-6">
-                  <h3 className="text-xl font-bold text-center">Business Information</h3>
+              <div style={{
+                background: 'white',
+                border: '1px solid #e2e8f0',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                marginTop: '32px'
+              }}>
+                <div style={{
+                  background: 'linear-gradient(135deg, rgba(30,58,138,0.9) 0%, rgba(10,22,40,0.85) 100%), url(https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1920) center/cover',
+                  color: '#ffffff',
+                  padding: '24px',
+                  textAlign: 'center',
+                  fontSize: '20px',
+                  fontWeight: 700
+                }}>
+                  Business Information
                 </div>
-                <div className="p-6 space-y-4">
-                  <div className="flex gap-3">
-                    <div className="text-2xl flex-shrink-0">🏢</div>
-                    <div>
-                      <p className="font-bold text-navy">AusClear</p>
-                      <p className="text-sm text-gray-600">82 Onkaparinga Valley Road</p>
-                      <p className="text-sm text-gray-600">Woodside SA 5244</p>
-                      <p className="text-sm text-gray-600">Australia</p>
+                
+                <div style={{ padding: '24px' }}>
+                  <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', alignItems: 'flex-start' }}>
+                    <div style={{ fontSize: '22px', flexShrink: 0 }}>🏢</div>
+                    <div style={{ fontSize: '15px', lineHeight: 1.5, color: '#1e293b' }}>
+                      <strong style={{ color: '#002147', fontWeight: 700, marginBottom: '4px', display: 'block' }}>AusClear</strong>
+                      82 Onkaparinga Valley Road<br />
+                      Woodside SA 5244<br />
+                      Australia
                     </div>
                   </div>
 
-                  <div className="flex gap-3">
-                    <div className="text-2xl flex-shrink-0">⏰</div>
-                    <div>
-                      <p className="font-bold text-navy">Opening Hours</p>
-                      <p className="text-sm text-gray-600">Monday - Friday: 9:00 AM - 5:00 PM ACST</p>
-                      <span id="businessStatus" className="inline-block mt-2 px-3 py-1 rounded-full text-xs font-bold"></span>
+                  <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', alignItems: 'flex-start' }}>
+                    <div style={{ fontSize: '22px', flexShrink: 0 }}>⏰</div>
+                    <div style={{ fontSize: '15px', lineHeight: 1.5, color: '#1e293b' }}>
+                      <strong style={{ color: '#002147', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Opening Hours</strong>
+                      Monday - Friday: 9:00 AM - 5:00 PM ACST<br />
+                      <span id="businessStatus" className="business-status"></span>
                     </div>
                   </div>
 
-                  <div className="flex gap-3">
-                    <div className="text-2xl flex-shrink-0">📞</div>
-                    <div>
-                      <a href="tel:1300027423" className="text-gray-800 hover:text-navy transition-colors">
-                        1300 027 423
-                      </a>
+                  <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', alignItems: 'flex-start' }}>
+                    <div style={{ fontSize: '22px', flexShrink: 0 }}>📞</div>
+                    <div style={{ fontSize: '15px', lineHeight: 1.5, color: '#1e293b' }}>
+                      <a href="tel:1300027423" style={{ color: '#1e293b', textDecoration: 'none' }}>1300 027 423</a>
                     </div>
                   </div>
 
-                  <div className="flex gap-3">
-                    <div className="text-2xl flex-shrink-0">✉️</div>
-                    <div>
-                      <a href="mailto:support@ausclear.com.au" className="text-gray-800 hover:text-navy transition-colors">
-                        support@ausclear.com.au
-                      </a>
+                  <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', alignItems: 'flex-start' }}>
+                    <div style={{ fontSize: '22px', flexShrink: 0 }}>✉️</div>
+                    <div style={{ fontSize: '15px', lineHeight: 1.5, color: '#1e293b' }}>
+                      <a href="mailto:support@ausclear.com.au" style={{ color: '#1e293b', textDecoration: 'none' }}>support@ausclear.com.au</a>
                     </div>
                   </div>
 
-                  <div className="flex gap-3">
-                    <div className="text-2xl flex-shrink-0">🏛️</div>
-                    <div>
-                      <p className="text-sm text-gray-600"><span className="font-bold text-navy">ABN:</span> 70 628 031 587</p>
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                    <div style={{ fontSize: '22px', flexShrink: 0 }}>🏛️</div>
+                    <div style={{ fontSize: '15px', lineHeight: 1.5, color: '#1e293b' }}>
+                      <strong style={{ color: '#002147', fontWeight: 700 }}>ABN:</strong> 70 628 031 587
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Contact Form */}
-            <div className="lg:col-span-2">
+            {/* Form - 65% (flex: 1) */}
+            <div style={{ flex: 1 }}>
               <ContactForm />
             </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      <style jsx global>{`
+        @media (max-width: 1024px) {
+          section > div > div[style*="flex"] {
+            flex-direction: column !important;
+          }
+          section > div > div[style*="flex"] > div:first-child {
+            flex: 1 !important;
+            max-width: 100% !important;
+          }
+        }
+        @media (max-width: 768px) {
+          section > div > div[style*="grid-template-columns"] {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </div>
   )
 }
-
