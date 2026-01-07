@@ -56,9 +56,9 @@ export default function ArticleListView({ articles, title = "Articles" }: Articl
             <Link
               key={article.id}
               href={`/articles/${article.slug}`}
-              className="block bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 p-6 border-l-4 border-navy group"
+              className="block bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 p-6 border-l-4 border-gold group"
             >
-              <h3 className="text-lg font-semibold text-navy mb-2 group-hover:text-blue-700 transition-colors">
+              <h3 className="text-lg font-semibold text-navy mb-2 group-hover:text-gold transition-colors">
                 {article.title}
               </h3>
               <p className="text-sm text-gray-600 line-clamp-3">{article.excerpt}</p>
@@ -77,14 +77,14 @@ export default function ArticleListView({ articles, title = "Articles" }: Articl
               className="block p-6 hover:bg-gray-50 transition-colors group"
             >
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-2 h-2 mt-2 bg-navy rounded-full"></div>
+                <div className="flex-shrink-0 w-2 h-2 mt-2 bg-gold rounded-full"></div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-semibold text-navy mb-2 group-hover:text-blue-700 transition-colors">
+                  <h3 className="text-lg font-semibold text-navy mb-2 group-hover:text-gold transition-colors">
                     {article.title}
                   </h3>
                   <p className="text-sm text-gray-600 line-clamp-2">{article.excerpt}</p>
                 </div>
-                <svg className="flex-shrink-0 w-5 h-5 text-gray-400 group-hover:text-navy transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="flex-shrink-0 w-5 h-5 text-gray-400 group-hover:text-gold transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
