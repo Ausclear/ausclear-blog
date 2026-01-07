@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-export const revalidate = 3600
+export const revalidate = 300 // Revalidate every 5 minutes
 
 type Props = {
   params: { slug: string }
