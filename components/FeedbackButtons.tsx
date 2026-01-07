@@ -29,7 +29,7 @@ export default function FeedbackButtons({
       setNotHelpfulCount(prev => prev + 1)
     }
 
-    // TODO: Send to Supabase
+    // Send to Supabase
     try {
       await fetch('/api/feedback', {
         method: 'POST',
@@ -46,17 +46,21 @@ export default function FeedbackButtons({
 
   return (
     <div className="mt-12 pt-8 border-t border-gray-200">
-      <p className="text-sm font-semibold text-gray-700 mb-4">Was this article helpful?</p>
+      <p className="text-sm font-semibold text-gray-700 mb-4">
+        Was this article helpful?
+        {userVoted && <span className="text-green-600 ml-2">✓ Thanks for your feedback!</span>}
+      </p>
       <div className="flex gap-4">
         <button 
           onClick={() => handleFeedback('yes')}
           disabled={userVoted !== null}
-          className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg transition-colors cursor-pointer ${
+          title={`${helpfulCount} people found this helpful`}
+          className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg transition-colors ${
             userVoted === 'yes' 
-              ? 'bg-green-100 border-green-600' 
+              ? 'bg-green-100 border-green-600 cursor-default' 
               : userVoted 
                 ? 'opacity-50 cursor-not-allowed' 
-                : 'hover:bg-green-50 hover:border-green-600'
+                : 'hover:bg-green-50 hover:border-green-600 cursor-pointer'
           }`}
         >
           <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,12 +71,13 @@ export default function FeedbackButtons({
         <button 
           onClick={() => handleFeedback('no')}
           disabled={userVoted !== null}
-          className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg transition-colors cursor-pointer ${
+          title={`${notHelpfulCount} people did not find this helpful`}
+          className={`flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg transition-colors ${
             userVoted === 'no' 
-              ? 'bg-red-100 border-red-600' 
+              ? 'bg-red-100 border-red-600 cursor-default' 
               : userVoted 
                 ? 'opacity-50 cursor-not-allowed' 
-                : 'hover:bg-red-50 hover:border-red-600'
+                : 'hover:bg-red-50 hover:border-red-600 cursor-pointer'
           }`}
         >
           <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
