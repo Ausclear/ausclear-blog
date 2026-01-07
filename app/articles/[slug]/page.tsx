@@ -36,6 +36,25 @@ function sanitiseContent(content: string): string {
   return cleaned
 }
 
+// Remove the TOC that's embedded in the article HTML
+function removeEmbeddedTOC(content: string): string {
+  if (!content) return ''
+  
+  let cleaned = content
+  
+  // Remove common TOC patterns from Zoho articles
+  // Pattern 1: <div class="table-of-contents">...</div> or similar
+  cleaned = cleaned.replace(/<div[^>]*class="[^"]*table-of-contents[^"]*"[^>]*>[\s\S]*?<\/div>/gi, '')
+  
+  // Pattern 2: Section with "On this page" or "Table of Contents" heading
+  cleaned = cleaned.replace(/<(?:div|section)[^>]*>[\s\S]*?(?:on this page|table of contents)[\s\S]*?<\/(?:div|section)>/gi, '')
+  
+  // Pattern 3: <nav> tags that contain TOC
+  cleaned = cleaned.replace(/<nav[^>]*>[\s\S]*?(?:on this page|table of contents)[\s\S]*?<\/nav>/gi, '')
+  
+  return cleaned
+}
+
 // Extract H2 headings only for TOC (main sections, not subsections)
 function extractTOCHeadings(htmlContent: string): Array<{ id: string; text: string }> {
   const headings: Array<{ id: string; text: string }> = []
@@ -89,19 +108,29 @@ async function getArticle(slug: string): Promise<Article | null> {
 
   const rawData: any = data
 
-  // Sanitise the content
+  // Sanitise the content (remove meta, scripts, comments)
   let cleanContent = sanitiseContent(rawData.content || '')
+  
+  // Remove the embedded TOC from Zoho HTML
+  cleanContent = removeEmbeddedTOC(cleanContent)
   
   // Add IDs to h2 headings that don't have them (for TOC anchors)
   cleanContent = cleanContent.replace(/<h2(?![^>]*\sid=)([^>]*)>(.*?)<\/h2>/gi, (match, attrs, text) => {
     const id = text.replace(/<[^>]*>/g, '').trim().toLowerCase().replace(/[^\w]+/g, '-')
     return `<h2${attrs} id="${id}">${text}</h2>`
   })
+  
+  // Generate clean excerpt by finding first paragraph of actual content
+  let excerpt = ''
+  const paragraphMatch = cleanContent.match(/<p[^>]*>(.*?)<\/p>/i)
+  if (paragraphMatch) {
+    excerpt = paragraphMatch[1].replace(/<[^>]*>/g, '').trim().substring(0, 200) + '...'
+  }
 
   const article: Article = {
     ...rawData,
     content: cleanContent,
-    excerpt: cleanContent ? cleanContent.substring(0, 200).replace(/<[^>]*>/g, '').trim() + '...' : '',
+    excerpt: excerpt || cleanContent.substring(0, 200).replace(/<[^>]*>/g, '').trim() + '...',
     slug: rawData.slug || rawData.id,
     view_count: 0,
     author: null,
@@ -127,12 +156,21 @@ async function getRelatedArticles(categorySlug: string, currentArticleId: string
   if (!data) return []
 
   return data.map((article: any) => {
-    const cleanContent = sanitiseContent(article.content || '')
+    let cleanContent = sanitiseContent(article.content || '')
+    cleanContent = removeEmbeddedTOC(cleanContent)
+    
+    // Extract excerpt from first paragraph
+    let excerpt = ''
+    const paragraphMatch = cleanContent.match(/<p[^>]*>(.*?)<\/p>/i)
+    if (paragraphMatch) {
+      excerpt = paragraphMatch[1].replace(/<[^>]*>/g, '').trim().substring(0, 150) + '...'
+    }
+    
     return {
       id: article.id,
       title: article.title,
       slug: article.slug || article.id,
-      excerpt: cleanContent ? cleanContent.substring(0, 150).replace(/<[^>]*>/g, '').trim() + '...' : '',
+      excerpt: excerpt || cleanContent.substring(0, 150).replace(/<[^>]*>/g, '').trim() + '...',
       category: article.category
     }
   })
