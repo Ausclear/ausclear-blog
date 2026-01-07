@@ -36,6 +36,11 @@ async function getArticle(slug: string): Promise<Article | null> {
     data = dataById
   }
 
+  // TypeScript safety check
+  if (!data) {
+    return null
+  }
+
   // Add excerpt from content
   const article = {
     ...data,
