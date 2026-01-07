@@ -107,11 +107,8 @@ async function getArticle(slug: string): Promise<Article | null> {
 
   const rawData: any = data
 
-  // Sanitise content - remove meta/scripts/comments
+  // Sanitise content - ONLY remove meta/scripts/comments, NOTHING ELSE
   let cleanContent = sanitiseContent(rawData.content || '')
-  
-  // Remove embedded TOC, Key Takeaways, Contact sections
-  cleanContent = removeEmbeddedSections(cleanContent)
   
   // Add IDs to h2 headings for TOC anchors
   cleanContent = cleanContent.replace(/<h2(?![^>]*\sid=)([^>]*)>(.*?)<\/h2>/gi, (match, attrs, text) => {
