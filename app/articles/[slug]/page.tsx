@@ -10,8 +10,8 @@ type Props = {
   params: { slug: string }
 }
 
-// Sanitise content by ONLY removing garbage that appears as plain text
-// KEEP all proper HTML tags including <style>, <p>, <div>, etc.
+// ONLY remove meta tags, scripts, HTML comments that show as text
+// DO NOT remove style tags or any actual content
 function sanitiseContent(content: string): string {
   if (!content) return ''
   
@@ -20,46 +20,21 @@ function sanitiseContent(content: string): string {
   // Remove HTML comments
   cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, '')
   
-  // Remove script tags and their content  
+  // Remove script tags
   cleaned = cleaned.replace(/<script[\s\S]*?<\/script>/gi, '')
   
   // Remove meta tags
   cleaned = cleaned.replace(/<meta[\s\S]*?>/gi, '')
   
-  // Remove CSS that appears as PLAIN TEXT (not in <style> tags)
-  cleaned = cleaned.replace(/\*\s*\{[\s\S]*?\}\s*body\s*\{[\s\S]*?\}/i, '')
-  
   // Trim whitespace
   cleaned = cleaned.trim()
   
-  // IMPORTANT: DO NOT remove <style> tags - they contain article formatting
   return cleaned
 }
 
-// Remove the TOC that's embedded in the article HTML
-function removeEmbeddedTOC(content: string): string {
-  if (!content) return ''
-  
-  let cleaned = content
-  
-  // Remove common TOC patterns from Zoho articles
-  // Pattern 1: <div class="table-of-contents">...</div> or similar
-  cleaned = cleaned.replace(/<div[^>]*class="[^"]*table-of-contents[^"]*"[^>]*>[\s\S]*?<\/div>/gi, '')
-  
-  // Pattern 2: Section with "On this page" or "Table of Contents" heading
-  cleaned = cleaned.replace(/<(?:div|section)[^>]*>[\s\S]*?(?:on this page|table of contents)[\s\S]*?<\/(?:div|section)>/gi, '')
-  
-  // Pattern 3: <nav> tags that contain TOC
-  cleaned = cleaned.replace(/<nav[^>]*>[\s\S]*?(?:on this page|table of contents)[\s\S]*?<\/nav>/gi, '')
-  
-  return cleaned
-}
-
-// Extract H2 headings only for TOC (main sections, not subsections)
+// Extract H2 headings only for sidebar TOC
 function extractTOCHeadings(htmlContent: string): Array<{ id: string; text: string }> {
   const headings: Array<{ id: string; text: string }> = []
-  
-  // Match ONLY h2 tags (main sections)
   const headingRegex = /<h2(?:\s+id=["']([^"']+)["'])?[^>]*>(.*?)<\/h2>/gi
   let match
   
@@ -67,7 +42,6 @@ function extractTOCHeadings(htmlContent: string): Array<{ id: string; text: stri
     const existingId = match[1]
     const textWithHtml = match[2]
     const text = textWithHtml.replace(/<[^>]*>/g, '').trim()
-    
     const id = existingId || text.toLowerCase().replace(/[^\w]+/g, '-')
     
     headings.push({ id, text })
@@ -77,7 +51,6 @@ function extractTOCHeadings(htmlContent: string): Array<{ id: string; text: stri
 }
 
 async function getArticle(slug: string): Promise<Article | null> {
-  // Try to find by slug first
   let { data, error } = await supabase
     .from('kb_documents')
     .select('*')
@@ -86,7 +59,6 @@ async function getArticle(slug: string): Promise<Article | null> {
     .eq('archived', false)
     .single()
 
-  // If not found by slug, try by ID
   if (error || !data) {
     const { data: dataById, error: errorById } = await supabase
       .from('kb_documents')
@@ -96,31 +68,24 @@ async function getArticle(slug: string): Promise<Article | null> {
       .eq('archived', false)
       .single()
     
-    if (errorById || !dataById) {
-      return null
-    }
+    if (errorById || !dataById) return null
     data = dataById
   }
 
-  if (!data) {
-    return null
-  }
+  if (!data) return null
 
   const rawData: any = data
 
-  // Sanitise the content (remove meta, scripts, comments)
+  // Sanitise content - ONLY remove garbage, keep everything else
   let cleanContent = sanitiseContent(rawData.content || '')
   
-  // Remove the embedded TOC from Zoho HTML
-  cleanContent = removeEmbeddedTOC(cleanContent)
-  
-  // Add IDs to h2 headings that don't have them (for TOC anchors)
+  // Add IDs to h2 headings for TOC anchors
   cleanContent = cleanContent.replace(/<h2(?![^>]*\sid=)([^>]*)>(.*?)<\/h2>/gi, (match, attrs, text) => {
     const id = text.replace(/<[^>]*>/g, '').trim().toLowerCase().replace(/[^\w]+/g, '-')
     return `<h2${attrs} id="${id}">${text}</h2>`
   })
-  
-  // Generate clean excerpt by finding first paragraph of actual content
+
+  // Generate excerpt from first paragraph
   let excerpt = ''
   const paragraphMatch = cleanContent.match(/<p[^>]*>(.*?)<\/p>/i)
   if (paragraphMatch) {
@@ -156,21 +121,17 @@ async function getRelatedArticles(categorySlug: string, currentArticleId: string
   if (!data) return []
 
   return data.map((article: any) => {
-    let cleanContent = sanitiseContent(article.content || '')
-    cleanContent = removeEmbeddedTOC(cleanContent)
-    
-    // Extract excerpt from first paragraph
-    let excerpt = ''
+    const cleanContent = sanitiseContent(article.content || '')
     const paragraphMatch = cleanContent.match(/<p[^>]*>(.*?)<\/p>/i)
-    if (paragraphMatch) {
-      excerpt = paragraphMatch[1].replace(/<[^>]*>/g, '').trim().substring(0, 150) + '...'
-    }
+    const excerpt = paragraphMatch 
+      ? paragraphMatch[1].replace(/<[^>]*>/g, '').trim().substring(0, 150) + '...'
+      : cleanContent.substring(0, 150).replace(/<[^>]*>/g, '').trim() + '...'
     
     return {
       id: article.id,
       title: article.title,
       slug: article.slug || article.id,
-      excerpt: excerpt || cleanContent.substring(0, 150).replace(/<[^>]*>/g, '').trim() + '...',
+      excerpt,
       category: article.category
     }
   })
@@ -180,9 +141,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await getArticle(params.slug)
 
   if (!article) {
-    return {
-      title: 'Article Not Found',
-    }
+    return { title: 'Article Not Found' }
   }
 
   return {
@@ -216,7 +175,7 @@ export default async function ArticlePage({ params }: Props) {
     day: 'numeric',
   })
   
-  // Extract TOC (H2 headings only - main sections)
+  // Extract TOC (H2 headings only)
   const tocHeadings = extractTOCHeadings(article.content)
 
   return (
@@ -255,7 +214,7 @@ export default async function ArticlePage({ params }: Props) {
             </ol>
           </nav>
 
-          {/* Two-column layout: Article + Sticky TOC */}
+          {/* Two-column layout */}
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
             {/* Article Column */}
             <div>
@@ -275,73 +234,80 @@ export default async function ArticlePage({ params }: Props) {
                     <span className="text-sm text-gray-500">{formattedDate}</span>
                   </div>
 
-                  {/* Content - Article HTML has title and everything */}
+                  {/* Article Content */}
                   <div
                     className="prose prose-lg max-w-none prose-headings:text-navy prose-a:text-gold hover:prose-a:text-navy prose-strong:text-navy"
                     dangerouslySetInnerHTML={{ __html: article.content }}
                   />
 
-              {/* Feedback Buttons */}
-              <div className="mt-12 pt-8 border-t border-gray-200">
-                <p className="text-sm font-semibold text-gray-700 mb-4">Was this article helpful?</p>
-                <div className="flex gap-4">
-                  <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colours">
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                    </svg>
-                    <span className="text-sm font-medium">Yes</span>
-                  </button>
-                  <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colours">
-                    <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5" />
-                    </svg>
-                    <span className="text-sm font-medium">No</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Tags */}
-              {article.tags && article.tags.length > 0 && (
-                <div className="mt-12 pt-8 border-t border-gray-200">
-                  <h3 className="text-sm font-semibold text-gray-700 mb-3">Tags:</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {article.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
+                  {/* Feedback Buttons */}
+                  <div className="mt-12 pt-8 border-t border-gray-200">
+                    <p className="text-sm font-semibold text-gray-700 mb-4">Was this article helpful?</p>
+                    <div className="flex gap-4">
+                      <button 
+                        onClick={() => alert('Thank you for your feedback!')}
+                        className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-green-50 hover:border-green-600 transition-colours cursor-pointer"
                       >
-                        {tag}
-                      </span>
-                    ))}
+                        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                        </svg>
+                        <span className="text-sm font-medium">Yes</span>
+                      </button>
+                      <button 
+                        onClick={() => alert('Thank you for your feedback. We\'ll work to improve this article.')}
+                        className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-red-50 hover:border-red-600 transition-colours cursor-pointer"
+                      >
+                        <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5" />
+                        </svg>
+                        <span className="text-sm font-medium">No</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Tags */}
+                  {article.tags && article.tags.length > 0 && (
+                    <div className="mt-12 pt-8 border-t border-gray-200">
+                      <h3 className="text-sm font-semibold text-gray-700 mb-3">Tags:</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {article.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </article>
+            </div>
+
+            {/* Sticky TOC Sidebar - H2 only, NO underlines */}
+            {tocHeadings.length > 0 && (
+              <aside className="hidden lg:block">
+                <div className="sticky top-24">
+                  <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-gold">
+                    <h3 className="text-sm font-bold text-navy mb-4 uppercase tracking-wide">On This Page</h3>
+                    <nav className="space-y-2">
+                      {tocHeadings.map((heading) => (
+                        <a
+                          key={heading.id}
+                          href={`#${heading.id}`}
+                          className="block text-sm hover:text-gold transition-colours leading-relaxed font-medium text-gray-800 no-underline"
+                          style={{ textDecoration: 'none' }}
+                        >
+                          {heading.text}
+                        </a>
+                      ))}
+                    </nav>
                   </div>
                 </div>
-              )}
-            </div>
-          </article>
-          </div>{/* End article column */}
-
-          {/* Sticky TOC Sidebar - H2 headings only */}
-          {tocHeadings.length > 0 && (
-            <aside className="hidden lg:block">
-              <div className="sticky top-24">
-                <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-gold">
-                  <h3 className="text-sm font-bold text-navy mb-4 uppercase tracking-wide">On This Page</h3>
-                  <nav className="space-y-2">
-                    {tocHeadings.map((heading) => (
-                      <a
-                        key={heading.id}
-                        href={`#${heading.id}`}
-                        className="block text-sm hover:text-gold transition-colours leading-relaxed font-medium text-gray-800"
-                      >
-                        {heading.text}
-                      </a>
-                    ))}
-                  </nav>
-                </div>
-              </div>
-            </aside>
-          )}
-          </div>{/* End two-column grid */}
+              </aside>
+            )}
+          </div>
 
           {/* Related Articles */}
           {relatedArticles.length > 0 && (
@@ -373,7 +339,7 @@ export default async function ArticlePage({ params }: Props) {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/request-introduction"
-                className="bg-navy text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-all inline-block"
+                className="bg-gold text-navy px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-all inline-block"
               >
                 Request Introduction
               </Link>
