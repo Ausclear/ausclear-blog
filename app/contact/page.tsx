@@ -60,11 +60,7 @@ export default function ContactPage() {
       {/* Contact Methods - 3 Flip Cards */}
       <section style={{ padding: '100px 0' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '32px'
-          }}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <FlipCard
               frontEmoji="✉️"
               frontTitle="Email"
@@ -100,16 +96,9 @@ export default function ContactPage() {
       {/* Main Content - Sidebar + Form */}
       <section style={{ padding: '100px 0', background: '#f8fafc' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
-          <div style={{
-            display: 'flex',
-            gap: '60px',
-            alignItems: 'flex-start'
-          }}>
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-[60px] items-start">
             {/* Sidebar - 35% */}
-            <div style={{ 
-              flex: '0 0 35%', 
-              maxWidth: '450px' 
-            }}>
+            <div className="w-full lg:flex-[0_0_35%] lg:max-w-[450px]">
               <h2 style={{
                 fontSize: '40px',
                 fontWeight: 800,
@@ -212,29 +201,12 @@ export default function ContactPage() {
             </div>
 
             {/* Form - 65% (flex: 1) */}
-            <div style={{ flex: 1 }}>
+            <div className="w-full lg:flex-1">
               <ContactForm />
             </div>
           </div>
         </div>
       </section>
-
-      <style jsx global>{`
-        @media (max-width: 1024px) {
-          section > div > div[style*="flex"] {
-            flex-direction: column !important;
-          }
-          section > div > div[style*="flex"] > div:first-child {
-            flex: 1 !important;
-            max-width: 100% !important;
-          }
-        }
-        @media (max-width: 768px) {
-          section > div > div[style*="grid-template-columns"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </div>
   )
 }
