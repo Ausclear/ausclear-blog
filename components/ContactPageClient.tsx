@@ -93,18 +93,9 @@ export default function ContactPageClient() {
                 fontSize: '18px',
                 color: '#475569',
                 lineHeight: 1.7,
-                marginBottom: '24px'
-              }}>
-                Need Professional Help? We've Got You Covered! Kindly complete the contact form with your details and message. At AusClear, we are dedicated to assisting you with your security clearance needs, and our team will contact you within the next few hours.
-              </p>
-
-              <p style={{
-                fontSize: '18px',
-                color: '#475569',
-                lineHeight: 1.7,
                 marginBottom: '48px'
               }}>
-                AusClear delivers responsive, expert support for individuals, defence contractors and organisations navigating Baseline, NV1 and NV2 security clearances. Whether you're beginning the process or seeking guidance on AGSVA requirements, our team provides clear, compliant and timely assistance to keep your clearance journey on track.
+                Need Professional Help? We've Got You Covered! Kindly complete the contact form with your details and message. At AusClear, we are dedicated to assisting you with your security clearance needs, and our team will contact you within the next few hours.
               </p>
 
               {/* Business Info Card */}
@@ -213,3 +204,4 @@ export default function ContactPageClient() {
     </>
   )
 }
+
