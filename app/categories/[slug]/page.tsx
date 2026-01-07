@@ -37,7 +37,8 @@ async function getCategoryArticles(categorySlug: string): Promise<Article[]> {
     .from('kb_documents')
     .select('*')
     .eq('category', categorySlug)
-    .eq('published', true)
+    .eq('is_active', true)
+    .eq('archived', false)
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -45,7 +46,12 @@ async function getCategoryArticles(categorySlug: string): Promise<Article[]> {
     return []
   }
 
-  return (data as Article[]) || []
+  // Map to add excerpt and ensure slug exists
+  return (data || []).map(article => ({
+    ...article,
+    excerpt: article.content ? article.content.substring(0, 150) + '...' : '',
+    slug: article.slug || article.id
+  })) as Article[]
 }
 
 export default async function CategoryPage({ params }: Props) {
