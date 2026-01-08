@@ -1,7 +1,5 @@
-// Force redeploy
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
-import HomeSearchBar from '@/components/HomeSearchBar'
 
 type Article = {
   id: string
@@ -11,155 +9,96 @@ type Article = {
   category: string
 }
 
-// Sanitise content - remove ALL garbage
-function sanitiseContent(content: string): string {
-  if (!content) return ''
-  
-  let cleaned = content
-  
-  // Remove HTML comments
-  cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, '')
-  
-  // Remove script tags  
-  cleaned = cleaned.replace(/<script[\s\S]*?<\/script>/gi, '')
-  
-  // Remove style tags (but keep inline styles)
-  cleaned = cleaned.replace(/<style[\s\S]*?<\/style>/gi, '')
-  
-  // Remove meta tags
-  cleaned = cleaned.replace(/<meta[\s\S]*?>/gi, '')
-  
-  // Remove CSS text patterns
-  cleaned = cleaned.replace(/\/\*[\s\S]*?\*\//g, '') // Remove CSS comments
-  cleaned = cleaned.replace(/\.[a-z\-]+\s*\{[^}]+\}/gi, '') // Remove CSS rules
-  cleaned = cleaned.replace(/\*\s*\{[\s\S]*?\}/gi, '') // Remove universal selector CSS
-  
-  cleaned = cleaned.trim()
-  return cleaned
-}
+async function getLatestArticles(): Promise<Article[]> {
+  const { data, error } = await supabase
+    .from('kb_documents')
+    .select('*')
+    .eq('is_active', true)
+    .eq('archived', false)
+    .order('created_at', { ascending: false })
+    .limit(6)
 
-// Remove embedded TOC sidebar - SURGICAL pattern based on actual Zoho HTML structure
-function removeEmbeddedSections(content: string): string {
-  if (!content) return ''
-  
-  let cleaned = content
-  
-  // Remove the ENTIRE <aside class="sidebar"> section (this contains "On This Page" TOC)
-  // This is the exact pattern from Zoho articles
-  cleaned = cleaned.replace(/<aside\s+class="sidebar">[\s\S]*?<\/aside>/gi, '')
-  
-  // Remove smooth scroll script at the very end
-  cleaned = cleaned.replace(/<script>[\s\S]*?<\/script>\s*$/gi, '')
-  
-  // Remove the layout wrapper divs that create two-column grid
-  // Remove: <div class="container"> and <div class="layout">
-  cleaned = cleaned.replace(/<div\s+class="container">\s*<div\s+class="layout">/gi, '')
-  
-  // Remove closing </div></div> at the end (for layout and container)
-  cleaned = cleaned.replace(/<\/div>\s*<\/div>\s*$/gi, '')
-  
-  return cleaned
+  if (error) {
+    console.error('Error fetching latest articles:', error)
+    return []
+  }
+
+  return (data || []).map((article: any) => ({
+    ...article,
+    slug: article.slug || article.id,
+    excerpt: article.excerpt || ''
+  })) as Article[]
 }
 
 export default async function HomePage() {
-  // Fetch latest articles (most recent 3)
-  const { data: latestData } = await supabase
-    .from('kb_documents')
-    .select('id, title, content, slug, category, created_at')
-    .eq('is_active', true)
-    .eq('archived', false)
-    .order('created_at', { ascending: false })
-    .limit(3)
+  const latestArticles = await getLatestArticles()
 
-  // Generate excerpt from content and ensure slug exists
-  const latestArticles = (latestData || []).map((article: any) => {
-    let cleanContent = sanitiseContent(article.content || '')
-    cleanContent = removeEmbeddedSections(cleanContent || '')
-    
-    // Extract excerpt from first paragraph
-    let excerpt = ''
-    const paragraphMatch = cleanContent.match(/<p[^>]*>(.*?)<\/p>/i)
-    if (paragraphMatch) {
-      excerpt = paragraphMatch[1].replace(/<[^>]*>/g, '').trim().substring(0, 150) + '...'
-    }
-    
-    return {
-      id: article.id,
-      title: article.title,
-      excerpt: excerpt || cleanContent.substring(0, 150).replace(/<[^>]*>/g, '').trim() + '...',
-      slug: article.slug || article.id,
-      category: article.category
-    }
-  })
-
-  // Fetch most popular articles (most recent 6, since we don't have view_count)
-  const { data: popularData } = await supabase
-    .from('kb_documents')
-    .select('id, title, content, slug, category, created_at')
-    .eq('is_active', true)
-    .eq('archived', false)
-    .order('created_at', { ascending: false })
-    .range(3, 5) // Get articles 4-6 to avoid duplicates with latest
-
-  const popularArticles = (popularData || []).map((article: any) => {
-    let cleanContent = sanitiseContent(article.content || '')
-    cleanContent = removeEmbeddedSections(cleanContent || '')
-    
-    // Extract excerpt from first paragraph
-    let excerpt = ''
-    const paragraphMatch = cleanContent.match(/<p[^>]*>(.*?)<\/p>/i)
-    if (paragraphMatch) {
-      excerpt = paragraphMatch[1].replace(/<[^>]*>/g, '').trim().substring(0, 150) + '...'
-    }
-    
-    return {
-      id: article.id,
-      title: article.title,
-      excerpt: excerpt || cleanContent.substring(0, 150).replace(/<[^>]*>/g, '').trim() + '...',
-      slug: article.slug || article.id,
-      category: article.category
-    }
-  })
   return (
-    <div>
-      {/* Hero Section */}
-      <div className="hero">
-        <div className="container-custom">
-          <h1 style={{ fontSize: '3rem', fontWeight: 700, marginBottom: '1.5rem' }}>
+    <>
+      {/* Hero Section with Search */}
+      <div style={{
+        background: 'linear-gradient(135deg, #002147 0%, #003a70 100%)',
+        color: 'white',
+        padding: '80px 20px',
+        textAlign: 'center'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <h1 style={{ fontSize: '48px', fontWeight: 700, marginBottom: '20px' }}>
             Security Clearance Knowledge Base
           </h1>
-          <p style={{ fontSize: '1.3rem', marginBottom: '2.5rem', opacity: 0.95 }}>
+          <p style={{ fontSize: '20px', marginBottom: '40px', opacity: 0.95 }}>
             Expert guidance for Australian security clearances
           </p>
-          <HomeSearchBar />
+          
+          {/* Search Form */}
+          <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+            <form action="/search" method="GET">
+              <input 
+                type="text"
+                name="q"
+                placeholder="Search our knowledge base..." 
+                style={{
+                  width: '100%',
+                  padding: '16px 24px',
+                  fontSize: '18px',
+                  border: 'none',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </form>
+          </div>
         </div>
       </div>
 
-      {/* Latest Articles Section */}
+      {/* Latest Articles */}
       {latestArticles && latestArticles.length > 0 && (
-        <div style={{ background: 'white', padding: '4rem 2rem' }}>
-          <div className="container-custom">
-            <div className="section-title">
-              <h2>Latest Articles</h2>
-              <p>Stay updated with our newest content</p>
+        <div style={{ background: 'white', padding: '80px 20px' }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+              <h2 style={{ fontSize: '36px', fontWeight: 700, color: '#002147', marginBottom: '10px' }}>
+                Latest Articles
+              </h2>
+              <p style={{ fontSize: '18px', color: '#64748b' }}>
+                Stay updated with our newest content
+              </p>
             </div>
 
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-              gap: '2rem',
-              marginBottom: '2rem'
+              gap: '30px'
             }}>
               {latestArticles.map((article) => (
                 <Link
                   key={article.id}
                   href={`/articles/${article.slug}`}
-                  className="article-card"
                   style={{
                     background: 'white',
-                    borderLeft: '4px solid var(--gold)',
+                    borderLeft: '4px solid #f1c40f',
                     borderRadius: '8px',
-                    padding: '1.5rem',
+                    padding: '24px',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                     transition: 'all 0.3s ease',
                     textDecoration: 'none',
@@ -167,29 +106,28 @@ export default async function HomePage() {
                   }}
                 >
                   <h3 style={{
-                    color: 'var(--navy)',
-                    fontSize: '1.25rem',
+                    color: '#002147',
+                    fontSize: '20px',
                     fontWeight: 700,
-                    marginBottom: '0.75rem',
-                    lineHeight: 1.4,
-                    transition: 'color 0.3s ease'
+                    marginBottom: '12px',
+                    lineHeight: 1.4
                   }}>
                     {article.title}
                   </h3>
                   <p style={{
-                    color: 'var(--text-grey)',
-                    fontSize: '0.95rem',
+                    color: '#64748b',
+                    fontSize: '15px',
                     lineHeight: 1.6,
-                    marginBottom: '1rem'
+                    marginBottom: '15px'
                   }}>
                     {article.excerpt}
                   </p>
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.5rem',
-                    fontSize: '0.875rem',
-                    color: 'var(--navy)',
+                    gap: '8px',
+                    fontSize: '14px',
+                    color: '#002147',
                     fontWeight: 600
                   }}>
                     <span>Read more</span>
@@ -202,124 +140,37 @@ export default async function HomePage() {
         </div>
       )}
 
-      {/* Most Popular Articles Section */}
-      {popularArticles && popularArticles.length > 0 && (
-        <div style={{ background: 'var(--light-grey)', padding: '4rem 2rem' }}>
-          <div className="container-custom">
-            <div className="section-title">
-              <h2>Most Popular Articles</h2>
-              <p>Our most viewed and helpful content</p>
-            </div>
-
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: '2rem',
-              marginTop: '2rem'
-            }}>
-              {popularArticles.map((article) => (
-                <Link
-                  key={article.id}
-                  href={`/articles/${article.slug}`}
-                  style={{
-                    display: 'block',
-                    background: 'white',
-                    borderRadius: '8px',
-                    padding: '2rem',
-                    textDecoration: 'none',
-                    border: '1px solid var(--mid-grey)',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                    transition: 'all 0.3s ease'
-                  }}
-                  className="article-card-hover"
-                >
-                  <div style={{
-                    fontSize: '0.85rem',
-                    color: 'var(--gold)',
-                    fontWeight: 600,
-                    marginBottom: '0.75rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px'
-                  }}>
-                    {article.category}
-                  </div>
-                  <h3 style={{
-                    color: 'var(--navy)',
-                    fontSize: '1.3rem',
-                    marginBottom: '1rem',
-                    fontWeight: 600,
-                    lineHeight: 1.4
-                  }}>
-                    {article.title}
-                  </h3>
-                  <p style={{
-                    color: 'var(--text-grey)',
-                    fontSize: '0.95rem',
-                    lineHeight: 1.6,
-                    marginBottom: '1rem'
-                  }}>
-                    {article.excerpt}
-                  </p>
-                  <div style={{
-                    color: 'var(--navy)',
-                    fontSize: '0.9rem',
-                    fontWeight: 600
-                  }}>
-                    Read more →
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Categories Preview Section */}
-      <div style={{ background: 'white', padding: '4rem 2rem' }}>
-        <div className="container-custom">
-          <div className="section-title">
-            <h2>Explore by Topic</h2>
-            <p>Find the information you need, organised by category</p>
-          </div>
-
-          <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-            <Link 
-              href="/categories" 
-              className="inline-block bg-navy text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-900 transition-colors"
-            >
-              Browse All Categories →
-            </Link>
-          </div>
-        </div>
-      </div>
-
       {/* CTA Section */}
       <div style={{
-        background: 'linear-gradient(135deg, var(--navy) 0%, #003a70 100%)',
-        padding: '4rem 2rem',
-        color: 'white'
+        background: 'linear-gradient(135deg, #002147 0%, #003a70 100%)',
+        padding: '80px 20px',
+        color: 'white',
+        textAlign: 'center'
       }}>
-        <div className="container-custom" style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '1.5rem' }}>
-            Need Personalised Assistance?
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '36px', fontWeight: 700, marginBottom: '20px' }}>
+            Need Help with Your Security Clearance?
           </h2>
-          <p style={{ fontSize: '1.2rem', marginBottom: '2.5rem', opacity: 0.9 }}>
-            Our team is ready to help you navigate your security clearance journey
+          <p style={{ fontSize: '18px', marginBottom: '30px', opacity: 0.9 }}>
+            Our team can guide you through the entire clearance process
           </p>
-          <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/request-introduction" className="btn btn-secondary btn-large">
-              Request Introduction
-            </Link>
-            <Link href="/contact" className="btn btn-outline btn-large">
-              Contact Us
-            </Link>
-          </div>
+          <Link
+            href="/contact"
+            style={{
+              display: 'inline-block',
+              background: 'white',
+              color: '#002147',
+              padding: '16px 40px',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              fontWeight: 700,
+              fontSize: '18px'
+            }}
+          >
+            Contact Us
+          </Link>
         </div>
       </div>
-    </div>
+    </>
   )
 }
-
-
-
-
