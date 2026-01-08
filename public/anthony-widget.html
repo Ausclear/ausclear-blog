@@ -861,7 +861,7 @@
       .single();
 
     if (error) {
-      alert("Failed to create session. Please try again.");
+      alert("Failed to create session. ERROR: " + JSON.stringify(error));
       console.error(error);
       return;
     }
