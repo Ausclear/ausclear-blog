@@ -1,6 +1,7 @@
 // Force redeploy
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import HomeSearchBar from '@/components/HomeSearchBar'
 
 type Article = {
   id: string
@@ -130,9 +131,7 @@ export default async function HomePage() {
           <p style={{ fontSize: '1.3rem', marginBottom: '2.5rem', opacity: 0.95 }}>
             Expert guidance for Australian security clearances
           </p>
-          <div className="search-container">
-            <input type="text" className="search-bar" placeholder="Search our knowledge base..." />
-          </div>
+          <HomeSearchBar />
         </div>
       </div>
 
@@ -320,6 +319,7 @@ export default async function HomePage() {
     </div>
   )
 }
+
 
 
 
