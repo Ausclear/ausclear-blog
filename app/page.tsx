@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import CTAButtons from '@/components/CTAButtons'
 
 type Article = {
   id: string
@@ -323,43 +324,13 @@ export default async function HomePage() {
           <p style={{ fontSize: '1.2rem', marginBottom: '2.5rem', opacity: 0.9 }}>
             Our team is ready to help you navigate your security clearance journey
           </p>
-          <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link 
-              href="/request-introduction" 
-              style={{
-                display: 'inline-block',
-                background: 'white',
-                color: '#002147',
-                padding: '16px 40px',
-                borderRadius: '8px',
-                textDecoration: 'none',
-                fontWeight: 700,
-                fontSize: '18px'
-              }}
-            >
-              Request Introduction
-            </Link>
-            <Link 
-              href="/contact" 
-              style={{
-                display: 'inline-block',
-                background: 'white',
-                color: '#002147',
-                padding: '16px 40px',
-                borderRadius: '8px',
-                textDecoration: 'none',
-                fontWeight: 700,
-                fontSize: '18px'
-              }}
-            >
-              Contact Us
-            </Link>
-          </div>
+          <CTAButtons />
         </div>
       </div>
     </div>
   )
 }
+
 
 
 
