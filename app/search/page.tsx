@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import ArticleListView from '@/components/ArticleListView'
-import SearchBar from '@/components/SearchBar'
+import SearchSection from '@/components/SearchSection'
 import { Metadata } from 'next'
 import { CATEGORIES, Article } from '@/types'
 
@@ -115,19 +115,7 @@ export default async function SearchPage({ searchParams }: Props) {
     <div className="py-12 bg-gray-50 min-h-screen">
       <div className="container-custom">
         {/* Search Header */}
-        <div className="max-w-3xl mx-auto mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-navy mb-6 text-center">
-            Search Knowledge Base
-          </h1>
-          <SearchBar initialQuery={query} />
-          {query && (
-            <p className="text-gray-600 mt-4 text-center">
-              {results.length > 0
-                ? `Found ${results.length} ${results.length === 1 ? 'result' : 'results'} for "${query}"`
-                : `No results found for "${query}"`}
-            </p>
-          )}
-        </div>
+        <SearchSection initialQuery={query} resultCount={results.length} />
 
         {/* Search Results */}
         {query.trim() ? (
@@ -205,3 +193,4 @@ export default async function SearchPage({ searchParams }: Props) {
     </div>
   )
 }
+
