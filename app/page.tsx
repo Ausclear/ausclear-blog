@@ -324,10 +324,34 @@ export default async function HomePage() {
             Our team is ready to help you navigate your security clearance journey
           </p>
           <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/request-introduction" className="btn btn-secondary btn-large">
+            <Link 
+              href="/request-introduction" 
+              style={{
+                display: 'inline-block',
+                background: 'white',
+                color: '#002147',
+                padding: '16px 40px',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                fontWeight: 700,
+                fontSize: '18px'
+              }}
+            >
               Request Introduction
             </Link>
-            <Link href="/contact" className="btn btn-outline btn-large">
+            <Link 
+              href="/contact" 
+              style={{
+                display: 'inline-block',
+                background: 'white',
+                color: '#002147',
+                padding: '16px 40px',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                fontWeight: 700,
+                fontSize: '18px'
+              }}
+            >
               Contact Us
             </Link>
           </div>
@@ -336,6 +360,7 @@ export default async function HomePage() {
     </div>
   )
 }
+
 
 
 
