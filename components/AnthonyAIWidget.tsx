@@ -49,9 +49,16 @@ export default function AnthonyAIWidget() {
     }
 
     // Wait for Supabase to load first
+    let attempts = 0
     const checkAndLoad = setInterval(() => {
-      if (window.supabase) {
+      attempts++
+      if ((window as any).supabase) {
         clearInterval(checkAndLoad)
+        loadWidget()
+      } else if (attempts > 100) {
+        // Timeout after 10 seconds
+        clearInterval(checkAndLoad)
+        console.warn('Supabase failed to load, loading widget anyway')
         loadWidget()
       }
     }, 100)
