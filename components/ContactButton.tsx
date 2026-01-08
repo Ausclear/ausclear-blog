@@ -13,14 +13,16 @@ export default function ContactButton() {
       onMouseLeave={() => setIsHovered(false)}
       style={{
         display: 'inline-block',
-        background: isHovered ? '#f1c40f' : 'white',
+        background: isHovered ? '#003a70' : 'white',
         color: isHovered ? 'white' : '#002147',
         padding: '16px 40px',
         borderRadius: '8px',
         textDecoration: 'none',
         fontWeight: 700,
         fontSize: '18px',
-        transition: 'all 0.3s ease'
+        transition: 'all 0.3s ease',
+        transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
+        boxShadow: isHovered ? '0 8px 20px rgba(0,0,0,0.3)' : 'none'
       }}
     >
       Contact Us
