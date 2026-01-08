@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, FormEvent, useEffect, useRef } from 'react'
+import { useState, FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 
 interface SearchBarProps {
@@ -10,14 +10,6 @@ interface SearchBarProps {
 export default function SearchBar({ initialQuery = '' }: SearchBarProps) {
   const [query, setQuery] = useState(initialQuery)
   const router = useRouter()
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    // Focus input on mount
-    if (inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -27,22 +19,44 @@ export default function SearchBar({ initialQuery = '' }: SearchBarProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full" style={{ position: 'relative', zIndex: 10 }}>
-      <div className="relative">
+    <form onSubmit={handleSubmit}>
+      <div style={{ position: 'relative', width: '100%' }}>
         <input
-          ref={inputRef}
           type="text"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            console.log('Input changed:', e.target.value)
+            setQuery(e.target.value)
+          }}
+          onKeyDown={(e) => console.log('Key pressed:', e.key)}
+          onClick={() => console.log('Input clicked')}
+          onFocus={() => console.log('Input focused')}
           placeholder="Search articles..."
-          className="w-full px-6 py-4 pr-32 text-lg rounded-lg border-2 border-gray-300 focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/20 transition-all"
-          style={{ pointerEvents: 'auto' }}
-          autoComplete="off"
+          style={{
+            width: '100%',
+            padding: '16px 140px 16px 24px',
+            fontSize: '18px',
+            borderRadius: '8px',
+            border: '2px solid #d1d5db',
+            outline: 'none',
+            boxSizing: 'border-box'
+          }}
         />
         <button
           type="submit"
-          className="absolute right-2 top-1/2 -translate-y-1/2 bg-navy text-white px-6 py-2 rounded-md hover:opacity-90 transition-all font-semibold"
-          style={{ pointerEvents: 'auto' }}
+          style={{
+            position: 'absolute',
+            right: '8px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            background: '#002147',
+            color: 'white',
+            padding: '8px 24px',
+            borderRadius: '6px',
+            border: 'none',
+            fontWeight: '600',
+            cursor: 'pointer'
+          }}
         >
           Search
         </button>
