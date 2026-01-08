@@ -3,6 +3,7 @@
 import { useState, FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 
+// Force Vercel redeploy
 export default function HomeSearchBar() {
   const [query, setQuery] = useState('')
   const router = useRouter()
