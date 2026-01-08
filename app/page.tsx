@@ -64,7 +64,9 @@ export default async function HomePage() {
                   border: 'none',
                   borderRadius: '8px',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-                  boxSizing: 'border-box'
+                  boxSizing: 'border-box',
+                  color: '#000000',
+                  backgroundColor: '#ffffff'
                 }}
               />
             </form>
