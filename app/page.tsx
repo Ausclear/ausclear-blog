@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import ContactButton from '@/components/ContactButton'
 
 type Article = {
   id: string
@@ -156,23 +157,10 @@ export default async function HomePage() {
           <p style={{ fontSize: '18px', marginBottom: '30px', opacity: 0.9 }}>
             Our team can guide you through the entire clearance process
           </p>
-          <Link
-            href="/contact"
-            style={{
-              display: 'inline-block',
-              background: 'white',
-              color: '#002147',
-              padding: '16px 40px',
-              borderRadius: '8px',
-              textDecoration: 'none',
-              fontWeight: 700,
-              fontSize: '18px'
-            }}
-          >
-            Contact Us
-          </Link>
+          <ContactButton />
         </div>
       </div>
     </>
   )
 }
+
