@@ -21,6 +21,12 @@ function sanitiseContent(content: string): string {
   
   let cleaned = content
   
+  // Remove breadcrumbs (various formats)
+  cleaned = cleaned.replace(/<nav[^>]*class="[^"]*breadcrumb[^"]*"[^>]*>[\s\S]*?<\/nav>/gi, '')
+  cleaned = cleaned.replace(/<div[^>]*class="[^"]*breadcrumb[^"]*"[^>]*>[\s\S]*?<\/div>/gi, '')
+  cleaned = cleaned.replace(/<ol[^>]*class="[^"]*breadcrumb[^"]*"[^>]*>[\s\S]*?<\/ol>/gi, '')
+  cleaned = cleaned.replace(/<ul[^>]*class="[^"]*breadcrumb[^"]*"[^>]*>[\s\S]*?<\/ul>/gi, '')
+  
   // Remove HTML comments
   cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, '')
   
@@ -423,3 +429,4 @@ export default async function ArticlePage({ params }: Props) {
   )
 }
 // Force Vercel sync: Wed Jan  7 02:46:58 UTC 2026
+
