@@ -358,7 +358,7 @@
     <div class="ac-field">
       <label>Mobile Number</label>
       <input type="tel" id="mobileInput" placeholder="e.g. 0412 345 678">
-      
+      <div class="ac-help">Optional - for callback purposes</div>
     </div>
 
     <div class="ac-field">
@@ -417,8 +417,8 @@
 (function() {
   const SUPABASE_URL = "https://qraxdkzmteogkbfatvir.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyYXhka3ptdGVvZ2tiZmF0dmlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM1OTk5MjEsImV4cCI6MjA3OTE3NTkyMX0.WqCGjBEiLgmqbaGmc8Z87CeqY-l_DBR3Gj9VQ4sujks";
-  const AI_ENDPOINT = "https://admin-dashboard-rho-lovat-77.vercel.app/api/ai";
-  const QUEUE_STATUS_ENDPOINT = "https://admin-dashboard-rho-lovat-77.vercel.app/api/queue/status";
+  const AI_ENDPOINT = "http://localhost:3000/api/ai";
+  const QUEUE_STATUS_ENDPOINT = "http://localhost:3000/api/queue/status";
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   marked.setOptions({ breaks: true, gfm: true });
@@ -463,10 +463,6 @@
 
   // Business hours check (Adelaide time) including public holidays
   function isWithinBusinessHours() {
-    // TEMPORARILY DISABLED FOR TESTING - ALWAYS RETURN TRUE
-    return true;
-    
-    /* ORIGINAL CODE - RE-ENABLE AFTER TESTING
     var now = new Date();
     var adelaide = new Date(now.toLocaleString("en-US", { timeZone: "Australia/Adelaide" }));
     var day = adelaide.getDay(); // 0 = Sunday, 6 = Saturday
@@ -499,7 +495,6 @@
     
     // Within business hours (Mon-Fri 9am-5pm/7pm)
     return true;
-    */
   }
 
 
@@ -866,7 +861,7 @@
       .single();
 
     if (error) {
-      alert("Failed to create session. ERROR: " + JSON.stringify(error));
+      alert("Failed to create session. Please try again.");
       console.error(error);
       return;
     }
@@ -1347,4 +1342,3 @@
 </script>
 </body>
 </html>
-
