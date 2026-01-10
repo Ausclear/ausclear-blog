@@ -61,10 +61,11 @@ function removeEmbeddedSections(content: string): string {
 }
 
 export default async function HomePage() {
-  // Fetch latest articles (most recent 3)
+  // Fetch latest articles (most recent by created_at)
   const { data: latestData } = await supabase
     .from('kb_documents')
     .select('id, title, content, slug, category, created_at')
+    .eq('document_type', 'zoho_article')
     .eq('is_active', true)
     .eq('archived', false)
     .order('created_at', { ascending: false })
@@ -91,14 +92,15 @@ export default async function HomePage() {
     }
   })
 
-  // Fetch most popular articles (most recent 6, since we don't have view_count)
+  // Fetch most popular articles (by view_count)
   const { data: popularData } = await supabase
     .from('kb_documents')
-    .select('id, title, content, slug, category, created_at')
+    .select('id, title, content, slug, category, view_count')
+    .eq('document_type', 'zoho_article')
     .eq('is_active', true)
     .eq('archived', false)
-    .order('created_at', { ascending: false })
-    .range(3, 5) // Get articles 4-6 to avoid duplicates with latest
+    .order('view_count', { ascending: false })
+    .limit(3)
 
   const popularArticles = (popularData || []).map((article: any) => {
     let cleanContent = sanitiseContent(article.content || '')
@@ -330,8 +332,3 @@ export default async function HomePage() {
     </div>
   )
 }
-
-
-
-
-
