@@ -468,6 +468,7 @@ export default function Footer() {
   }
   
   // Start tracking
+  heartbeatTimer = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL);
   sendHeartbeat();
 
 })();
@@ -475,3 +476,4 @@ export default function Footer() {
     </>
   )
 }
+
