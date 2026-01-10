@@ -17,14 +17,16 @@ export default function CTAButtons() {
           display: 'inline-block',
           background: hoveredIntro ? '#003a70' : 'white',
           color: hoveredIntro ? 'white' : '#002147',
-          padding: '16px 40px',
+          padding: '16px 24px',
           borderRadius: '8px',
           textDecoration: 'none',
           fontWeight: 700,
-          fontSize: '18px',
+          fontSize: '16px',
           transition: 'all 0.3s ease',
           transform: hoveredIntro ? 'translateY(-2px)' : 'translateY(0)',
-          boxShadow: hoveredIntro ? '0 8px 20px rgba(0,0,0,0.3)' : 'none'
+          boxShadow: hoveredIntro ? '0 8px 20px rgba(0,0,0,0.3)' : 'none',
+          minWidth: '200px',
+          textAlign: 'center'
         }}
       >
         Request Introduction
@@ -37,14 +39,16 @@ export default function CTAButtons() {
           display: 'inline-block',
           background: hoveredContact ? '#003a70' : 'white',
           color: hoveredContact ? 'white' : '#002147',
-          padding: '16px 40px',
+          padding: '16px 24px',
           borderRadius: '8px',
           textDecoration: 'none',
           fontWeight: 700,
-          fontSize: '18px',
+          fontSize: '16px',
           transition: 'all 0.3s ease',
           transform: hoveredContact ? 'translateY(-2px)' : 'translateY(0)',
-          boxShadow: hoveredContact ? '0 8px 20px rgba(0,0,0,0.3)' : 'none'
+          boxShadow: hoveredContact ? '0 8px 20px rgba(0,0,0,0.3)' : 'none',
+          minWidth: '200px',
+          textAlign: 'center'
         }}
       >
         Contact Us
