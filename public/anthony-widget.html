@@ -463,6 +463,10 @@
 
   // Business hours check (Adelaide time) including public holidays
   function isWithinBusinessHours() {
+    // TEMPORARILY DISABLED FOR TESTING - ALWAYS RETURN TRUE
+    return true;
+    
+    /* ORIGINAL CODE - RE-ENABLE AFTER TESTING
     var now = new Date();
     var adelaide = new Date(now.toLocaleString("en-US", { timeZone: "Australia/Adelaide" }));
     var day = adelaide.getDay(); // 0 = Sunday, 6 = Saturday
@@ -495,6 +499,7 @@
     
     // Within business hours (Mon-Fri 9am-5pm/7pm)
     return true;
+    */
   }
 
 
@@ -1342,3 +1347,4 @@
 </script>
 </body>
 </html>
+
