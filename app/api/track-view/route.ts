@@ -9,10 +9,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Article ID required' }, { status: 400 })
     }
 
-    // Increment view count
-    const { error } = await supabase.rpc('increment_article_views', {
-      article_id: articleId
-    })
+    // Increment view count directly with UPDATE
+    const { error } = await supabase
+      .from('kb_documents')
+      .update({ 
+        view_count: supabase.raw('COALESCE(view_count, 0) + 1'),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', articleId)
 
     if (error) {
       console.error('Error incrementing view count:', error)
