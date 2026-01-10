@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -47,6 +48,74 @@ export default function RootLayout({
   return (
     <html lang="en-AU">
       <body>
+        {/* Visitor Tracking Script */}
+        <Script
+          id="visitor-tracking"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+(function() {
+  var SUPABASE_URL = 'https://qraxdkzmteogkbfatvir.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyYXhka3ptdGVvZ2tiZmF0dmlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM1OTk5MjEsImV4cCI6MjA3OTE3NTkyMX0.WqCGjBEiLgmqbaGmc8Z87CeqY-l_DBR3Gj9VQ4sujks';
+  
+  function getVisitorId() {
+    var id = localStorage.getItem('ausclear_visitor_id');
+    if (!id) {
+      id = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      localStorage.setItem('ausclear_visitor_id', id);
+    }
+    return id;
+  }
+  
+  function trackVisitor() {
+    var visitorId = getVisitorId();
+    
+    fetch('https://ipapi.co/json/')
+      .then(function(res) { return res.json(); })
+      .then(function(location) {
+        var data = {
+          visitor_id: visitorId,
+          session_id: 'session_' + Date.now(),
+          current_page: window.location.pathname,
+          page_title: document.title,
+          location_city: location.city || null,
+          location_state: location.region || null,
+          location_country: location.country_name || null,
+          location_country_code: location.country_code || null,
+          device_type: /Mobile|Android|iPhone/.test(navigator.userAgent) ? 'mobile' : 'desktop',
+          browser: navigator.userAgent.split(' ').slice(-1)[0].split('/')[0],
+          os: navigator.platform,
+          referrer: document.referrer || null,
+          is_new_visitor: !localStorage.getItem('ausclear_has_visited'),
+          is_returning: !!localStorage.getItem('ausclear_has_visited'),
+          updated_at: new Date().toISOString()
+        };
+        
+        fetch(SUPABASE_URL + '/rest/v1/active_visitors', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify(data)
+        }).then(function() {
+          localStorage.setItem('ausclear_has_visited', 'true');
+        });
+      });
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', trackVisitor);
+  } else {
+    trackVisitor();
+  }
+})();
+            `
+          }}
+        />
+        
         <Header />
         <main className="min-h-screen">
           {children}
