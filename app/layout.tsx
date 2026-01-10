@@ -46,10 +46,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en-AU">
-      <head>
-        {/* Load visitor tracking script from main website */}
-        <script async src="https://www.ausclear.com.au/visitor-tracking.js"></script>
-      </head>
       <body>
         <Header />
         <main className="min-h-screen">
