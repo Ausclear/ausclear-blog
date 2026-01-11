@@ -28,89 +28,79 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            <ul style={{ listStyle: 'none', display: 'flex', gap: '0.5rem' }}>
-              <li>
-                <Link
-                  href="/"
-                  style={{
-                    textDecoration: 'none',
-                    fontWeight: 500,
-                    transition: 'all 0.3s ease',
-                    padding: '8px 16px',
-                    borderRadius: '4px',
-                    border: hoveredItem === 'home' ? '2px solid var(--gold)' : '2px solid transparent',
-                    backgroundColor: hoveredItem === 'home' ? 'var(--gold)' : 'transparent',
-                    color: hoveredItem === 'home' ? 'var(--header-navy)' : 'var(--gold)',
-                    display: 'inline-block'
-                  }}
-                  onMouseEnter={() => setHoveredItem('home')}
-                  onMouseLeave={() => setHoveredItem(null)}
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/categories"
-                  style={{
-                    textDecoration: 'none',
-                    fontWeight: 500,
-                    transition: 'all 0.3s ease',
-                    padding: '8px 16px',
-                    borderRadius: '4px',
-                    border: hoveredItem === 'categories' ? '2px solid var(--gold)' : '2px solid transparent',
-                    backgroundColor: hoveredItem === 'categories' ? 'var(--gold)' : 'transparent',
-                    color: hoveredItem === 'categories' ? 'var(--header-navy)' : 'var(--gold)',
-                    display: 'inline-block'
-                  }}
-                  onMouseEnter={() => setHoveredItem('categories')}
-                  onMouseLeave={() => setHoveredItem(null)}
-                >
-                  Categories
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/request-introduction"
-                  style={{
-                    textDecoration: 'none',
-                    fontWeight: 500,
-                    transition: 'all 0.3s ease',
-                    padding: '8px 16px',
-                    borderRadius: '4px',
-                    border: hoveredItem === 'request' ? '2px solid var(--gold)' : '2px solid transparent',
-                    backgroundColor: hoveredItem === 'request' ? 'var(--gold)' : 'transparent',
-                    color: hoveredItem === 'request' ? 'var(--header-navy)' : 'var(--gold)',
-                    display: 'inline-block'
-                  }}
-                  onMouseEnter={() => setHoveredItem('request')}
-                  onMouseLeave={() => setHoveredItem(null)}
-                >
-                  Request Introduction
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  style={{
-                    textDecoration: 'none',
-                    fontWeight: 500,
-                    transition: 'all 0.3s ease',
-                    padding: '8px 16px',
-                    borderRadius: '4px',
-                    border: hoveredItem === 'contact' ? '2px solid var(--gold)' : '2px solid transparent',
-                    backgroundColor: hoveredItem === 'contact' ? 'var(--gold)' : 'transparent',
-                    color: hoveredItem === 'contact' ? 'var(--header-navy)' : 'var(--gold)',
-                    display: 'inline-block'
-                  }}
-                  onMouseEnter={() => setHoveredItem('contact')}
-                  onMouseLeave={() => setHoveredItem(null)}
-                >
-                  Contact
-                </Link>
-              </li>
-            </ul>
+          <nav className="hidden md:flex items-center gap-2">
+            <Link
+              href="/"
+              style={{
+                textDecoration: 'none',
+                fontWeight: 500,
+                transition: 'all 0.3s ease',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                border: hoveredItem === 'home' ? '2px solid var(--gold)' : '2px solid transparent',
+                backgroundColor: hoveredItem === 'home' ? 'var(--gold)' : 'transparent',
+                color: hoveredItem === 'home' ? 'var(--header-navy)' : 'var(--gold)',
+                display: 'inline-block'
+              }}
+              onMouseEnter={() => setHoveredItem('home')}
+              onMouseLeave={() => setHoveredItem(null)}
+            >
+              Home
+            </Link>
+            <Link
+              href="/categories"
+              style={{
+                textDecoration: 'none',
+                fontWeight: 500,
+                transition: 'all 0.3s ease',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                border: hoveredItem === 'categories' ? '2px solid var(--gold)' : '2px solid transparent',
+                backgroundColor: hoveredItem === 'categories' ? 'var(--gold)' : 'transparent',
+                color: hoveredItem === 'categories' ? 'var(--header-navy)' : 'var(--gold)',
+                display: 'inline-block'
+              }}
+              onMouseEnter={() => setHoveredItem('categories')}
+              onMouseLeave={() => setHoveredItem(null)}
+            >
+              Categories
+            </Link>
+            <Link
+              href="/request-introduction"
+              style={{
+                textDecoration: 'none',
+                fontWeight: 500,
+                transition: 'all 0.3s ease',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                border: hoveredItem === 'request' ? '2px solid var(--gold)' : '2px solid transparent',
+                backgroundColor: hoveredItem === 'request' ? 'var(--gold)' : 'transparent',
+                color: hoveredItem === 'request' ? 'var(--header-navy)' : 'var(--gold)',
+                display: 'inline-block'
+              }}
+              onMouseEnter={() => setHoveredItem('request')}
+              onMouseLeave={() => setHoveredItem(null)}
+            >
+              Request Introduction
+            </Link>
+            <Link
+              href="/contact"
+              style={{
+                textDecoration: 'none',
+                fontWeight: 500,
+                transition: 'all 0.3s ease',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                border: hoveredItem === 'contact' ? '2px solid var(--gold)' : '2px solid transparent',
+                backgroundColor: hoveredItem === 'contact' ? 'var(--gold)' : 'transparent',
+                color: hoveredItem === 'contact' ? 'var(--header-navy)' : 'var(--gold)',
+                display: 'inline-block'
+              }}
+              onMouseEnter={() => setHoveredItem('contact')}
+              onMouseLeave={() => setHoveredItem(null)}
+            >
+              Contact
+            </Link>
             <Link
               href="/login"
               style={{
@@ -119,7 +109,7 @@ export default function Header() {
                 transition: 'all 0.3s ease',
                 padding: '8px 16px',
                 borderRadius: '4px',
-                border: '2px solid var(--gold)',
+                border: hoveredItem === 'login' ? '2px solid var(--gold)' : '2px solid transparent',
                 backgroundColor: hoveredItem === 'login' ? 'var(--gold)' : 'transparent',
                 color: hoveredItem === 'login' ? 'var(--header-navy)' : 'var(--gold)',
                 display: 'inline-block'
@@ -196,7 +186,7 @@ export default function Header() {
               <li>
                 <Link
                   href="/login"
-                  style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 500, display: 'block', padding: '12px', border: '2px solid var(--gold)', margin: '8px 16px', borderRadius: '4px' }}
+                  style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 500, display: 'block', padding: '12px' }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Login
