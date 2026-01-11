@@ -1,0 +1,10 @@
+# Allow all search engines
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://blogs.ausclear.au/sitemap.xml
+
+# Disallow admin/private pages if any
+Disallow: /api/
+Disallow: /login
