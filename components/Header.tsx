@@ -16,7 +16,7 @@ export default function Header() {
             style={{
               fontSize: '1.5rem',
               fontWeight: 700,
-              color: 'var(--white)',
+              color: 'var(--gold)',
               textDecoration: 'none'
             }}
           >
@@ -30,7 +30,7 @@ export default function Header() {
                 <Link
                   href="/"
                   style={{
-                    color: 'var(--white)',
+                    color: 'var(--gold)',
                     textDecoration: 'none',
                     fontWeight: 500,
                     transition: 'color 0.3s'
@@ -43,7 +43,7 @@ export default function Header() {
                 <Link
                   href="/categories"
                   style={{
-                    color: 'var(--white)',
+                    color: 'var(--gold)',
                     textDecoration: 'none',
                     fontWeight: 500,
                     transition: 'color 0.3s'
@@ -56,7 +56,7 @@ export default function Header() {
                 <Link
                   href="/request-introduction"
                   style={{
-                    color: 'var(--white)',
+                    color: 'var(--gold)',
                     textDecoration: 'none',
                     fontWeight: 500,
                     transition: 'color 0.3s'
@@ -69,7 +69,7 @@ export default function Header() {
                 <Link
                   href="/contact"
                   style={{
-                    color: 'var(--white)',
+                    color: 'var(--gold)',
                     textDecoration: 'none',
                     fontWeight: 500,
                     transition: 'color 0.3s'
@@ -82,6 +82,10 @@ export default function Header() {
             <Link
               href="/login"
               className="header-login-btn"
+              style={{
+                color: 'var(--gold)',
+                borderColor: 'var(--gold)'
+              }}
             >
               Login
             </Link>
@@ -90,7 +94,8 @@ export default function Header() {
           {/* Mobile menu button */}
           <button
             type="button"
-            className="md:hidden text-white p-2"
+            className="md:hidden p-2"
+            style={{ color: 'var(--gold)' }}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             <span className="sr-only">Open menu</span>
@@ -113,7 +118,7 @@ export default function Header() {
               <li>
                 <Link
                   href="/"
-                  style={{ color: 'var(--white)', textDecoration: 'none', fontWeight: 500 }}
+                  style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 500 }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Home
@@ -122,7 +127,7 @@ export default function Header() {
               <li>
                 <Link
                   href="/categories"
-                  style={{ color: 'var(--white)', textDecoration: 'none', fontWeight: 500 }}
+                  style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 500 }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Categories
@@ -131,7 +136,7 @@ export default function Header() {
               <li>
                 <Link
                   href="/request-introduction"
-                  style={{ color: 'var(--white)', textDecoration: 'none', fontWeight: 500 }}
+                  style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 500 }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Request Introduction
@@ -140,7 +145,7 @@ export default function Header() {
               <li>
                 <Link
                   href="/contact"
-                  style={{ color: 'var(--white)', textDecoration: 'none', fontWeight: 500 }}
+                  style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 500 }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Contact
@@ -149,7 +154,7 @@ export default function Header() {
               <li>
                 <Link
                   href="/login"
-                  style={{ color: 'var(--white)', textDecoration: 'none', fontWeight: 500 }}
+                  style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 500 }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Login
