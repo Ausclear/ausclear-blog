@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ask AusClear - Chat Widget</title>
+  <title>Ask Clearance First - Chat Widget</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
@@ -317,7 +317,7 @@
         <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
       </div>
       <div>
-        <h3>Ask AusClear</h3>
+        <h3>Ask Clearance First</h3>
         <p>Security Clearance Experts</p>
       </div>
     </div>
@@ -336,7 +336,7 @@
 
   <!-- PRECHAT FORM -->
   <div class="ac-prechat" id="prechat">
-    <h4>👋 Welcome to AusClear</h4>
+    <h4>👋 Welcome to Clearance First</h4>
     <p>Start a conversation with Trigger, our AI assistant who can help with your security clearance enquiry.</p>
 
     <div class="ac-field">
@@ -906,7 +906,7 @@
           if (payload.new.session_id === currentSessionId) {
             var senderType = payload.new.sender_type;
             if (senderType === 'admin') {
-              var adminName = payload.new.sender_name || 'AusClear Support';
+              var adminName = payload.new.sender_name || 'Clearance First Support';
               hideTyping();
               hideTrafficLight();
               addMessage('admin', payload.new.message_text, adminName);
@@ -914,7 +914,7 @@
             if (senderType === 'system') {
               hideTyping();
               var buttons = payload.new.message_metadata?.buttons || null;
-              addMessage('system', payload.new.message_text, 'AusClear Support', buttons);
+              addMessage('system', payload.new.message_text, 'Clearance First Support', buttons);
             }
           }
         }
@@ -1095,8 +1095,8 @@
     content.className = 'ac-msg-content';
     var nameLabel = '';
     if (sender === 'ai') nameLabel = '<div class="ac-sender-name">Trigger</div>';
-    else if (sender === 'admin') nameLabel = '<div class="ac-sender-name">' + (senderName || 'AusClear Support') + '</div>';
-    else if (sender === 'system') nameLabel = '<div class="ac-sender-name">AusClear Support</div>';
+    else if (sender === 'admin') nameLabel = '<div class="ac-sender-name">' + (senderName || 'Clearance First Support') + '</div>';
+    else if (sender === 'system') nameLabel = '<div class="ac-sender-name">Clearance First Support</div>';
     else if (sender === 'user') nameLabel = '<div class="ac-sender-name">' + userFullName + '</div>';
     var messageHtml;
     if (sender === 'ai' || sender === 'admin' || sender === 'system') {
@@ -1342,3 +1342,4 @@
 </script>
 </body>
 </html>
+
