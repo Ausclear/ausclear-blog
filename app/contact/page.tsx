@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import ContactPageClient from '@/components/ContactPageClient'
 
 export const metadata: Metadata = {
-  title: 'Contact AusClear - Security Clearance Sponsorship & Consulting',
-  description: 'Contact AusClear for expert security clearance sponsorship and assistance. NV1, NV2, and Baseline clearance specialists.',
+  title: 'Contact Clearance First - Security Clearance Sponsorship & Consulting',
+  description: 'Contact Clearance First for expert security clearance sponsorship and assistance. NV1, NV2, and Baseline clearance specialists.',
 }
 
 export default function ContactPage() {
@@ -26,7 +26,7 @@ export default function ContactPage() {
             lineHeight: 1.2,
             color: '#ffffff'
           }}>
-            Contact AusClear
+            Contact Clearance First
           </h1>
           <p style={{
             fontSize: '20px',
@@ -43,3 +43,4 @@ export default function ContactPage() {
     </div>
   )
 }
+
