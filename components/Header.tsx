@@ -5,16 +5,7 @@ import { useState } from 'react'
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
-  // Shared menu link style
-  const menuLinkStyle = {
-    color: 'var(--gold)',
-    textDecoration: 'none',
-    fontWeight: 500,
-    transition: 'all 0.3s ease',
-    padding: '8px 16px',
-    borderRadius: '4px',
-  }
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
   return (
     <header style={{ background: 'var(--header-navy)', color: 'var(--white)', padding: '1rem 0', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
@@ -42,15 +33,20 @@ export default function Header() {
               <li>
                 <Link
                   href="/"
-                  style={menuLinkStyle}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(241, 196, 15, 0.1)'
-                    e.currentTarget.style.transform = 'translateY(-2px)'
+                  style={{
+                    color: 'var(--gold)',
+                    textDecoration: 'none',
+                    fontWeight: 500,
+                    transition: 'all 0.3s ease',
+                    padding: '8px 16px',
+                    borderRadius: '4px',
+                    border: hoveredItem === 'home' ? '2px solid var(--gold)' : '2px solid transparent',
+                    backgroundColor: hoveredItem === 'home' ? 'var(--gold)' : 'transparent',
+                    color: hoveredItem === 'home' ? 'var(--header-navy)' : 'var(--gold)',
+                    display: 'inline-block'
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent'
-                    e.currentTarget.style.transform = 'translateY(0)'
-                  }}
+                  onMouseEnter={() => setHoveredItem('home')}
+                  onMouseLeave={() => setHoveredItem(null)}
                 >
                   Home
                 </Link>
@@ -58,15 +54,20 @@ export default function Header() {
               <li>
                 <Link
                   href="/categories"
-                  style={menuLinkStyle}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(241, 196, 15, 0.1)'
-                    e.currentTarget.style.transform = 'translateY(-2px)'
+                  style={{
+                    color: 'var(--gold)',
+                    textDecoration: 'none',
+                    fontWeight: 500,
+                    transition: 'all 0.3s ease',
+                    padding: '8px 16px',
+                    borderRadius: '4px',
+                    border: hoveredItem === 'categories' ? '2px solid var(--gold)' : '2px solid transparent',
+                    backgroundColor: hoveredItem === 'categories' ? 'var(--gold)' : 'transparent',
+                    color: hoveredItem === 'categories' ? 'var(--header-navy)' : 'var(--gold)',
+                    display: 'inline-block'
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent'
-                    e.currentTarget.style.transform = 'translateY(0)'
-                  }}
+                  onMouseEnter={() => setHoveredItem('categories')}
+                  onMouseLeave={() => setHoveredItem(null)}
                 >
                   Categories
                 </Link>
@@ -74,15 +75,20 @@ export default function Header() {
               <li>
                 <Link
                   href="/request-introduction"
-                  style={menuLinkStyle}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(241, 196, 15, 0.1)'
-                    e.currentTarget.style.transform = 'translateY(-2px)'
+                  style={{
+                    color: 'var(--gold)',
+                    textDecoration: 'none',
+                    fontWeight: 500,
+                    transition: 'all 0.3s ease',
+                    padding: '8px 16px',
+                    borderRadius: '4px',
+                    border: hoveredItem === 'request' ? '2px solid var(--gold)' : '2px solid transparent',
+                    backgroundColor: hoveredItem === 'request' ? 'var(--gold)' : 'transparent',
+                    color: hoveredItem === 'request' ? 'var(--header-navy)' : 'var(--gold)',
+                    display: 'inline-block'
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent'
-                    e.currentTarget.style.transform = 'translateY(0)'
-                  }}
+                  onMouseEnter={() => setHoveredItem('request')}
+                  onMouseLeave={() => setHoveredItem(null)}
                 >
                   Request Introduction
                 </Link>
@@ -90,15 +96,20 @@ export default function Header() {
               <li>
                 <Link
                   href="/contact"
-                  style={menuLinkStyle}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(241, 196, 15, 0.1)'
-                    e.currentTarget.style.transform = 'translateY(-2px)'
+                  style={{
+                    color: 'var(--gold)',
+                    textDecoration: 'none',
+                    fontWeight: 500,
+                    transition: 'all 0.3s ease',
+                    padding: '8px 16px',
+                    borderRadius: '4px',
+                    border: hoveredItem === 'contact' ? '2px solid var(--gold)' : '2px solid transparent',
+                    backgroundColor: hoveredItem === 'contact' ? 'var(--gold)' : 'transparent',
+                    color: hoveredItem === 'contact' ? 'var(--header-navy)' : 'var(--gold)',
+                    display: 'inline-block'
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent'
-                    e.currentTarget.style.transform = 'translateY(0)'
-                  }}
+                  onMouseEnter={() => setHoveredItem('contact')}
+                  onMouseLeave={() => setHoveredItem(null)}
                 >
                   Contact
                 </Link>
@@ -107,19 +118,19 @@ export default function Header() {
             <Link
               href="/login"
               style={{
-                ...menuLinkStyle,
+                color: 'var(--gold)',
+                textDecoration: 'none',
+                fontWeight: 500,
+                transition: 'all 0.3s ease',
+                padding: '8px 16px',
+                borderRadius: '4px',
                 border: '2px solid var(--gold)',
+                backgroundColor: hoveredItem === 'login' ? 'var(--gold)' : 'transparent',
+                color: hoveredItem === 'login' ? 'var(--header-navy)' : 'var(--gold)',
+                display: 'inline-block'
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--gold)'
-                e.currentTarget.style.color = 'var(--header-navy)'
-                e.currentTarget.style.transform = 'translateY(-2px)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent'
-                e.currentTarget.style.color = 'var(--gold)'
-                e.currentTarget.style.transform = 'translateY(0)'
-              }}
+              onMouseEnter={() => setHoveredItem('login')}
+              onMouseLeave={() => setHoveredItem(null)}
             >
               Login
             </Link>
