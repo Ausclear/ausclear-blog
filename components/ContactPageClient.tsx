@@ -121,7 +121,7 @@ export default function ContactPageClient() {
                   <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', alignItems: 'flex-start' }}>
                     <div style={{ fontSize: '22px', flexShrink: 0 }}>🏢</div>
                     <div style={{ fontSize: '15px', lineHeight: 1.5, color: '#1e293b' }}>
-                      <strong style={{ color: '#002147', fontWeight: 700, marginBottom: '4px', display: 'block' }}>AusClear</strong>
+                      <strong style={{ color: '#002147', fontWeight: 700, marginBottom: '4px', display: 'block' }}>Clearance First</strong>
                       82 Onkaparinga Valley Road<br />
                       Woodside SA 5244<br />
                       Australia
@@ -204,5 +204,6 @@ export default function ContactPageClient() {
     </>
   )
 }
+
 
 
