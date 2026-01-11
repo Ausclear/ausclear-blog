@@ -20,8 +20,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  console.log('🔧 CHECKING MAINTENANCE MODE for:', pathname)
-
   try {
     // Check maintenance mode from Supabase
     const { data, error } = await supabase
@@ -30,15 +28,11 @@ export async function middleware(request: NextRequest) {
       .eq('id', 1)
       .single()
 
-    console.log('🔧 Maintenance check result:', { data, error })
-
-    // If maintenance mode is enabled, redirect to maintenance page
+    // If maintenance mode is enabled, REDIRECT to maintenance page
     if (!error && data?.is_enabled === true) {
-      console.log('🔧 MAINTENANCE MODE ACTIVE - Redirecting to /maintenance')
-      return NextResponse.rewrite(new URL('/maintenance', request.url))
+      const maintenanceUrl = new URL('/maintenance', request.url)
+      return NextResponse.redirect(maintenanceUrl)
     }
-
-    console.log('🔧 Maintenance mode NOT active - allowing through')
   } catch (err) {
     console.error('🔧 Maintenance check error:', err)
   }
