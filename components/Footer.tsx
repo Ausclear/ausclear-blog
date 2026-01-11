@@ -25,7 +25,7 @@ export default function Footer() {
                 color: 'var(--gold)',
                 marginBottom: '1rem'
               }}>
-                AusClear Support
+                Clearance First Support
               </h3>
               <p style={{
                 color: '#9CA3AF',
@@ -104,7 +104,7 @@ export default function Footer() {
               fontSize: '0.9rem',
               margin: 0
             }}>
-              &copy; {currentYear} AusClear. All rights reserved.
+              <strong style={{ color: 'var(--gold)' }}>Clearance First</strong> is Powered by AusClear &middot; &copy; {currentYear} AusClear. All rights reserved.
             </p>
             <div style={{ display: 'flex', gap: '1.5rem' }}>
               <a href="#" style={{ color: 'var(--gold)', textDecoration: 'none', fontSize: '0.9rem' }}>
