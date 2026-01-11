@@ -20,7 +20,7 @@ export default function Header() {
               textDecoration: 'none'
             }}
           >
-            AusClear Support
+            Clearance First Support
           </Link>
 
           {/* Desktop Navigation */}
