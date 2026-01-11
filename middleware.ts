@@ -10,9 +10,8 @@ const supabase = createClient(
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   
-  // Skip maintenance check for maintenance page itself and static files
+  // Skip maintenance check for static files and API routes only
   if (
-    pathname === '/maintenance' ||
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.match(/\.(ico|png|jpg|jpeg|svg|css|js)$/)
@@ -28,10 +27,16 @@ export async function middleware(request: NextRequest) {
       .eq('id', 1)
       .single()
 
-    // If maintenance mode is enabled, REDIRECT to maintenance page
-    if (!error && data?.is_enabled === true) {
-      const maintenanceUrl = new URL('/maintenance', request.url)
-      return NextResponse.redirect(maintenanceUrl)
+    const isMaintenanceEnabled = !error && data?.is_enabled === true
+
+    // If on maintenance page but maintenance is DISABLED, redirect to home
+    if (pathname === '/maintenance' && !isMaintenanceEnabled) {
+      return NextResponse.redirect(new URL('/', request.url))
+    }
+
+    // If NOT on maintenance page but maintenance is ENABLED, redirect to maintenance
+    if (pathname !== '/maintenance' && isMaintenanceEnabled) {
+      return NextResponse.redirect(new URL('/maintenance', request.url))
     }
   } catch (err) {
     console.error('🔧 Maintenance check error:', err)
