@@ -8,26 +8,39 @@ const supabase = createClient(
 )
 
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname
+  
   // Skip maintenance check for maintenance page itself and static files
   if (
-    request.nextUrl.pathname === '/maintenance' ||
-    request.nextUrl.pathname.startsWith('/_next') ||
-    request.nextUrl.pathname.startsWith('/api') ||
-    request.nextUrl.pathname.match(/\.(ico|png|jpg|jpeg|svg|css|js)$/)
+    pathname === '/maintenance' ||
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/api') ||
+    pathname.match(/\.(ico|png|jpg|jpeg|svg|css|js)$/)
   ) {
     return NextResponse.next()
   }
 
-  // Check maintenance mode from Supabase
-  const { data, error } = await supabase
-    .from('maintenance_mode')
-    .select('is_enabled')
-    .eq('id', 1)
-    .single()
+  console.log('🔧 CHECKING MAINTENANCE MODE for:', pathname)
 
-  // If maintenance mode is enabled, redirect to maintenance page
-  if (!error && data?.is_enabled === true) {
-    return NextResponse.rewrite(new URL('/maintenance', request.url))
+  try {
+    // Check maintenance mode from Supabase
+    const { data, error } = await supabase
+      .from('maintenance_mode')
+      .select('is_enabled')
+      .eq('id', 1)
+      .single()
+
+    console.log('🔧 Maintenance check result:', { data, error })
+
+    // If maintenance mode is enabled, redirect to maintenance page
+    if (!error && data?.is_enabled === true) {
+      console.log('🔧 MAINTENANCE MODE ACTIVE - Redirecting to /maintenance')
+      return NextResponse.rewrite(new URL('/maintenance', request.url))
+    }
+
+    console.log('🔧 Maintenance mode NOT active - allowing through')
+  } catch (err) {
+    console.error('🔧 Maintenance check error:', err)
   }
 
   return NextResponse.next()
@@ -35,13 +48,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
