@@ -95,7 +95,7 @@ export default function ContactPageClient() {
                 lineHeight: 1.7,
                 marginBottom: '48px'
               }}>
-                Need Professional Help? We've Got You Covered! Kindly complete the contact form with your details and message. At AusClear, we are dedicated to assisting you with your security clearance needs, and our team will contact you within the next few hours.
+                Need Professional Help? We've Got You Covered! Kindly complete the contact form with your details and message. At Clearance First, we are dedicated to assisting you with your security clearance needs, and our team will contact you within the next few hours.
               </p>
 
               {/* Business Info Card */}
@@ -204,4 +204,5 @@ export default function ContactPageClient() {
     </>
   )
 }
+
 
