@@ -107,10 +107,10 @@ export default function Footer() {
               <strong style={{ color: 'var(--gold)' }}>Clearance First</strong> is Powered by AusClear &middot; &copy; {currentYear} AusClear. All rights reserved.
             </p>
             <div style={{ display: 'flex', gap: '1.5rem' }}>
-              <a href="#" style={{ color: 'var(--gold)', textDecoration: 'none', fontSize: '0.9rem' }}>
+              <a href="/privacy" style={{ color: 'var(--gold)', textDecoration: 'none', fontSize: '0.9rem' }}>
                 Privacy Policy
               </a>
-              <a href="#" style={{ color: 'var(--gold)', textDecoration: 'none', fontSize: '0.9rem' }}>
+              <a href="/terms" style={{ color: 'var(--gold)', textDecoration: 'none', fontSize: '0.9rem' }}>
                 Terms of Service
               </a>
             </div>
@@ -476,4 +476,5 @@ export default function Footer() {
     </>
   )
 }
+
 
