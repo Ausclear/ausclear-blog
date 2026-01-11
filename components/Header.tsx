@@ -34,7 +34,6 @@ export default function Header() {
                 <Link
                   href="/"
                   style={{
-                    color: 'var(--gold)',
                     textDecoration: 'none',
                     fontWeight: 500,
                     transition: 'all 0.3s ease',
@@ -55,7 +54,6 @@ export default function Header() {
                 <Link
                   href="/categories"
                   style={{
-                    color: 'var(--gold)',
                     textDecoration: 'none',
                     fontWeight: 500,
                     transition: 'all 0.3s ease',
@@ -76,7 +74,6 @@ export default function Header() {
                 <Link
                   href="/request-introduction"
                   style={{
-                    color: 'var(--gold)',
                     textDecoration: 'none',
                     fontWeight: 500,
                     transition: 'all 0.3s ease',
@@ -97,7 +94,6 @@ export default function Header() {
                 <Link
                   href="/contact"
                   style={{
-                    color: 'var(--gold)',
                     textDecoration: 'none',
                     fontWeight: 500,
                     transition: 'all 0.3s ease',
@@ -118,7 +114,6 @@ export default function Header() {
             <Link
               href="/login"
               style={{
-                color: 'var(--gold)',
                 textDecoration: 'none',
                 fontWeight: 500,
                 transition: 'all 0.3s ease',
