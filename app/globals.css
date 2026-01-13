@@ -414,7 +414,7 @@
    ================================================================= */
 
 @media (max-width: 1024px) {
-  /* Article content - remove width restrictions */
+  /* Article content wrapper - NO padding restrictions */
   article,
   .article-content,
   .prose {
