@@ -3,6 +3,7 @@ import Script from 'next/script'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import RequestIntroModal from '@/components/RequestIntroModal'
 // import AnthonyAIWidget from '@/components/AnthonyAIWidget' // TEMPORARILY DISABLED
 
 export const metadata: Metadata = {
@@ -59,6 +60,19 @@ export default function RootLayout({
         </main>
         <Footer />
         {/* <AnthonyAIWidget /> */} {/* TEMPORARILY DISABLED */}
+        <RequestIntroModal />
+        <Script id="request-intro-interceptor" strategy="afterInteractive">
+          {`
+            document.addEventListener('click', function(e) {
+              const target = e.target.closest('a[href="/request-introduction"], button[href="/request-introduction"]');
+              if (target) {
+                e.preventDefault();
+                e.stopPropagation();
+                document.getElementById('request-intro-trigger')?.click();
+              }
+            }, true);
+          `}
+        </Script>
       </body>
     </html>
   )
