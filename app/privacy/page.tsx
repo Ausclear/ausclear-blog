@@ -172,7 +172,8 @@ export default function PrivacyPage() {
               If you have any questions about this Privacy Policy or our privacy practices, please contact us:
             </p>
             <p style={{ paddingLeft: '24px' }}>
-              <strong>Clearance First</strong><br />
+              <strong>AusClear</strong><br />
+              Trading as: Clearance First<br />
               ABN: 70 628 031 587<br />
               Email: support@ausclear.com.au<br />
               Phone: 1300 027 423<br />
