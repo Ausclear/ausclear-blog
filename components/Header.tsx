@@ -6,7 +6,6 @@ import { useState } from 'react'
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
-  const [showComingSoonModal, setShowComingSoonModal] = useState(false)
 
   return (
     <header style={{ background: 'var(--header-navy)', color: 'var(--white)', padding: '1rem 0', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
@@ -66,8 +65,8 @@ export default function Header() {
             >
               Categories
             </Link>
-            <button
-              onClick={() => setShowComingSoonModal(true)}
+            <Link
+              href="/request-introduction"
               style={{
                 textDecoration: 'none',
                 fontWeight: 500,
@@ -77,14 +76,13 @@ export default function Header() {
                 border: hoveredItem === 'request' ? '2px solid var(--gold)' : '2px solid transparent',
                 backgroundColor: hoveredItem === 'request' ? 'var(--gold)' : 'transparent',
                 color: hoveredItem === 'request' ? 'var(--header-navy)' : 'var(--gold)',
-                display: 'inline-block',
-                cursor: 'pointer'
+                display: 'inline-block'
               }}
               onMouseEnter={() => setHoveredItem('request')}
               onMouseLeave={() => setHoveredItem(null)}
             >
               Request Introduction
-            </button>
+            </Link>
             <Link
               href="/contact"
               style={{
@@ -168,12 +166,13 @@ export default function Header() {
                 </Link>
               </li>
               <li>
-                <button
-                  onClick={() => { setMobileMenuOpen(false); setShowComingSoonModal(true); }}
-                  style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 500, display: 'block', padding: '12px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', width: '100%' }}
+                <Link
+                  href="/request-introduction"
+                  style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 500, display: 'block', padding: '12px' }}
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   Request Introduction
-                </button>
+                </Link>
               </li>
               <li>
                 <Link
@@ -197,62 +196,6 @@ export default function Header() {
           </nav>
         )}
       </div>
-
-      {/* Coming Soon Modal */}
-      {showComingSoonModal && (
-        <div 
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 10000
-          }}
-          onClick={() => setShowComingSoonModal(false)}
-        >
-          <div 
-            style={{
-              backgroundColor: 'white',
-              padding: '32px',
-              borderRadius: '8px',
-              maxWidth: '400px',
-              textAlign: 'center',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 style={{ color: 'var(--header-navy)', marginBottom: '16px', fontSize: '1.5rem', fontWeight: 700 }}>
-              Coming Soon
-            </h3>
-            <p style={{ color: '#666', marginBottom: '24px', lineHeight: 1.6 }}>
-              Request Introduction feature is currently under development and will be available soon.
-            </p>
-            <button
-              onClick={() => setShowComingSoonModal(false)}
-              style={{
-                backgroundColor: 'var(--header-navy)',
-                color: 'var(--gold)',
-                border: 'none',
-                padding: '12px 32px',
-                borderRadius: '4px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                fontSize: '1rem',
-                transition: 'opacity 0.3s ease'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
-              onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-            >
-              OK
-            </button>
-          </div>
-        </div>
-      )}
     </header>
   )
 }
