@@ -16,7 +16,7 @@ export default function PrivacyPage() {
           <section style={{ marginBottom: '32px' }}>
             <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#002147', marginBottom: '16px' }}>1. Introduction</h2>
             <p style={{ marginBottom: '16px' }}>
-              Clearance First (ABN 70 628 031 587) ("we", "our", or "us") is committed to protecting your privacy and complying with the Australian Privacy Principles (APPs) contained in the Privacy Act 1988 (Cth). This Privacy Policy explains how we collect, use, disclose, and safeguard your personal information.
+              AusClear (ABN 70 628 031 587) ("we", "our", or "us") is committed to protecting your privacy and complying with the Australian Privacy Principles (APPs) contained in the Privacy Act 1988 (Cth). This Privacy Policy explains how we collect, use, disclose, and safeguard your personal information.
             </p>
             <p style={{ marginBottom: '16px' }}>
               By using our services, you consent to the collection and use of your information in accordance with this Privacy Policy.
