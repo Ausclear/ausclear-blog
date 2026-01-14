@@ -126,10 +126,7 @@ export default function RequestIntroModal() {
                   fontSize: '16px',
                   fontWeight: 600,
                   cursor: 'pointer',
-                  transition: 'background 0.3s',
                 }}
-                onMouseOver={(e) => (e.currentTarget.style.background = '#003a70')}
-                onMouseOut={(e) => (e.currentTarget.style.background = '#002147')}
               >
                 Got it
               </button>
