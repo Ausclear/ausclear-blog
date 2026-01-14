@@ -3,7 +3,7 @@ import Script from 'next/script'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import AnthonyAIWidget from '@/components/AnthonyAIWidget'
+// import AnthonyAIWidget from '@/components/AnthonyAIWidget' // TEMPORARILY DISABLED
 
 export const metadata: Metadata = {
   title: {
@@ -58,7 +58,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
-        <AnthonyAIWidget />
+        {/* <AnthonyAIWidget /> */} {/* TEMPORARILY DISABLED */}
       </body>
     </html>
   )
