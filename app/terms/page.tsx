@@ -16,7 +16,7 @@ export default function TermsPage() {
           <section style={{ marginBottom: '32px' }}>
             <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#002147', marginBottom: '16px' }}>1. Introduction</h2>
             <p style={{ marginBottom: '16px' }}>
-              These Terms of Service ("Terms") govern your use of services provided by Clearance First (ABN 70 628 031 587) ("we", "our", or "us"). By engaging our services or using our website, you agree to be bound by these Terms.
+              These Terms of Service ("Terms") govern your use of services provided by AusClear (ABN 70 628 031 587) ("we", "our", or "us"). By engaging our services or using our website, you agree to be bound by these Terms.
             </p>
             <p style={{ marginBottom: '16px' }}>
               Clearance First is a professional advisory and referral service specialising in Australian Government security clearances. We connect eligible individuals with AGSVA-approved sponsors and provide expert guidance throughout the clearance process.
@@ -210,8 +210,7 @@ export default function TermsPage() {
               For questions about these Terms of Service, please contact:
             </p>
             <p style={{ paddingLeft: '24px' }}>
-              <strong>Clearance First</strong><br />
-              (Powered by AusClear)<br />
+              <strong>AusClear</strong><br />
               ABN: 70 628 031 587<br />
               Email: support@ausclear.com.au<br />
               Phone: 1300 027 423<br />
