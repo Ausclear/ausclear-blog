@@ -305,6 +305,25 @@
         
         sessionStorage.setItem('visit_counted', 'true');
         
+        // INCREMENT JANUARY COUNTER (real-time)
+        try {
+          const currentMonth = new Date().toISOString().substring(0, 7); // '2026-01'
+          await fetch(
+            SUPABASE_URL + '/rest/v1/rpc/increment_monthly_visitors',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+              },
+              body: JSON.stringify({ month_key: currentMonth })
+            }
+          );
+        } catch (e) {
+          // Silent fail - counter increment is optional
+        }
+        
         await fetch(
           SUPABASE_URL + '/rest/v1/active_visitors',
           {
