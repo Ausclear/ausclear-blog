@@ -16,7 +16,7 @@ export default function PrivacyPage() {
           <section style={{ marginBottom: '32px' }}>
             <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#002147', marginBottom: '16px' }}>1. Introduction</h2>
             <p style={{ marginBottom: '16px' }}>
-              AusClear (ABN 70 628 031 587) ("we", "our", or "us") is committed to protecting your privacy and complying with the Australian Privacy Principles (APPs) contained in the Privacy Act 1988 (Cth). This Privacy Policy explains how we collect, use, disclose, and safeguard your personal information.
+              Nepthys Pty Ltd trading as AusClear (ABN 70 628 031 587) ("we", "our", or "us") is committed to protecting your privacy and complying with the Australian Privacy Principles (APPs) contained in the Privacy Act 1988 (Cth). This Privacy Policy explains how we collect, use, disclose, and safeguard your personal information.
             </p>
             <p style={{ marginBottom: '16px' }}>
               By using our services, you consent to the collection and use of your information in accordance with this Privacy Policy.
@@ -172,8 +172,8 @@ export default function PrivacyPage() {
               If you have any questions about this Privacy Policy or our privacy practices, please contact us:
             </p>
             <p style={{ paddingLeft: '24px' }}>
-              <strong>AusClear</strong><br />
-              Trading as: Clearance First<br />
+              <strong>Nepthys Pty Ltd</strong><br />
+              Trading as: AusClear<br />
               ABN: 70 628 031 587<br />
               Email: support@ausclear.com.au<br />
               Phone: 1300 027 423<br />
