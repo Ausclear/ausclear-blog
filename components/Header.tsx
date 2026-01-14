@@ -39,7 +39,7 @@ export default function Header() {
                 borderRadius: '4px',
                 border: hoveredItem === 'home' ? '2px solid var(--gold)' : '2px solid transparent',
                 backgroundColor: hoveredItem === 'home' ? 'var(--gold)' : 'transparent',
-                color: hoveredItem === 'home' ? 'var(--white)' : 'var(--gold)',
+                color: hoveredItem === 'home' ? 'var(--header-navy)' : 'var(--gold)',
                 display: 'inline-block'
               }}
               onMouseEnter={() => setHoveredItem('home')}
@@ -57,7 +57,7 @@ export default function Header() {
                 borderRadius: '4px',
                 border: hoveredItem === 'categories' ? '2px solid var(--gold)' : '2px solid transparent',
                 backgroundColor: hoveredItem === 'categories' ? 'var(--gold)' : 'transparent',
-                color: hoveredItem === 'categories' ? 'var(--white)' : 'var(--gold)',
+                color: hoveredItem === 'categories' ? 'var(--header-navy)' : 'var(--gold)',
                 display: 'inline-block'
               }}
               onMouseEnter={() => setHoveredItem('categories')}
@@ -75,7 +75,7 @@ export default function Header() {
                 borderRadius: '4px',
                 border: hoveredItem === 'request' ? '2px solid var(--gold)' : '2px solid transparent',
                 backgroundColor: hoveredItem === 'request' ? 'var(--gold)' : 'transparent',
-                color: hoveredItem === 'request' ? 'var(--white)' : 'var(--gold)',
+                color: hoveredItem === 'request' ? 'var(--header-navy)' : 'var(--gold)',
                 display: 'inline-block'
               }}
               onMouseEnter={() => setHoveredItem('request')}
@@ -93,7 +93,7 @@ export default function Header() {
                 borderRadius: '4px',
                 border: hoveredItem === 'contact' ? '2px solid var(--gold)' : '2px solid transparent',
                 backgroundColor: hoveredItem === 'contact' ? 'var(--gold)' : 'transparent',
-                color: hoveredItem === 'contact' ? 'var(--white)' : 'var(--gold)',
+                color: hoveredItem === 'contact' ? 'var(--header-navy)' : 'var(--gold)',
                 display: 'inline-block'
               }}
               onMouseEnter={() => setHoveredItem('contact')}
@@ -111,7 +111,7 @@ export default function Header() {
                 borderRadius: '4px',
                 border: hoveredItem === 'login' ? '2px solid var(--gold)' : '2px solid transparent',
                 backgroundColor: hoveredItem === 'login' ? 'var(--gold)' : 'transparent',
-                color: hoveredItem === 'login' ? 'var(--white)' : 'var(--gold)',
+                color: hoveredItem === 'login' ? 'var(--header-navy)' : 'var(--gold)',
                 display: 'inline-block'
               }}
               onMouseEnter={() => setHoveredItem('login')}
