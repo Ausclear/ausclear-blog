@@ -118,6 +118,16 @@ export default function Footer() {
         </div>
       </footer>
       
+      {/* Google Analytics */}
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-R2PFRS6DB9"></script>
+      <script dangerouslySetInnerHTML={{ __html: `
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-R2PFRS6DB9');
+      ` }} />
+      
+      {/* Visitor Tracking */}
       <script dangerouslySetInnerHTML={{ __html: `
 (function() {
   'use strict';
