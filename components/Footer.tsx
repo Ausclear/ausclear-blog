@@ -133,7 +133,7 @@ export default function Footer() {
   'use strict';
   
   const SUPABASE_URL = 'https://qraxdkzmteogkbfatvir.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyYXhka3ptdGVvZ2tiZmF0dmlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM1OTk5MjEsImV4cCI6MjA3OTE3NTkyMX0.WqCGjBEiLgmqbaGmc8Z87CeqY-l_DBR3Gj9VQ4sujks';
+  const EDGE_FUNCTION_PATH = '/functions/v1/visitor-heartbeat';
   
   // HEARTBEAT INTERVAL - 5 seconds
   const HEARTBEAT_INTERVAL = 5000;
@@ -283,7 +283,7 @@ export default function Footer() {
   }
   
   async function sendHeartbeat() {
-    // Check if user is idle - no interaction for 60 seconds = don't send heartbeat
+    // Check if user is idle - no interaction for 5 minutes = don't send heartbeat
     const idleTime = Date.now() - lastInteraction;
     if (idleTime > IDLE_TIMEOUT) {
       return; // User is idle, don't send heartbeat
@@ -341,7 +341,7 @@ export default function Footer() {
         debugPanel.style.cssText = 'position:fixed;bottom:10px;right:10px;background:#000;color:#0f0;padding:15px;border-radius:8px;font-family:monospace;font-size:12px;z-index:99999;min-width:200px;';
         document.body.appendChild(debugPanel);
       }
-      debugPanel.innerHTML = '<b>TRACKING DEBUG</b><br>Pages: ' + pagesViewed.length + '<br>Time: ' + timeOnSite + 's<br>Scroll: ' + maxScrollDepth + '%<br>Returning: ' + (initialReturningStatus ? 'YES' : 'NO') + '<br>High Intent: ' + (currentHighIntent ? 'YES' : 'NO') + '<br><i>Scores calculated by DB</i>';
+      debugPanel.innerHTML = '<b>TRACKING DEBUG</b><br>Pages: ' + pagesViewed.length + '<br>Time: ' + timeOnSite + 's<br>Scroll: ' + maxScrollDepth + '%<br>Returning: ' + (initialReturningStatus ? 'YES' : 'NO') + '<br>High Intent: ' + (currentHighIntent ? 'YES' : 'NO') + '<br><i>Edge Function (NO KEYS)</i>';
     }
     
     // NOTE: lead_score, opportunity_score, priority_score are calculated
@@ -355,7 +355,7 @@ export default function Footer() {
       pages_viewed: pagesViewed,
       page_journey: pageJourney,
       time_on_site: timeOnSite,
-      time_on_current_page: maxScrollDepth, // Using this field for scroll depth %
+      scroll_depth_pct: maxScrollDepth,
       session_start: sessionStart,
       last_activity: new Date().toISOString(),
       first_visit_date: firstVisitDate,
@@ -363,13 +363,11 @@ export default function Footer() {
       location_city: locationData.city,
       location_state: locationData.state,
       location_country: locationData.country,
-      ip_address: ipAddress,
       device_type: getDeviceType(),
       browser: getBrowser(),
       os: getOS(),
       referrer: document.referrer || 'Direct',
       referrer_type: document.referrer ? 'External' : 'Direct',
-      search_terms: '',
       is_new_visitor: !hasVisitedBefore,
       is_returning: hasVisitedBefore,
       previous_visit_count: visitCount,
@@ -378,97 +376,56 @@ export default function Footer() {
       is_watched: false,
       watched_by: null,
       admin_notes: '',
-      priority_score: 0,
-      opportunity_score: 0,
-      lead_score: 0,
       exit_url: '',
+      utm_source: '',
+      utm_medium: '',
+      utm_campaign: '',
+      utm_content: '',
+      utm_term: '',
       updated_at: new Date().toISOString()
     };
     
     try {
-      // Check if visitor exists in active_visitors
-      const checkResponse = await fetch(
-        SUPABASE_URL + '/rest/v1/active_visitors?visitor_id=eq.' + visitorId + '&select=id',
-        {
-          method: 'GET',
-          headers: {
-            'apikey': SUPABASE_ANON_KEY,
-            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
-          }
-        }
-      );
+      // CHANGED: Send to Edge Function (NO KEYS EXPOSED)
+      const response = await fetch(SUPABASE_URL + EDGE_FUNCTION_PATH, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
       
-      const existing = await checkResponse.json();
-      
-      if (existing && existing.length > 0) {
-        // UPDATE existing visitor (same session, just updating activity)
+      if (response.ok) {
+        const result = await response.json();
         
-        if (!sessionStorage.getItem('visit_counted')) {
-          sessionStorage.setItem('visit_counted', 'true');
-        }
-        
-        // DON'T change is_new_visitor, is_returning, or previous_visit_count on updates
-        // These are set at INSERT and should not change during session
-        delete data.is_new_visitor;
-        delete data.is_returning;
-        delete data.previous_visit_count;
-        
-        await fetch(
-          SUPABASE_URL + '/rest/v1/active_visitors?visitor_id=eq.' + visitorId,
-          {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              'apikey': SUPABASE_ANON_KEY,
-              'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-              'Prefer': 'return=minimal'
-            },
-            body: JSON.stringify(data)
+        // Handle first insert vs update
+        if (result.mode === 'insert') {
+          // First insert successful - mark visit for future sessions
+          if (!sessionStorage.getItem('visit_counted')) {
+            sessionStorage.setItem('visit_counted', 'true');
+            localStorage.setItem('ausclear_has_visited', 'true');
+            localStorage.setItem('ausclear_visit_count', (visitCount + 1).toString());
           }
-        );
-      } else {
-        // INSERT new visitor
-        data.created_at = new Date().toISOString();
-        
-        // Keep the is_new_visitor and is_returning values set from localStorage check above
-        // They're already set correctly: is_new_visitor = !hasVisitedBefore, is_returning = hasVisitedBefore
-        // previous_visit_count is already set correctly from visitCount (line 238)
-        
-        sessionStorage.setItem('visit_counted', 'true');
-        
-        await fetch(
-          SUPABASE_URL + '/rest/v1/active_visitors',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'apikey': SUPABASE_ANON_KEY,
-              'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-              'Prefer': 'return=minimal'
-            },
-            body: JSON.stringify(data)
+          
+          // Trigger IP enrichment via Supabase Edge Function (once per session)
+          if (!sessionStorage.getItem('ip_enriched') && ipAddress) {
+            sessionStorage.setItem('ip_enriched', 'true');
+            try {
+              fetch(SUPABASE_URL + '/functions/v1/rapid-responder', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ip: ipAddress, visitor_id: visitorId })
+              });
+            } catch (e) {
+              // Silent fail - enrichment is optional
+            }
           }
-        );
-        
-        // Mark as visited for future sessions (AFTER insert, so THIS session stays as "new")
-        // Increment visit count for NEXT session
-        localStorage.setItem('ausclear_has_visited', 'true');
-        localStorage.setItem('ausclear_visit_count', (visitCount + 1).toString());
-        
-        // Trigger IP enrichment via Supabase Edge Function (once per session)
-        if (!sessionStorage.getItem('ip_enriched') && ipAddress) {
-          sessionStorage.setItem('ip_enriched', 'true');
-          try {
-            fetch(SUPABASE_URL + '/functions/v1/rapid-responder', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
-              },
-              body: JSON.stringify({ ip: ipAddress, visitor_id: visitorId })
-            });
-          } catch (e) {
-            // Silent fail - enrichment is optional
+        } else if (result.mode === 'update') {
+          // Update successful - just mark visit counted if not already
+          if (!sessionStorage.getItem('visit_counted')) {
+            sessionStorage.setItem('visit_counted', 'true');
           }
         }
       }
@@ -486,5 +443,6 @@ export default function Footer() {
     </>
   )
 }
+
 
 
